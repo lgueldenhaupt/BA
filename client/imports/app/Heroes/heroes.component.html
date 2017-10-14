@@ -1,0 +1,25 @@
+<form action="#">
+    <div class="file-field input-field">
+        <div class="btn">
+            <span>File</span>
+            <input type="file" (change)="dataInput($event)">
+        </div>
+        <div class="file-path-wrapper">
+            <input class="file-path validate" type="text">
+        </div>
+    </div>
+<img width="300" src="{{photoString}}">
+<div class="input-field col s6">
+    <input placeholder="Name" id="first_name" type="text" class="validate" [(ngModel)]="name" name="first_name">
+    <label for="first_name">Name</label>
+</div>
+<div class="input-field col s4">
+    <input id="age" type="number" class="validate" [(ngModel)]="age" name="age">
+    <label for="age">Age</label>
+</div>
+<button class="btn" (click)="addHeroToDB()" type="submit" (submit)="addHeroToDB()">Submit</button>
+</form>
+<div *ngFor="let hero of heroes | async">
+    <p>{{hero.name}} - {{hero.age}}</p>
+    <img src="{{hero.photo}}" width="200">
+</div>
