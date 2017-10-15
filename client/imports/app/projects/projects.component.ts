@@ -4,6 +4,7 @@ import template from "./projects.component.html";
 import style from "./projects.component.scss";
 import {Observable} from "rxjs/Observable";
 import {Project} from "../../../../both/models/project.model";
+import {Router} from "@angular/router";
 
 declare var $ :any;
 
@@ -15,7 +16,10 @@ declare var $ :any;
 export class ProjectsComponent implements OnInit{
     projects: Observable<Project[]>;
 
-    constructor(private projectsDS: ProjectsDataService) {
+    constructor(
+        private projectsDS: ProjectsDataService,
+        private router: Router
+    ) {
         $(document).ready(function(){
             $('.carousel').carousel();
         });
@@ -26,6 +30,10 @@ export class ProjectsComponent implements OnInit{
             // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
         });
+    }
+
+    openProject(ID) {
+        this.router.navigate(['/project', ID]);
     }
 
     createProject(name, description) {

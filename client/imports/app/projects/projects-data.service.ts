@@ -23,4 +23,9 @@ export class ProjectsDataService  {
         ProjectsCollection.remove(ID);
     }
 
+    public getProject(ID): Project {
+        let proj = ProjectsCollection.findOne({_id: ID});
+        return proj;
+    }
+
 }

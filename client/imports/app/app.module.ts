@@ -5,6 +5,7 @@ import {AppComponent} from "./app.component";
 import {DemoComponent} from "./demo/demo.component";
 import {HeroesComponent} from "./Heroes/heroes.component";
 import {ProjectsComponent} from "./projects/projects.component";
+import {ProjectComponent} from "./project/project.component";
 import {DemoDataService} from "./demo/demo-data.service";
 import {HeroDataService} from "./Heroes/hero-data.service";
 import {RouterModule, Routes} from '@angular/router';
@@ -26,6 +27,10 @@ const appRoutes: Routes = [
         redirectTo: '/heroes',
         pathMatch: 'full'
     },
+    {
+        path: 'project/:id',
+        component: ProjectComponent
+    },
     {path: '**', component: AppComponent}
 ];
 
@@ -35,7 +40,8 @@ const appRoutes: Routes = [
         AppComponent,
         DemoComponent,
         HeroesComponent,
-        ProjectsComponent
+        ProjectsComponent,
+        ProjectComponent
     ],
     // Entry Components
     entryComponents: [
