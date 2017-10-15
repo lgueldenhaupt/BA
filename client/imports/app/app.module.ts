@@ -4,9 +4,11 @@ import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./app.component";
 import {DemoComponent} from "./demo/demo.component";
 import {HeroesComponent} from "./Heroes/heroes.component";
+import {ProjectsComponent} from "./projects/projects.component";
 import {DemoDataService} from "./demo/demo-data.service";
 import {HeroDataService} from "./Heroes/hero-data.service";
 import {RouterModule, Routes} from '@angular/router';
+import {ProjectsDataService} from "./projects/projects-data.service";
 
 const appRoutes: Routes = [
     {path: 'crisis-center', component: DemoComponent},
@@ -14,6 +16,10 @@ const appRoutes: Routes = [
     {
         path: 'heroes',
         component: HeroesComponent
+    },
+    {
+        path: 'projects',
+        component: ProjectsComponent
     },
     {
         path: '',
@@ -28,7 +34,8 @@ const appRoutes: Routes = [
     declarations: [
         AppComponent,
         DemoComponent,
-        HeroesComponent
+        HeroesComponent,
+        ProjectsComponent
     ],
     // Entry Components
     entryComponents: [
@@ -37,7 +44,8 @@ const appRoutes: Routes = [
     // Providers
     providers: [
         DemoDataService,
-        HeroDataService
+        HeroDataService,
+        ProjectsDataService
     ],
     // Modules
     imports: [
