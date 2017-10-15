@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import {ProjectsDataService} from "./projects-data.service";
-import template from "./projects.component.html";
-import style from "./projects.component.scss";
+import template from "./dashboard.component.html";
+import style from "./dashboard.component.scss";
 import {Observable} from "rxjs/Observable";
 import {Project} from "../../../../both/models/project.model";
 import {Router} from "@angular/router";
@@ -9,11 +9,11 @@ import {Router} from "@angular/router";
 declare var $ :any;
 
 @Component({
-    selector: "projects",
+    selector: "dashboard",
     template,
     styles: [ style ]
 })
-export class ProjectsComponent implements OnInit{
+export class DashboardComponent implements OnInit{
     projects: Observable<Project[]>;
 
     constructor(

@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import {ProjectsDataService} from "./../projects/projects-data.service";
+import {ProjectsDataService} from "../dashboard/projects-data.service";
 import template from "./project.component.html";
 import style from "./project.component.scss";
 import {Project} from "../../../../both/models/project.model";

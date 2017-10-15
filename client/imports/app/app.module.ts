@@ -4,12 +4,12 @@ import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./app.component";
 import {DemoComponent} from "./demo/demo.component";
 import {HeroesComponent} from "./Heroes/heroes.component";
-import {ProjectsComponent} from "./projects/projects.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ProjectComponent} from "./project/project.component";
 import {DemoDataService} from "./demo/demo-data.service";
 import {HeroDataService} from "./Heroes/hero-data.service";
 import {RouterModule, Routes} from '@angular/router';
-import {ProjectsDataService} from "./projects/projects-data.service";
+import {ProjectsDataService} from "./dashboard/projects-data.service";
 
 const appRoutes: Routes = [
     {path: 'crisis-center', component: DemoComponent},
@@ -19,17 +19,17 @@ const appRoutes: Routes = [
         component: HeroesComponent
     },
     {
-        path: 'projects',
-        component: ProjectsComponent
-    },
-    {
-        path: '',
-        redirectTo: '/heroes',
-        pathMatch: 'full'
+        path: 'dashboard',
+        component: DashboardComponent
     },
     {
         path: 'project/:id',
         component: ProjectComponent
+    },
+    {
+        path: '',
+        redirectTo: '/dashboard',
+        pathMatch: 'prefix'
     },
     {path: '**', component: AppComponent}
 ];
@@ -40,7 +40,7 @@ const appRoutes: Routes = [
         AppComponent,
         DemoComponent,
         HeroesComponent,
-        ProjectsComponent,
+        DashboardComponent,
         ProjectComponent
     ],
     // Entry Components
