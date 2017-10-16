@@ -23,8 +23,8 @@ export class ProjectsDataService  {
         ProjectsCollection.remove(ID);
     }
 
-    public getProject(ID): Project {
-        let proj = ProjectsCollection.findOne({_id: ID});
+    public getProject(ID): ObservableCursor<Project> {
+        let proj = ProjectsCollection.find({_id: ID}, {});
         return proj;
     }
 

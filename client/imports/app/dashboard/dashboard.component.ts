@@ -20,14 +20,10 @@ export class DashboardComponent implements OnInit{
         private projectsDS: ProjectsDataService,
         private router: Router
     ) {
-        $(document).ready(function(){
-            $('.carousel').carousel();
-        });
     }
 
     openAddProjectModal() {
         $(document).ready(function(){
-            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
         });
     }
