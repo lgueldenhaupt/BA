@@ -10,6 +10,8 @@ import {DemoDataService} from "./demo/demo-data.service";
 import {HeroDataService} from "./Heroes/hero-data.service";
 import {RouterModule, Routes} from '@angular/router';
 import {ProjectsDataService} from "./dashboard/projects-data.service";
+import {ConfigSetsDataService} from "../services/configsets-data.service";
+import {NotificationService} from "../services/notification.service";
 
 const appRoutes: Routes = [
     {path: 'crisis-center', component: DemoComponent},
@@ -51,7 +53,9 @@ const appRoutes: Routes = [
     providers: [
         DemoDataService,
         HeroDataService,
-        ProjectsDataService
+        ProjectsDataService,
+        ConfigSetsDataService,
+        NotificationService
     ],
     // Modules
     imports: [

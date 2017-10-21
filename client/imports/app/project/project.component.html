@@ -6,6 +6,7 @@
         <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" (click)="openAddConfigSetModal()" data-target="configSetModal">Add</button>
     </div>
 </div>
+<div *ngFor="let set of configSets | async">{{set.name}}</div>
 
 
 
