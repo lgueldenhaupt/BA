@@ -4,13 +4,13 @@ import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import template from "./project.component.html";
 import style from "./project.component.scss";
 import {Project} from "../../../../both/models/project.model";
-import {Router, ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {Observable} from "rxjs/Observable";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
+import {SearchService} from "../../services/search.service";
 
 declare let $ :any;
-declare let Materialize : any;
 
 @Component({
     selector: "project",
@@ -22,15 +22,18 @@ export class ProjectComponent implements OnInit{
     project: Project;
     sub: any;
     configSets: Observable<ConfigSet[]>;
+    searchText: string;
+    chosenConfig: Object;
 
     constructor(
         private projectsDS: ProjectsDataService,
         private configSetsDS: ConfigSetsDataService,
-        private router: Router,
         private route: ActivatedRoute,
-        private notification : NotificationService
+        private notification : NotificationService,
+        private search: SearchService
     ) {
         this.project = {name: '', description: ''};
+        this.chosenConfig = null;
     }
 
     ngOnInit(): void {
@@ -47,10 +50,14 @@ export class ProjectComponent implements OnInit{
                 }
             )
         });
+        this.search.getSearchQuery().subscribe(x => {
+            this.searchText = (<HTMLInputElement>x.target).value;
+        });
         this.configSets = this.configSetsDS.getProjectConfigs(this.projectID).zone();
 
         $(document).ready(function () {
             $('.tooltipped').tooltip({delay: 50});
+            $('select').material_select();
         });
     }
 
@@ -72,5 +79,9 @@ export class ProjectComponent implements OnInit{
 
     deleteConfigSet(id) {
         this.configSetsDS.delete(id);
+    }
+
+    chooseConfig(configSet) {
+        this.chosenConfig = configSet;
     }
 }

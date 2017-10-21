@@ -1,7 +1,7 @@
 import {Observable} from "rxjs/Observable";
-import {Injectable, Input} from "@angular/core";
-import {ObservableCursor} from "meteor-rxjs";
+import {Injectable} from "@angular/core";
 import {FromEventObservable} from "rxjs/observable/FromEventObservable";
+import {Router} from "@angular/router";
 
 declare let $ : any;
 declare let Rx : any;
@@ -12,9 +12,14 @@ export class SearchService {
     query$ : any;
 
 
-    constructor() {
+    constructor(
+        private router: Router
+    ) {
         this.search = $('#main_search');
         this.query$ = Observable.fromEvent(this.search, 'keyup');
+        this.router.events.subscribe(x => {
+            this.search.val('');
+        })
     }
 
     public getSearchQuery() : FromEventObservable<Event> {
