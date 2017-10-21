@@ -39,3 +39,4 @@ This package contains:
 - Testing framework with Mocha and Chai
 - [Meteor-RxJS](http://angular-meteor.com/meteor-rxjs/) support and usage
 
+
