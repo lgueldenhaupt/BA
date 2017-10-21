@@ -9,6 +9,7 @@ import {Observable} from "rxjs/Observable";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
+import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 
 declare let $ :any;
 
@@ -83,5 +84,15 @@ export class ProjectComponent implements OnInit{
 
     chooseConfig(configSet) {
         this.chosenConfig = configSet;
+    }
+
+    dataInput(event) {
+        var input = event.srcElement.files;
+        let FR = new FileReader();
+        FR.onload = (ev : FileReaderEvent) => {
+            let result = ev.target.result ? ev.target.result : '';
+            console.log(result);
+        };
+        FR.readAsText(input[0]);
     }
 }
