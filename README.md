@@ -2,8 +2,8 @@
 
 ## Motivation
 
-This is a project for the bachelor thesis of Lukas G?ldenhaupt for the [Institute for Communications Technology](https://www.ifn.ing.tu-bs.de/en/ifn/sp/).
-Tutor for this is [Samy Elshamy] (https://www.ifn.ing.tu-bs.de/en/ifn/sp/elshamy/).
+This is a project for the bachelor thesis of Lukas Gueldenhaupt for the [Institute for Communications Technology](https://www.ifn.ing.tu-bs.de/en/ifn/sp/).
+Tutor for this is [Samy Elshamy](https://www.ifn.ing.tu-bs.de/en/ifn/sp/elshamy/).
 
 ## Idea
 
