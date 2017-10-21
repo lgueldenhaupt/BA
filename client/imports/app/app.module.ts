@@ -13,6 +13,7 @@ import {ProjectsDataService} from "./dashboard/projects-data.service";
 import {ConfigSetsDataService} from "../services/configsets-data.service";
 import {NotificationService} from "../services/notification.service";
 import {FilterPipe, ProjectFilterPipe} from "../helpers/filter.pipe";
+import {SearchService} from "../services/search.service";
 
 const appRoutes: Routes = [
     // {path: 'crisis-center', component: DemoComponent},
@@ -58,7 +59,8 @@ const appRoutes: Routes = [
         HeroDataService,
         ProjectsDataService,
         ConfigSetsDataService,
-        NotificationService
+        NotificationService,
+        SearchService
     ],
     // Modules
     imports: [

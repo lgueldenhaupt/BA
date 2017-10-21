@@ -6,6 +6,7 @@ import {Observable} from "rxjs/Observable";
 import {Project} from "../../../../both/models/project.model";
 import {Router} from "@angular/router";
 import {NotificationService} from "../../services/notification.service";
+import {SearchService} from "../../services/search.service";
 
 declare var $ :any;
 
@@ -19,11 +20,13 @@ export class DashboardComponent implements OnInit{
     projectName: string;
     projectDesc: string;
     projectID: string;
+    searchText: string;
 
     constructor(
         private projectsDS: ProjectsDataService,
         private router: Router,
-        private notification: NotificationService
+        private notification: NotificationService,
+        private search: SearchService
     ) {
         this.projectName = '';
         this.projectDesc = '';
@@ -32,6 +35,9 @@ export class DashboardComponent implements OnInit{
 
     ngOnInit(): void {
         this.projects = this.projectsDS.getData().zone();
+        this.search.getSearchQuery().subscribe(x => {
+            this.searchText = (<HTMLInputElement>x.target).value;
+        });
     }
 
     openAddProjectModal() {
@@ -53,6 +59,7 @@ export class DashboardComponent implements OnInit{
         $('#createModal_name').val('');
         $('#createModal_desc').val('');
         $('#modal1').modal('close');
+        this.notification.success("Project added")
     }
 
     deleteItem(id) {

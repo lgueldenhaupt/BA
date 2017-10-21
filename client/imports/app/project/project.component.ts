@@ -61,8 +61,13 @@ export class ProjectComponent implements OnInit{
     }
 
     createConfigSet(name, desc) {
+        if (name === '') {
+            this.notification.error("Please enter a name!");
+            return;
+        }
         this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID});
         this.notification.success("ConfigSet added");
+        $('.modal').modal('close');
     }
 
     deleteConfigSet(id) {
