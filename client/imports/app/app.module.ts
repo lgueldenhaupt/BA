@@ -4,9 +4,14 @@ import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./app.component";
 import {DemoComponent} from "./demo/demo.component";
 import {HeroesComponent} from "./Heroes/heroes.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
+import {ProjectComponent} from "./project/project.component";
 import {DemoDataService} from "./demo/demo-data.service";
 import {HeroDataService} from "./Heroes/hero-data.service";
 import {RouterModule, Routes} from '@angular/router';
+import {ProjectsDataService} from "./dashboard/projects-data.service";
+import {ConfigSetsDataService} from "../services/configsets-data.service";
+import {NotificationService} from "../services/notification.service";
 
 const appRoutes: Routes = [
     {path: 'crisis-center', component: DemoComponent},
@@ -16,9 +21,17 @@ const appRoutes: Routes = [
         component: HeroesComponent
     },
     {
+        path: 'dashboard',
+        component: DashboardComponent
+    },
+    {
+        path: 'project/:id',
+        component: ProjectComponent
+    },
+    {
         path: '',
-        redirectTo: '/heroes',
-        pathMatch: 'full'
+        redirectTo: '/dashboard',
+        pathMatch: 'prefix'
     },
     {path: '**', component: AppComponent}
 ];
@@ -28,7 +41,9 @@ const appRoutes: Routes = [
     declarations: [
         AppComponent,
         DemoComponent,
-        HeroesComponent
+        HeroesComponent,
+        DashboardComponent,
+        ProjectComponent
     ],
     // Entry Components
     entryComponents: [
@@ -37,7 +52,10 @@ const appRoutes: Routes = [
     // Providers
     providers: [
         DemoDataService,
-        HeroDataService
+        HeroDataService,
+        ProjectsDataService,
+        ConfigSetsDataService,
+        NotificationService
     ],
     // Modules
     imports: [

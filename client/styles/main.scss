@@ -1,4 +1,22 @@
 body, html {
   padding: 0;
   margin: 0;
+  height: 100%;
 }
+
+html {
+  height: 100%;
+}
+
+app {
+  height: 100%;
+}
+
+.pointer:hover {
+  cursor: pointer !important;
+}
+
+.top_space {
+  margin-top: 15px !important;
+}
+
