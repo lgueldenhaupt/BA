@@ -28,4 +28,8 @@ export class ProjectsDataService  {
         return proj;
     }
 
+    public updateProject(id, name, desc) {
+        ProjectsCollection.update({_id: id}, {name: name, description: desc});
+    }
+
 }

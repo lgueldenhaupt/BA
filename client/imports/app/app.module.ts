@@ -12,14 +12,15 @@ import {RouterModule, Routes} from '@angular/router';
 import {ProjectsDataService} from "./dashboard/projects-data.service";
 import {ConfigSetsDataService} from "../services/configsets-data.service";
 import {NotificationService} from "../services/notification.service";
+import {FilterPipe, ProjectFilterPipe} from "../helpers/filter.pipe";
 
 const appRoutes: Routes = [
-    {path: 'crisis-center', component: DemoComponent},
-    {path: 'hero', component: DemoComponent},
-    {
-        path: 'heroes',
-        component: HeroesComponent
-    },
+    // {path: 'crisis-center', component: DemoComponent},
+    // {path: 'hero', component: DemoComponent},
+    // {
+    //     path: 'heroes',
+    //     component: HeroesComponent
+    // },
     {
         path: 'dashboard',
         component: DashboardComponent
@@ -43,7 +44,9 @@ const appRoutes: Routes = [
         DemoComponent,
         HeroesComponent,
         DashboardComponent,
-        ProjectComponent
+        ProjectComponent,
+        ProjectFilterPipe,
+        FilterPipe
     ],
     // Entry Components
     entryComponents: [

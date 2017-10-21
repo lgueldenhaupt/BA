@@ -20,3 +20,13 @@ app {
   margin-top: 15px !important;
 }
 
+.flex_conti {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.card_space {
+  flex-grow: 1;
+  margin: 15px;
+}

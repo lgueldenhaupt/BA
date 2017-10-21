@@ -64,4 +64,8 @@ export class ProjectComponent implements OnInit{
         this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID});
         this.notification.success("ConfigSet added");
     }
+
+    deleteConfigSet(id) {
+        this.configSetsDS.delete(id);
+    }
 }
