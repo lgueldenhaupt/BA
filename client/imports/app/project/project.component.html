@@ -7,10 +7,10 @@
     </div>
 </div>
 <hr>
-<div *ngIf="chosenConfig === null">
+<div *ngIf="chosenConfig === null" class="center-align">
     <h5>Configuration Sets:</h5>
-    <div class="flex_conti">
-        <div class="card grey lighten-1 card_space" *ngFor="let set of configSets | async | projects: searchText">
+    <div class="flex_conti" *ngIf="(configSets | async)?.length > 0">
+        <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of configSets | async | projects: searchText">
             <div class="card-content pointer" (click)="chooseConfig(set)">
                 <span class="card-title">{{set.name}}</span>
                 <p class="">{{set.description}}</p>
@@ -22,6 +22,7 @@
             </div>
         </div>
     </div>
+    <span *ngIf="(configSets | async)?.length < 1" class="">No configs to display</span>
 </div>
 
 <div *ngIf="chosenConfig != null">

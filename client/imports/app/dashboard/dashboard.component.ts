@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit{
         private projectsDS: ProjectsDataService,
         private router: Router,
         private notification: NotificationService,
-        private search: SearchService
+        private search: SearchService,
     ) {
         this.projectName = '';
         this.projectDesc = '';
@@ -64,20 +64,23 @@ export class DashboardComponent implements OnInit{
 
     deleteItem(id) {
         this.projectsDS.delete(id);
+        this.notification.warning("Deleted")
     }
 
     editProject(id, name, description) {
+        //to open modal and set values
         if (this.projectDesc === '' && this.projectName === '' && this.projectID === '') {
             this.projectName = name;
             this.projectDesc = description;
             this.projectID = id;
             $('.modal').modal();
         } else {
-
+        //to close modal and safe work
             this.projectsDS.updateProject(this.projectID, this.projectName, this.projectDesc);
             this.projectName = '';
             this.projectDesc = '';
             this.projectID = '';
+            this.notification.success("Entry updated");
         }
     }
 

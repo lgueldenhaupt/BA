@@ -13,6 +13,18 @@ app {
   height: 100%;
 }
 
+.successToast {
+  color: #ffe082;
+}
+
+.errorToast {
+  color: #ff6f00;
+}
+
+.waringToast {
+  color: #ffb300;
+}
+
 .pointer:hover {
   cursor: pointer !important;
 }

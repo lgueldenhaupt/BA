@@ -3,7 +3,7 @@
     <div class="col s2"><button class="btn top_space modal-trigger grey darken-3" data-target="modal1" (click)="openAddProjectModal()">Add Project</button></div>
 </div>
 <div class="flex_conti">
-    <div class="card amber darken-1 card_space" *ngFor="let item of projects | async | projects: searchText">
+    <div class="card amber darken-1 card_space hoverable" *ngFor="let item of projects | async | projects: searchText">
         <div class="card-content pointer" (click)="openProject(item._id)">
             <span class="card-title">{{item.name}}</span>
             <p class="">{{item.description}}</p>

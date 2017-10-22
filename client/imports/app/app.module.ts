@@ -68,7 +68,7 @@ const appRoutes: Routes = [
         ConfigSetsDataService,
         NotificationService,
         SearchService,
-        ParamExtractor
+        ParamExtractor,
     ],
     // Modules
     imports: [
