@@ -4,12 +4,13 @@ import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import template from "./project.component.html";
 import style from "./project.component.scss";
 import {Project} from "../../../../both/models/project.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs/Observable";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
+import {ParamExtractor} from "../../helpers/param-extractor";
 
 declare let $ :any;
 
@@ -30,8 +31,10 @@ export class ProjectComponent implements OnInit{
         private projectsDS: ProjectsDataService,
         private configSetsDS: ConfigSetsDataService,
         private route: ActivatedRoute,
+        private router: Router,
         private notification : NotificationService,
-        private search: SearchService
+        private search: SearchService,
+        private parser: ParamExtractor
     ) {
         this.project = {name: '', description: ''};
         this.chosenConfig = null;
@@ -82,6 +85,10 @@ export class ProjectComponent implements OnInit{
         this.configSetsDS.delete(id);
     }
 
+    goToConfig(id) {
+        this.router.navigate(['/config', id]);
+    }
+
     chooseConfig(configSet) {
         this.chosenConfig = configSet;
     }
@@ -91,7 +98,8 @@ export class ProjectComponent implements OnInit{
         let FR = new FileReader();
         FR.onload = (ev : FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
-            console.log(result);
+            let parsed = this.parser.searchForParams(result);
+            console.log(parsed);
         };
         FR.readAsText(input[0]);
     }

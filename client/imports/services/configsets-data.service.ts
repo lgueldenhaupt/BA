@@ -27,4 +27,8 @@ export class ConfigSetsDataService {
         return ConfigSetsCollection.find({projectID: projectID});
     }
 
+    public getConfigById(ID): ObservableCursor<ConfigSet> {
+        return ConfigSetsCollection.find({_id: ID});
+    }
+
 }

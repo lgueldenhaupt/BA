@@ -14,6 +14,8 @@ import {ConfigSetsDataService} from "../services/configsets-data.service";
 import {NotificationService} from "../services/notification.service";
 import {FilterPipe, ProjectFilterPipe} from "../helpers/filter.pipe";
 import {SearchService} from "../services/search.service";
+import {ParamExtractor} from "../helpers/param-extractor";
+import {ConfigComponent} from "./config/config.component";
 
 const appRoutes: Routes = [
     // {path: 'crisis-center', component: DemoComponent},
@@ -31,6 +33,10 @@ const appRoutes: Routes = [
         component: ProjectComponent
     },
     {
+        path: 'config/:id',
+        component: ConfigComponent
+    },
+    {
         path: '',
         redirectTo: '/dashboard',
         pathMatch: 'prefix'
@@ -46,6 +52,7 @@ const appRoutes: Routes = [
         HeroesComponent,
         DashboardComponent,
         ProjectComponent,
+        ConfigComponent,
         ProjectFilterPipe,
         FilterPipe
     ],
@@ -60,7 +67,8 @@ const appRoutes: Routes = [
         ProjectsDataService,
         ConfigSetsDataService,
         NotificationService,
-        SearchService
+        SearchService,
+        ParamExtractor
     ],
     // Modules
     imports: [
