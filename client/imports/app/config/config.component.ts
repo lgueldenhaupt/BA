@@ -26,8 +26,8 @@ export class ConfigComponent implements OnInit{
         let self = this;
         this.route.params.subscribe(params =>{
             this.configID = params['id'];
-            let project$ = this.configDS.getConfigById(this.configID);
-            project$.subscribe(
+            let config$ = this.configDS.getConfigById(this.configID);
+            config$.subscribe(
                 data => {
                     self.config = data[0];
                 }
