@@ -4,6 +4,8 @@ import style from "./config.component.scss";
 import {ActivatedRoute} from "@angular/router";
 import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import {ConfigSet} from "../../../../both/models/configSet.model";
+import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
+import {ParamExtractor} from "../../helpers/param-extractor";
 
 declare let $ :any;
 
@@ -18,8 +20,10 @@ export class ConfigComponent implements OnInit{
 
     constructor(
         private route: ActivatedRoute,
-        private configDS: ConfigSetsDataService
+        private configDS: ConfigSetsDataService,
+        private parser: ParamExtractor
     ) {
+        this.config = {name: '', projectID: '', description: '', params: []}
     }
 
     ngOnInit(): void {
@@ -33,5 +37,16 @@ export class ConfigComponent implements OnInit{
                 }
             )
         });
+    }
+
+    public dataInput(event) {
+        var input = event.srcElement.files;
+        let FR = new FileReader();
+        FR.onload = (ev : FileReaderEvent) => {
+            let result = ev.target.result ? ev.target.result : '';
+            let parsed = this.parser.searchForParams(result);
+            this.config.params = parsed;
+        };
+        FR.readAsText(input[0]);
     }
 }

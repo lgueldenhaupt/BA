@@ -9,8 +9,6 @@ import {Observable} from "rxjs/Observable";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
-import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
-import {ParamExtractor} from "../../helpers/param-extractor";
 
 declare let $ :any;
 
@@ -34,7 +32,6 @@ export class ProjectComponent implements OnInit{
         private router: Router,
         private notification : NotificationService,
         private search: SearchService,
-        private parser: ParamExtractor
     ) {
         this.project = {name: '', description: ''};
         this.chosenConfig = null;
@@ -91,16 +88,5 @@ export class ProjectComponent implements OnInit{
 
     chooseConfig(configSet) {
         this.chosenConfig = configSet;
-    }
-
-    dataInput(event) {
-        var input = event.srcElement.files;
-        let FR = new FileReader();
-        FR.onload = (ev : FileReaderEvent) => {
-            let result = ev.target.result ? ev.target.result : '';
-            let parsed = this.parser.searchForParams(result);
-            console.log(parsed);
-        };
-        FR.readAsText(input[0]);
     }
 }

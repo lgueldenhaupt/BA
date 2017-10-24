@@ -1,13 +1,40 @@
 <div class="row">
+    <!-----------------------Left Area------------------------->
     <div class="col s2">
-        Left
-    </div>
-    <div class="col s8">
-        Config Site {{config.name}}
     </div>
 
+    <!----------------------Main Area------------------------->
+    <div class="col s8">
+        <h4>{{config.name}}</h4>
+        <div class="file-field input-field">
+            <div class="btn grey darken-3">
+                <span>Add</span>
+                <input type="file" (change)="dataInput($event)">
+            </div>
+            <div class="file-path-wrapper">
+                <input class="file-path validate" type="text">
+            </div>
+        </div>
+        <table class="highlight">
+            <thead>
+            <tr>
+                <th>Param</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let paramSet of config.params">
+                <td>{{paramSet.param}}</td>
+                <td>{{paramSet.value}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <!----------------------Right Area------------------------->
     <div class="col s2">
-        Right
     </div>
 </div>
 

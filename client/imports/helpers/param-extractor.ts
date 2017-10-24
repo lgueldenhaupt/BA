@@ -1,7 +1,8 @@
+import {ParamSet} from "../../../both/models/paramSet";
 
 export class ParamExtractor {
 
-    public searchForParams(input: string): Object[] {
+    public searchForParams(input: string): ParamSet[] {
         let splitByMinus;
         splitByMinus = input.split('-');
         return this.separateParamFromValue(splitByMinus);
@@ -16,7 +17,7 @@ export class ParamExtractor {
                     let param = splitted[0];
                     let value = splitted[1];
                     if (param.length > 0) {
-                        result.push({param: param, value: value});
+                        result.push(new ParamSet(param, value));
                     }
                 }
             }
