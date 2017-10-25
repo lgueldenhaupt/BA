@@ -73,7 +73,7 @@ export class ProjectComponent implements OnInit{
             this.notification.error("Please enter a name!");
             return;
         }
-        this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID});
+        this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID, params: []});
         this.notification.success("ConfigSet added");
         $('.modal').modal('close');
     }

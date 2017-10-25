@@ -6,6 +6,7 @@ import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import {ParamExtractor} from "../../helpers/param-extractor";
+import {NotificationService} from "../../services/notification.service";
 
 declare let $ :any;
 
@@ -17,13 +18,19 @@ declare let $ :any;
 export class ConfigComponent implements OnInit{
     private configID: string;
     private config: ConfigSet;
+    private pureText: string;
+    private canSafe: boolean;
+    private hideText: boolean;
 
     constructor(
         private route: ActivatedRoute,
         private configDS: ConfigSetsDataService,
-        private parser: ParamExtractor
+        private parser: ParamExtractor,
+        private notification: NotificationService
     ) {
-        this.config = {name: '', projectID: '', description: '', params: []}
+        this.config = {name: '', projectID: '', description: '', params: []};
+        this.canSafe = false;
+        this.hideText = true;
     }
 
     ngOnInit(): void {
@@ -37,6 +44,10 @@ export class ConfigComponent implements OnInit{
                 }
             )
         });
+
+        $(document).ready(function(){
+            $('.collapsible').collapsible();
+        });
     }
 
     public dataInput(event) {
@@ -44,9 +55,24 @@ export class ConfigComponent implements OnInit{
         let FR = new FileReader();
         FR.onload = (ev : FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
-            let parsed = this.parser.searchForParams(result);
-            this.config.params = parsed;
+            this.pureText = result;
+            this.config.params = this.parser.searchForParams(result);
+            this.canSafe = true;
         };
         FR.readAsText(input[0]);
+    }
+
+    public saveChanges() {
+        this.configDS.updateConfig(this.configID, this.config);
+        this.notification.success("Config updated");
+        this.canSafe = false;
+    }
+
+    public changedAttr() {
+        this.canSafe = true;
+    }
+
+    public toggleText() {
+        this.hideText = !this.hideText;
     }
 }

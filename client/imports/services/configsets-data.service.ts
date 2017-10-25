@@ -31,4 +31,8 @@ export class ConfigSetsDataService {
         return ConfigSetsCollection.find({_id: ID});
     }
 
+    public updateConfig(ID, config : ConfigSet) {
+        ConfigSetsCollection.update({_id: ID}, config);
+    }
+
 }
