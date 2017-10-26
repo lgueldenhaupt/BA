@@ -13,6 +13,7 @@ import {SearchService} from "../services/search.service";
 import {ParamExtractor} from "../helpers/param-extractor";
 import {ConfigComponent} from "./config/config.component";
 import {MappingComponent} from "./mapping/mapping.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 const appRoutes: Routes = [
     {
@@ -66,6 +67,7 @@ const appRoutes: Routes = [
     imports: [
         BrowserModule,
         FormsModule,
+        BrowserAnimationsModule,
         RouterModule.forRoot(
             appRoutes,
         )

@@ -1,18 +1,43 @@
 import { Component, OnInit } from "@angular/core";
 import {ProjectsDataService} from "./projects-data.service";
 import template from "./dashboard.component.html";
-import style from "./dashboard.component.scss";
+import styleScss from "./dashboard.component.scss";
 import {Observable} from "rxjs/Observable";
 import {Project} from "../../../../both/models/project.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
+import {trigger, state, style, animate, transition} from "@angular/animations";
 
 declare var $ :any;
 
 @Component({
     selector: "dashboard",
     template,
-    styles: [ style ]
+    styles: [ styleScss ],
+    animations: [
+        trigger('fadeIn', [
+            transition(':enter', [
+                style({ opacity: '0' }),
+                animate('.5s ease-out', style({ opacity: '1' })),
+            ]),
+        ]),
+        trigger('flyInOut', [
+            state('in', style({opacity: 1, transform: 'translateX(0)'})),
+            transition('void => *', [
+                style({
+                    opacity: 0,
+                    transform: 'translateY(100%)'
+                }),
+                animate('0.1s ease-in')
+            ]),
+            transition('* => void', [
+                animate('0.1s 0.5s ease-out', style({
+                    opacity: 0,
+                    transform: 'translateX(100%)'
+                }))
+            ])
+        ])
+    ]
 })
 export class DashboardComponent implements OnInit{
     projects: Observable<Project[]>;
