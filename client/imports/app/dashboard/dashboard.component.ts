@@ -4,7 +4,6 @@ import template from "./dashboard.component.html";
 import style from "./dashboard.component.scss";
 import {Observable} from "rxjs/Observable";
 import {Project} from "../../../../both/models/project.model";
-import {Router} from "@angular/router";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
 
@@ -24,7 +23,6 @@ export class DashboardComponent implements OnInit{
 
     constructor(
         private projectsDS: ProjectsDataService,
-        private router: Router,
         private notification: NotificationService,
         private search: SearchService,
     ) {
@@ -44,10 +42,6 @@ export class DashboardComponent implements OnInit{
         $(document).ready(function(){
             $('.modal').modal();
         });
-    }
-
-    openProject(ID) {
-        this.router.navigate(['/project', ID]);
     }
 
     createProject(name, description) {

@@ -5,7 +5,7 @@
     </div>
     <div class="flex_conti">
         <div class="card amber darken-1 card_space hoverable" *ngFor="let item of projects | async | projects: searchText">
-            <div class="card-content pointer" (click)="openProject(item._id)">
+            <div class="card-content pointer" routerLink="/project/{{item._id}}">
                 <span class="card-title">{{item.name}}</span>
                 <p class="">{{item.description}}</p>
             </div>
