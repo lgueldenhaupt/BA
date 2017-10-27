@@ -7,6 +7,7 @@ import {Project} from "../../../../both/models/project.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
 import {trigger, state, style, animate, transition} from "@angular/animations";
+import {Router} from "@angular/router";
 
 declare var $ :any;
 
@@ -15,25 +16,19 @@ declare var $ :any;
     template,
     styles: [ styleScss ],
     animations: [
-        trigger('fadeIn', [
-            transition(':enter', [
-                style({ opacity: '0' }),
-                animate('.5s ease-out', style({ opacity: '1' })),
-            ]),
-        ]),
-        trigger('flyInOut', [
-            state('in', style({opacity: 1, transform: 'translateX(0)'})),
+        trigger('growShrink', [
+            state('in', style({opacity: 1, transform: 'scale(1.0)'})),
             transition('void => *', [
                 style({
                     opacity: 0,
-                    transform: 'translateY(100%)'
+                    transform: 'scale(0.1)'
                 }),
-                animate('0.1s ease-in')
+                animate('0.4s ease-in')
             ]),
             transition('* => void', [
-                animate('0.1s 0.5s ease-out', style({
+                animate('0.2s 0.2s ease-out', style({
                     opacity: 0,
-                    transform: 'translateX(100%)'
+                    transform: 'scale(0.1)'
                 }))
             ])
         ])
@@ -50,6 +45,7 @@ export class DashboardComponent implements OnInit{
         private projectsDS: ProjectsDataService,
         private notification: NotificationService,
         private search: SearchService,
+        private router: Router
     ) {
         this.projectName = '';
         this.projectDesc = '';
@@ -67,6 +63,10 @@ export class DashboardComponent implements OnInit{
         $(document).ready(function(){
             $('.modal').modal();
         });
+    }
+
+    openProject(ID) {
+        this.router.navigate(['/project', ID]);
     }
 
     createProject(name, description) {

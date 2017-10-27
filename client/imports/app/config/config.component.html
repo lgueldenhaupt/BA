@@ -12,7 +12,7 @@
                 <div class="collapsible-header"><h3>{{config.name}}</h3></div>
                 <div class="collapsible-body grey lighten-4">
                     <div class="input-field">
-                        <input placeholder="Placeholder" id="name" type="text" class="validate" [(ngModel)]="config.name" (input)="changedAttr()">
+                        <input placeholder="Placeholder" id="name" type="text" minlength="3" required class="validate" [(ngModel)]="config.name" (input)="changedAttr()">
                         <label for="name">Change Name</label>
                     </div>
                 </div>
