@@ -9,6 +9,7 @@ import {Observable} from "rxjs/Observable";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
+import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 
 declare let $ :any;
 
@@ -75,7 +76,10 @@ export class ProjectComponent implements OnInit{
         }
         this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID, params: []});
         this.notification.success("ConfigSet added");
-        $('.modal').modal('close');
+        if ($('.modal').modal()) {
+            $('.modal').modal('close');
+        }
+
     }
 
     deleteConfigSet(id) {
@@ -88,5 +92,31 @@ export class ProjectComponent implements OnInit{
 
     chooseConfig(configSet) {
         this.chosenConfig = configSet;
+    }
+
+    onDrop(e) {
+        let file = e.dataTransfer.files[0];
+        e.preventDefault();
+        let card = document.getElementById('dropCard');
+        card.className = 'card amber accent-2 dropCard';
+        let FR = new FileReader();
+        FR.onload = (ev : FileReaderEvent) => {
+            let result = ev.target.result ? ev.target.result : '';
+        };
+        FR.readAsText(file);
+        this.createConfigSet(file.name, file.lastModifiedDate);
+    }
+
+    onDragOver(e) {
+        let card = document.getElementById('dropCard');
+        card.className = 'card amber accent-4 dropCard';
+        e.preventDefault();
+        return false;
+    }
+
+    onDragLeave(e) {
+        let card = document.getElementById('dropCard');
+        card.className = 'card amber accent-2 dropCard';
+        return false;
     }
 }

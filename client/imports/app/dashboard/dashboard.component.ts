@@ -8,6 +8,7 @@ import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
 import {trigger, state, style, animate, transition} from "@angular/animations";
 import {Router} from "@angular/router";
+import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 
 declare var $ :any;
 
@@ -40,6 +41,7 @@ export class DashboardComponent implements OnInit{
     projectDesc: string;
     projectID: string;
     searchText: string;
+    dropOverlayActive: boolean;
 
     constructor(
         private projectsDS: ProjectsDataService,
@@ -50,6 +52,9 @@ export class DashboardComponent implements OnInit{
         this.projectName = '';
         this.projectDesc = '';
         this.projectID = '';
+
+
+
     }
 
     ngOnInit(): void {
