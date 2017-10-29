@@ -10,6 +10,7 @@ import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
+import {ParamExtractor} from "../../helpers/param-extractor";
 
 declare let $ :any;
 
@@ -33,6 +34,7 @@ export class ProjectComponent implements OnInit{
         private router: Router,
         private notification : NotificationService,
         private search: SearchService,
+        private parser: ParamExtractor
     ) {
         this.project = {name: '', description: ''};
         this.chosenConfig = null;
@@ -69,12 +71,12 @@ export class ProjectComponent implements OnInit{
         });
     }
 
-    createConfigSet(name, desc) {
+    createConfigSet(name, desc, params) {
         if (name === '') {
             this.notification.error("Please enter a name!");
             return;
         }
-        this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID, params: []});
+        this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID, params: params});
         this.notification.success("ConfigSet added");
         if ($('.modal').modal()) {
             $('.modal').modal('close');
@@ -102,9 +104,10 @@ export class ProjectComponent implements OnInit{
         let FR = new FileReader();
         FR.onload = (ev : FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
+            let params = this.parser.searchForParams(result);
+            this.createConfigSet(file.name, file.lastModifiedDate, params);
         };
         FR.readAsText(file);
-        this.createConfigSet(file.name, file.lastModifiedDate);
     }
 
     onDragOver(e) {

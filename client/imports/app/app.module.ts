@@ -14,11 +14,16 @@ import {ParamExtractor} from "../helpers/param-extractor";
 import {ConfigComponent} from "./config/config.component";
 import {MappingComponent} from "./mapping/mapping.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {LoginComponent} from "./login/login.component";
 
 const appRoutes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent
+    },
+    {
+        path: 'login',
+        component: LoginComponent
     },
     {
         path: 'mapping',
@@ -44,6 +49,7 @@ const appRoutes: Routes = [
     // Components, Pipes, Directive
     declarations: [
         AppComponent,
+        LoginComponent,
         DashboardComponent,
         ProjectComponent,
         ConfigComponent,
