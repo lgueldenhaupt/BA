@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import {ProjectsDataService} from "../dashboard/projects-data.service";
+import {ProjectsDataService} from "../../services/projects-data.service";
 import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import template from "./project.component.html";
 import style from "./project.component.scss";
@@ -11,6 +11,7 @@ import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import {ParamExtractor} from "../../helpers/param-extractor";
+import undefined = Match.undefined;
 
 declare let $ :any;
 
@@ -76,8 +77,14 @@ export class ProjectComponent implements OnInit{
             this.notification.error("Please enter a name!");
             return;
         }
-        this.configSetsDS.addData({name: name, description: desc, projectID: this.projectID, params: params});
-        this.notification.success("ConfigSet added");
+        this.configSetsDS.addConfig({name: name, description: desc, projectID: this.projectID, params: params}).subscribe((newID) => {
+            if (newID != '' || newID != undefined) {
+                this.notification.success("ConfigSet added");
+            }
+            else {
+                this.notification.error("Could not add Config Set");
+            }
+        });
         if ($('.modal').modal()) {
             $('.modal').modal('close');
         }
@@ -85,7 +92,13 @@ export class ProjectComponent implements OnInit{
     }
 
     deleteConfigSet(id) {
-        this.configSetsDS.delete(id);
+        this.configSetsDS.delete(id).subscribe((changedEntries) => {
+            if (changedEntries === 1) {
+                this.notification.success("ConfigSet deleted");
+            } else {
+                this.notification.error("ConfigSet not deleted");
+            }
+        });
     }
 
     goToConfig(id) {

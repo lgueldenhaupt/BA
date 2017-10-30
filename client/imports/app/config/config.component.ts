@@ -18,6 +18,7 @@ declare let $ :any;
 export class ConfigComponent implements OnInit{
     private configID: string;
     private config: ConfigSet;
+    private changedConfig: ConfigSet;
     private pureText: string;
     private canSafe: boolean;
     private hideText: boolean;
@@ -26,9 +27,10 @@ export class ConfigComponent implements OnInit{
         private route: ActivatedRoute,
         private configDS: ConfigSetsDataService,
         private parser: ParamExtractor,
-        private notification: NotificationService
+        private notification: NotificationService,
     ) {
         this.config = {name: '', projectID: '', description: '', params: []};
+        this.changedConfig = {name: '', projectID: '', description: '', params: []};
         this.canSafe = false;
         this.hideText = true;
     }
@@ -63,8 +65,15 @@ export class ConfigComponent implements OnInit{
     }
 
     public saveChanges() {
-        this.configDS.updateConfig(this.configID, this.config);
-        this.notification.success("Config updated");
+        this.configDS.updateConfig(this.configID, this.config).subscribe((n) => {
+            if (n == 1) {
+                this.notification.success("Config updated");
+            } else {
+                this.notification.error("Could not update");
+            }
+        }, (err) => {
+            console.log(err)
+        });
         this.canSafe = false;
     }
 

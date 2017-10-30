@@ -18,7 +18,7 @@
 
                 <div class="card-action">
                     <a (click)="deleteItem(item._id)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
-                    <a (click)="editProject(item._id, item.name, item.description)" class="secondary-content right modal-trigger" data-target="editModal"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                    <a (click)="openEditModal(item._id, item.name, item.description)" class="secondary-content right modal-trigger" data-target="editModal"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
                 </div>
             </div>
         </div>
@@ -57,6 +57,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="modal-action modal-close waves-effect waves-green btn-flat" (click)="editProject(id, name.value, desc.value)">Edit</button>
+        <button class="modal-action modal-close waves-effect waves-green btn-flat" (click)="editProject()">Edit</button>
     </div>
 </div>

@@ -5,7 +5,7 @@ import {AppComponent} from "./app.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ProjectComponent} from "./project/project.component";
 import {RouterModule, Routes} from '@angular/router';
-import {ProjectsDataService} from "./dashboard/projects-data.service";
+import {ProjectsDataService} from "../services/projects-data.service";
 import {ConfigSetsDataService} from "../services/configsets-data.service";
 import {NotificationService} from "../services/notification.service";
 import {FilterPipe, ProjectFilterPipe} from "../helpers/filter.pipe";
