@@ -12,6 +12,7 @@ import {SearchService} from "../../services/search.service";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import {ParamExtractor} from "../../helpers/param-extractor";
 import undefined = Match.undefined;
+import {ConfirmationModalService} from "../../services/confirmationModal.service";
 
 declare let $ :any;
 
@@ -35,7 +36,8 @@ export class ProjectComponent implements OnInit{
         private router: Router,
         private notification : NotificationService,
         private search: SearchService,
-        private parser: ParamExtractor
+        private parser: ParamExtractor,
+        private confirm: ConfirmationModalService
     ) {
         this.project = {name: '', description: ''};
         this.chosenConfig = null;
@@ -91,12 +93,16 @@ export class ProjectComponent implements OnInit{
 
     }
 
-    deleteConfigSet(id) {
-        this.configSetsDS.delete(id).subscribe((changedEntries) => {
-            if (changedEntries === 1) {
-                this.notification.success("ConfigSet deleted");
-            } else {
-                this.notification.error("ConfigSet not deleted");
+    deleteConfigSet(id, name) {
+        this.confirm.openModal('Delete ' + name, "Do you really want to delete that config?").then((fullfilled) => {
+            if (fullfilled) {
+                this.configSetsDS.delete(id).subscribe((changedEntries) => {
+                    if (changedEntries === 1) {
+                        this.notification.success("ConfigSet deleted");
+                    } else {
+                        this.notification.error("ConfigSet not deleted");
+                    }
+                });
             }
         });
     }

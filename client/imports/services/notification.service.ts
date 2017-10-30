@@ -18,4 +18,6 @@ export class NotificationService {
     public warning(message) {
         Materialize.toast(message, 4000);
     }
+
+    
 }

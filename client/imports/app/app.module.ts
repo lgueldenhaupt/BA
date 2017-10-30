@@ -15,6 +15,7 @@ import {ConfigComponent} from "./config/config.component";
 import {MappingComponent} from "./mapping/mapping.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from "./login/login.component";
+import {ConfirmationModalService} from "../services/confirmationModal.service";
 
 const appRoutes: Routes = [
     {
@@ -66,6 +67,7 @@ const appRoutes: Routes = [
         ProjectsDataService,
         ConfigSetsDataService,
         NotificationService,
+        ConfirmationModalService,
         SearchService,
         ParamExtractor,
     ],

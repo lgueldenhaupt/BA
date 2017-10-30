@@ -10,6 +10,7 @@ import {trigger, state, style, animate, transition} from "@angular/animations";
 import {Router} from "@angular/router";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import undefined = Match.undefined;
+import {ConfirmationModalService} from "../../services/confirmationModal.service";
 
 declare var $ :any;
 
@@ -47,7 +48,8 @@ export class DashboardComponent implements OnInit{
         private projectsDS: ProjectsDataService,
         private notification: NotificationService,
         private search: SearchService,
-        private router: Router
+        private router: Router,
+        private confirmation: ConfirmationModalService
     ) {
         this.projectName = '';
         this.projectDesc = '';
@@ -89,15 +91,18 @@ export class DashboardComponent implements OnInit{
 
     }
 
-    deleteItem(id) {
-        this.projectsDS.delete(id).subscribe((removedItems) => {
-            if (removedItems === 1) {
-                this.notification.warning("Deleted");
-            } else {
-                this.notification.error("Could not delete Project");
+    deleteItem(id, name) {
+        this.confirmation.openModal('Delete ' + name, 'Do you really want to delete this project?').then((fullfilled) => {
+            if (fullfilled) {
+                this.projectsDS.delete(id).subscribe((removedItems) => {
+                    if (removedItems === 1) {
+                        this.notification.warning("Deleted");
+                    } else {
+                        this.notification.error("Could not delete Project");
+                    }
+                });
             }
         });
-
     }
 
     openEditModal(id, name, description) {
@@ -114,5 +119,4 @@ export class DashboardComponent implements OnInit{
         this.projectID = '';
         this.notification.success("Entry updated");
     }
-
 }
