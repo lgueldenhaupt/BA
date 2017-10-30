@@ -24,10 +24,8 @@ export class ConfirmationModalService {
             $('body').append(template);
 
             //clear and reset title and content
-            $('#confirm_modal_title').empty();
-            $('#confirm_modal_content').empty();
-            $('#confirm_modal_title').append(title);
-            $('#confirm_modal_content').append(content);
+            $('#confirm_modal_title').empty().append(title);
+            $('#confirm_modal_content').empty().append(content);
 
             //init modal with modal options
             $('.modal').modal({

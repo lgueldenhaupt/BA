@@ -28,6 +28,7 @@ export class ProjectComponent implements OnInit{
     configSets: Observable<ConfigSet[]>;
     searchText: string;
     chosenConfig: Object;
+    view: number;
 
     constructor(
         private projectsDS: ProjectsDataService,
@@ -41,6 +42,7 @@ export class ProjectComponent implements OnInit{
     ) {
         this.project = {name: '', description: ''};
         this.chosenConfig = null;
+        this.view = 0;
     }
 
     ngOnInit(): void {
@@ -124,7 +126,7 @@ export class ProjectComponent implements OnInit{
         FR.onload = (ev : FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
             let params = this.parser.searchForParams(result);
-            this.createConfigSet(file.name, file.lastModifiedDate, params);
+            this.createConfigSet(file.name, file.lastModifiedDate + '', params);
         };
         FR.readAsText(file);
     }
@@ -140,5 +142,11 @@ export class ProjectComponent implements OnInit{
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-2 dropCard';
         return false;
+    }
+
+    changeView(value: number) {
+        if (value >= 0 && value <=1) {
+            this.view = value;
+        }
     }
 }

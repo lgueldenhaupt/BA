@@ -13,20 +13,47 @@
         </div>
         <hr>
         <div *ngIf="chosenConfig === null" class="center-align">
-            <h5>Configuration Sets:</h5>
-            <div class="flex_conti" *ngIf="(configSets | async)?.length > 0">
-                <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of configSets | async | projects: searchText">
-                    <div class="card-content pointer" (click)="chooseConfig(set)">
-                        <span class="card-title">{{set.name}}</span>
-                        <p class="">{{set.description}}</p>
-                    </div>
+            <h5>Configurations:</h5>
 
-                    <div class="card-action">
-                        <a (click)="deleteConfigSet(set._id, set.name)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
-                        <a (click)="goToConfig(set._id)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+            <div *ngIf="view == 0">
+                <div class="flex_conti" *ngIf="(configSets | async)?.length > 0">
+                    <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of configSets | async | projects: searchText">
+                        <div class="card-content pointer" (click)="chooseConfig(set)">
+                            <span class="card-title">{{set.name}}</span>
+                            <p class="">{{set.description}}</p>
+                        </div>
+
+                        <div class="card-action">
+                            <a (click)="deleteConfigSet(set._id, set.name)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
+                            <a (click)="goToConfig(set._id)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div *ngIf="view == 1">
+                <table class="highlight">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr *ngFor="let set of configSets | async | projects: searchText">
+                        <td (click)="chooseConfig(set)" class="pointer">{{set.name}}</td>
+                        <td (click)="chooseConfig(set)" class="pointer">{{set.description}}</td>
+                        <td>
+                            <a (click)="deleteConfigSet(set._id, set.name)"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
+                            <a (click)="goToConfig(set._id)"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <span *ngIf="(configSets | async)?.length < 1" class="">No configs to display</span>
         </div>
 
@@ -78,6 +105,21 @@
                 <p>Drop a config file here to create a new config</p>
             </div>
             <div class="card-action">
+            </div>
+        </div>
+        <div class="card grey lighten-3">
+            <div class="card-content">
+                <span class="card-title">View</span>
+                <form action="#">
+                    <p>
+                        <input name="group1" type="radio" id="card" checked (change)="changeView(0)"/>
+                        <label for="card" class="grey-text">Card</label>
+                    </p>
+                    <p>
+                        <input name="group1" type="radio" id="list" (change)="changeView(1)"/>
+                        <label for="list">List</label>
+                    </p>
+                </form>
             </div>
         </div>
     </div>

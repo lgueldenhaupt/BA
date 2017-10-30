@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit{
     }
 
     deleteItem(id, name) {
-        this.confirmation.openModal('Delete ' + name, 'Do you really want to delete this project?').then((fullfilled) => {
+        this.confirmation.openModal('Delete ' + name, 'Do you really want to delete this project? <br>All related configs will be deleted too!').then((fullfilled) => {
             if (fullfilled) {
                 this.projectsDS.delete(id).subscribe((removedItems) => {
                     if (removedItems === 1) {

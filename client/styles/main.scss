@@ -73,3 +73,15 @@ app {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
   background-color: #616161;
 }
+
+[type="radio"]:checked + label:after, [type="radio"].with-gap:checked + label:after {
+  background-color: #757575 !important;
+}
+
+[type="radio"]:checked + label:after, [type="radio"].with-gap:checked + label:before, [type="radio"].with-gap:checked + label:after {
+  border: 2px solid #424242 !important;
+}
+
+[type="radio"]:not(:checked) + label:before, [type="radio"]:not(:checked) + label:after {
+  border: 2px solid #424242 !important;
+}
