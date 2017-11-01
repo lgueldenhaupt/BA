@@ -7,6 +7,7 @@ import {ConfigSet} from "../../../../both/models/configSet.model";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import {ParamExtractor} from "../../helpers/param-extractor";
 import {NotificationService} from "../../services/notification.service";
+import {MappingsDataService} from "../../services/mappings-data.service";
 
 declare let $ :any;
 
@@ -18,7 +19,6 @@ declare let $ :any;
 export class ConfigComponent implements OnInit{
     private configID: string;
     private config: ConfigSet;
-    private changedConfig: ConfigSet;
     private pureText: string;
     private canSafe: boolean;
     private hideText: boolean;
@@ -26,11 +26,11 @@ export class ConfigComponent implements OnInit{
     constructor(
         private route: ActivatedRoute,
         private configDS: ConfigSetsDataService,
+        private mappingDS: MappingsDataService,
         private parser: ParamExtractor,
         private notification: NotificationService,
     ) {
-        this.config = {name: '', projectID: '', description: '', params: []};
-        this.changedConfig = {name: '', projectID: '', description: '', params: []};
+        this.config = {name: '', projectID: '', description: '', params: [], mappingID: ''};
         this.canSafe = false;
         this.hideText = true;
     }
@@ -83,5 +83,27 @@ export class ConfigComponent implements OnInit{
 
     public toggleText() {
         this.hideText = !this.hideText;
+    }
+
+    public assignToMapping() {
+
+    }
+
+    public createMapping() {
+        this.mappingDS.addMappingFromConfig(this.config.name + ' Mapping', this.config.params).subscribe(
+            (mappingID) => {
+                if (mappingID != '' && mappingID != undefined) {
+                    this.notification.success('Mapping added');
+                    // this.config.mappingID = mappingID;
+                    // this.configDS.updateConfig(this.configID, this.config).subscribe(
+                    //     (changedDocuments) => {
+                    //         if (changedDocuments === 1) {
+                    //             this.notification.success("Updated config");
+                    //         }
+                    //     }
+                    // );
+                }
+            }
+        );
     }
 }

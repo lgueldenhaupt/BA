@@ -21,7 +21,7 @@
                 <div class="collapsible-header">{{config.description}}</div>
                 <div class="collapsible-body grey lighten-4">
                     <div class="input-field">
-                        <textarea placeholder="Placeholder" id="desc" type="text" class="validate materialize-textarea" [(ngModel)]="config.description" (input)="changedAttr()">
+                        <textarea placeholder="Placeholder" id="desc" type="text" class="validate materialize-textarea" [(ngModel)]="config.description" (input)="changedAttr()"></textarea>
                         <label for="desc">Change Description</label>
                     </div>
                 </div>
@@ -77,6 +77,16 @@
                 Whenever you changed something you can save your changes to update the database.</p>
             </div>
             <div class="card-action">
+            </div>
+        </div>
+        <div class="card amber accent-2">
+            <div class="card-content">
+                <span class="card-title">Related Mapping</span>
+                <p>No mapping assigned yet.</p>
+            </div>
+            <div class="card-action">
+                <button class="btn grey darken-1 waves-effect s_top_space" (click)="assignToMapping()">Assign</button>
+                <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()">Create</button>
             </div>
         </div>
     </div>

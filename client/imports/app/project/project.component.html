@@ -1,7 +1,10 @@
 <div class="row">
+    <!----------------Left Side----------------------->
     <div class="col s2">
-
+        <configFilter [projectID]="projectID"></configFilter>
     </div>
+
+    <!-----------------Middle------------------------->
     <div class="col s8">
         <div class="row">
             <div class="col s10">
@@ -70,27 +73,15 @@
             <table class="highlight">
                 <thead>
                 <tr>
-                    <th>ResultID</th>
-                    <th>Result Name</th>
-                    <th>Result Error</th>
+                    <th>Parameter</th>
+                    <th>Value</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                <tr>
-                    <td>Alvin</td>
-                    <td>Eclair</td>
-                    <td>$0.87</td>
-                </tr>
-                <tr>
-                    <td>Alan</td>
-                    <td>Jellybean</td>
-                    <td>$3.76</td>
-                </tr>
-                <tr>
-                    <td>Jonathan</td>
-                    <td>Lollipop</td>
-                    <td>$7.00</td>
+                <tr *ngFor="let paramSet of chosenConfig.params">
+                    <td>{{paramSet.param}}</td>
+                    <td>{{paramSet.value}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -123,7 +114,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
 
 

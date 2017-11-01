@@ -5,4 +5,5 @@ export interface ConfigSet {
     description: string;
     projectID: string;
     params: ParamSet[];
+    mappingID: string;
 }

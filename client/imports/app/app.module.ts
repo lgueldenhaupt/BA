@@ -16,6 +16,8 @@ import {MappingComponent} from "./mapping/mapping.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from "./login/login.component";
 import {ConfirmationModalService} from "../services/confirmationModal.service";
+import {ConfigFilterComponent} from "./configFilter/configFilter.component";
+import {MappingsDataService} from "../services/mappings-data.service";
 
 const appRoutes: Routes = [
     {
@@ -55,6 +57,7 @@ const appRoutes: Routes = [
         ProjectComponent,
         ConfigComponent,
         MappingComponent,
+        ConfigFilterComponent,
         ProjectFilterPipe,
         FilterPipe
     ],
@@ -66,6 +69,7 @@ const appRoutes: Routes = [
     providers: [
         ProjectsDataService,
         ConfigSetsDataService,
+        MappingsDataService,
         NotificationService,
         ConfirmationModalService,
         SearchService,
