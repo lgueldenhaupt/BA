@@ -33,6 +33,10 @@ const appRoutes: Routes = [
         component: MappingComponent
     },
     {
+        path: 'mapping/:id',
+        component: MappingComponent
+    },
+    {
         path: 'project/:id',
         component: ProjectComponent
     },

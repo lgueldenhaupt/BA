@@ -8,7 +8,7 @@
     <div class="col s8">
         <h4 *ngIf="!selectedMapping" class="center-align grey-text">Nothing selected</h4>
         <h4 *ngIf="selectedMapping" class="center-align">{{selectedMapping.name}}</h4>
-        <table *ngIf="selectedMapping" class="highlight">
+        <table *ngIf="selectedMapping" class="highlight bordered">
             <thead>
             <th>Parameter Key</th>
             <th>Aliases</th>
@@ -16,7 +16,7 @@
             <tbody>
                 <tr *ngFor="let param of selectedMapping.params">
                     <td>{{param.key}}</td>
-                    <td>
+                    <td (drop)="drop($event)" (dragover)="allowDrop($event)">
                         <ul>
                             <li *ngFor="let alias of param.aliases">{{alias}}</li>
                         </ul>
@@ -26,11 +26,20 @@
         </table>
     </div>
     <div class="col s2">
-        <div class="card amber accent-2">
+        <div class="card amber accent-2" id="data">
             <div class="card-content">
                 <span class="card-title">Mappings</span>
                 <p>This is the mapping page. Here you can create or adjust parameter mappings. For every parameter in a mapping you can
                 chose as many aliases as you want. All configurations of a mapping can be filtered.</p>
+            </div>
+            <div class="card-action">
+            </div>
+        </div>
+
+        <div class="card amber accent-2" *ngIf="selectedMapping">
+            <div class="card-content">
+                <span class="card-title">Unrelated Params</span>
+                    <div class="chip grey darken-1 white-text" *ngFor="let param of selectedMapping?.unrelatedParams" draggable="true" (dragstart)="drag($event)">{{param}}</div>
             </div>
             <div class="card-action">
             </div>

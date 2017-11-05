@@ -21,12 +21,36 @@ export class MappingsDataService {
     public addMappingFromConfig(name, configParams) : Observable<string> {
         let mapping = {
             name: name,
-            params: []
+            params: [],
+            unrelatedParams: []
         };
         configParams.forEach((paramSet) => {
            mapping.params.push({key: paramSet.param, aliases: []});
         });
         return MappingsCollection.insert(mapping);
+    }
+
+    public assignConfigToMapping(configParams, mappingID) : Observable<number> {
+        let result = Observable.create((observer) => {
+            MappingsCollection.find({_id: mappingID}).subscribe((foundMappings) => {
+                if (foundMappings && foundMappings[0]) {
+                    let mapping = foundMappings[0];
+                    configParams.forEach((paramSet) => {
+                        if (!this.existsInMapping(paramSet.param, mapping)) {
+                            mapping.unrelatedParams.push(paramSet.param);
+                        }
+                    });
+                    this.updateMapping(mappingID, mapping).subscribe((changedMappings) => {
+                        if (changedMappings === 1) {
+                            observer.next(mapping.unrelatedParams.length);
+                        } else {
+                            observer.next(-1);
+                        }
+                    });
+                }
+            });
+        });
+        return result;
     }
 
     public addMapping(data) : Observable<string> {
@@ -43,5 +67,25 @@ export class MappingsDataService {
 
     public updateMapping(ID, mapping : Mapping) : Observable<number> {
         return MappingsCollection.update({_id: ID}, mapping);
+    }
+
+    private existsInMapping(toSearch: string, mapping: Mapping): boolean {
+        let found = false;
+        mapping.params.forEach((param) => {
+            if (param.key.toLowerCase() === toSearch.toLowerCase()) {
+                found = true;
+            }
+            param.aliases.forEach((alias) => {
+                if (alias.toLowerCase() === toSearch.toLowerCase()) {
+                    found = true;
+                }
+            })
+        });
+        mapping.unrelatedParams.forEach((param) => {
+            if (param.toLowerCase() === toSearch.toLowerCase()) {
+                found = true;
+            }
+        });
+        return found;
     }
 }

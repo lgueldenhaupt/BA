@@ -8,6 +8,9 @@ import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import {ParamExtractor} from "../../helpers/param-extractor";
 import {NotificationService} from "../../services/notification.service";
 import {MappingsDataService} from "../../services/mappings-data.service";
+import {Mapping} from "../../../../both/models/mapping.model";
+import {Observable} from "rxjs/Observable";
+import {ConfirmationModalService} from "../../services/confirmationModal.service";
 
 declare let $ :any;
 
@@ -19,9 +22,12 @@ declare let $ :any;
 export class ConfigComponent implements OnInit{
     private configID: string;
     private config: ConfigSet;
+    private mapping: Mapping;
+    private allMappings: Observable<Mapping[]>;
     private pureText: string;
     private canSafe: boolean;
     private hideText: boolean;
+    private stack: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -29,28 +35,38 @@ export class ConfigComponent implements OnInit{
         private mappingDS: MappingsDataService,
         private parser: ParamExtractor,
         private notification: NotificationService,
+        private confirm: ConfirmationModalService
     ) {
         this.config = {name: '', projectID: '', description: '', params: [], mappingID: ''};
         this.canSafe = false;
         this.hideText = true;
+        this.stack = [
+            'hey', 'hey', 'ho'
+        ]
     }
 
     ngOnInit(): void {
-        let self = this;
         this.route.params.subscribe(params =>{
             this.configID = params['id'];
             let config$ = this.configDS.getConfigById(this.configID);
             config$.subscribe(
-                data => {
-                    self.config = data[0];
+                (data) => {
+                    this.config = data[0];
+                    if (this.config.mappingID && this.config.mappingID != '') {
+                        this.mappingDS.getMappingById(this.config.mappingID).subscribe((foundMappings) => {
+                            this.mapping = foundMappings[0];
+                        });
+                    }
                 }
             )
         });
 
+        this.allMappings = this.mappingDS.getData().zone();
+
+
         $(document).ready(function(){
             $('.collapsible').collapsible();
             $('.modal').modal();
-            $('select').material_select();
         });
     }
 
@@ -87,8 +103,27 @@ export class ConfigComponent implements OnInit{
         this.hideText = !this.hideText;
     }
 
-    public assignToMapping() {
-
+    public assignToMapping(mappingID) {
+        this.confirm.openModal("Assign To Mapping?", "Do you really want to assign this config to that mapping?").then((fullfilled) => {
+            if (fullfilled) {
+                this.mappingDS.assignConfigToMapping(this.config.params, mappingID).subscribe((unrelatedParams) => {
+                    if (unrelatedParams === -1) {
+                        this.notification.error("Assigning failed");
+                        return;
+                    } else {
+                        this.notification.warning(unrelatedParams + " unrelated Params");
+                        this.config.mappingID = mappingID;
+                        this.configDS.updateConfig(this.configID, this.config).subscribe(
+                            (changedDocuments) => {
+                                if (changedDocuments === 1) {
+                                    this.notification.success("Updated config");
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+        });
     }
 
     public createMapping() {
@@ -96,14 +131,14 @@ export class ConfigComponent implements OnInit{
             (mappingID) => {
                 if (mappingID != '' && mappingID != undefined) {
                     this.notification.success('Mapping added');
-                    // this.config.mappingID = mappingID;
-                    // this.configDS.updateConfig(this.configID, this.config).subscribe(
-                    //     (changedDocuments) => {
-                    //         if (changedDocuments === 1) {
-                    //             this.notification.success("Updated config");
-                    //         }
-                    //     }
-                    // );
+                    this.config.mappingID = mappingID;
+                    this.configDS.updateConfig(this.configID, this.config).subscribe(
+                        (changedDocuments) => {
+                            if (changedDocuments === 1) {
+                                this.notification.success("Updated config");
+                            }
+                        }
+                    );
                 }
             }
         );

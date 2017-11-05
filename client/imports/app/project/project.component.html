@@ -49,8 +49,8 @@
                         <td (click)="chooseConfig(set)" class="pointer">{{set.name}}</td>
                         <td (click)="chooseConfig(set)" class="pointer">{{set.description}}</td>
                         <td>
-                            <a (click)="deleteConfigSet(set._id, set.name)"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
                             <a (click)="goToConfig(set._id)"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                            <a (click)="deleteConfigSet(set._id, set.name)"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
                         </td>
                     </tr>
                     </tbody>
@@ -103,11 +103,11 @@
                 <span class="card-title">View</span>
                 <form action="#">
                     <p>
-                        <input name="group1" type="radio" id="card" checked (change)="changeView(0)"/>
+                        <input name="group1" type="radio" id="card" (change)="changeView(0)"/>
                         <label for="card" class="grey-text">Card</label>
                     </p>
                     <p>
-                        <input name="group1" type="radio" id="list" (change)="changeView(1)"/>
+                        <input name="group1" type="radio" id="list" checked (change)="changeView(1)"/>
                         <label for="list">List</label>
                     </p>
                 </form>

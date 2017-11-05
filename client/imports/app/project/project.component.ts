@@ -42,7 +42,7 @@ export class ProjectComponent implements OnInit{
     ) {
         this.project = {name: '', description: ''};
         this.chosenConfig = null;
-        this.view = 0;
+        this.view = 1;
     }
 
     ngOnInit(): void {
