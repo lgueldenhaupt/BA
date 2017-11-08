@@ -8,11 +8,10 @@ import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
 import {trigger, state, style, animate, transition} from "@angular/animations";
 import {Router} from "@angular/router";
-import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import undefined = Match.undefined;
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
 
-declare var $ :any;
+declare const $ :any;
 
 @Component({
     selector: "dashboard",
@@ -39,8 +38,7 @@ declare var $ :any;
 })
 export class DashboardComponent implements OnInit{
     projects: Observable<Project[]>;
-    projectName: string;
-    projectDesc: string;
+    editedProject: Project;
     projectID: string;
     searchText: string;
 
@@ -51,8 +49,7 @@ export class DashboardComponent implements OnInit{
         private router: Router,
         private confirmation: ConfirmationModalService
     ) {
-        this.projectName = '';
-        this.projectDesc = '';
+        this.editedProject = {name: '', description: '', mappingID: ''};
         this.projectID = '';
     }
 
@@ -106,16 +103,16 @@ export class DashboardComponent implements OnInit{
     }
 
     openEditModal(id, name, description) {
-        this.projectName = name;
-        this.projectDesc = description;
+        this.editedProject.name = name;
+        this.editedProject.description = description;
         this.projectID = id;
         $('.modal').modal();
     }
 
     editProject() {
-        this.projectsDS.updateProject(this.projectID, this.projectName, this.projectDesc);
-        this.projectName = '';
-        this.projectDesc = '';
+        this.projectsDS.updateProject(this.projectID, this.editedProject);
+        this.editedProject.name = '';
+        this.editedProject.description = '';
         this.projectID = '';
         this.notification.success("Entry updated");
     }

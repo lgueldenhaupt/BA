@@ -16,6 +16,10 @@ export class ProjectsDataService  {
         return this.data;
     }
 
+    public getSortedData(options): ObservableCursor<Project> {
+        return ProjectsCollection.find({}, options);
+    }
+
     public addData(data) : Observable<string> {
         return ProjectsCollection.insert(data);
     }
@@ -25,12 +29,11 @@ export class ProjectsDataService  {
     }
 
     public getProject(ID): ObservableCursor<Project> {
-        let proj = ProjectsCollection.find({_id: ID}, {});
-        return proj;
+        return ProjectsCollection.find({_id: ID}, {});
     }
 
-    public updateProject(id, name, desc) : Observable<number> {
-        return ProjectsCollection.update({_id: id}, {name: name, description: desc});
+    public updateProject(id, project: Project) : Observable<number> {
+        return ProjectsCollection.update({_id: id}, project);
     }
 
 }

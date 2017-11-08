@@ -34,6 +34,7 @@ export class MappingComponent implements OnInit{
                 this.selectedMapping = foundMappings[0];
             });
         });
+
     }
 
     public selectMapping(mapping: any) {
@@ -51,6 +52,9 @@ export class MappingComponent implements OnInit{
 
     public drop(event) {
         event.preventDefault();
-        event.target.appendChild(this.label);
+        if (event.target.className.indexOf('chip_dropzone') != -1) {
+            event.target.appendChild(this.label);
+        }
+
     }
 }

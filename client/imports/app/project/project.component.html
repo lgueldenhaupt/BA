@@ -19,8 +19,8 @@
             <h5>Configurations:</h5>
 
             <div *ngIf="view == 0">
-                <div class="flex_conti" *ngIf="(configSets | async)?.length > 0">
-                    <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of configSets | async | projects: searchText">
+                <div class="flex_conti" *ngIf="(configSets)?.length > 0">
+                    <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of configSets | projects: searchText">
                         <div class="card-content pointer" (click)="chooseConfig(set)">
                             <span class="card-title">{{set.name}}</span>
                             <p class="">{{set.description}}</p>
@@ -45,7 +45,7 @@
                     </thead>
 
                     <tbody>
-                    <tr *ngFor="let set of configSets | async | projects: searchText">
+                    <tr *ngFor="let set of configSets | projects: searchText">
                         <td (click)="chooseConfig(set)" class="pointer">{{set.name}}</td>
                         <td (click)="chooseConfig(set)" class="pointer">{{set.description}}</td>
                         <td>
@@ -57,7 +57,7 @@
                 </table>
             </div>
 
-            <span *ngIf="(configSets | async)?.length < 1" class="">No configs to display</span>
+            <span *ngIf="(configSets)?.length < 1" class="">No configs to display</span>
         </div>
 
 
@@ -96,6 +96,16 @@
                 <p>Drop a config file here to create a new config</p>
             </div>
             <div class="card-action">
+            </div>
+        </div>
+        <div class="card amber accent-2">
+            <div class="card-content">
+                <span class="card-title">Related Mapping</span>
+                <p *ngIf="project.mappingID === ''">No mapping assigned yet.</p>
+                <p [routerLink]="['/mapping', mapping?._id]" class="pointer">{{mapping?.name}}</p>
+            </div>
+            <div class="card-action">
+                <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()" *ngIf="!project.mappingID || project.mappingID === ''">Create</button>
             </div>
         </div>
         <div class="card grey lighten-3">

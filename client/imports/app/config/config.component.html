@@ -79,26 +79,7 @@
             <div class="card-action">
             </div>
         </div>
-        <div class="card amber accent-2">
-            <div class="card-content">
-                <span class="card-title">Related Mapping</span>
-                <p *ngIf="config.mappingID === ''">No mapping assigned yet.</p>
-                <p [routerLink]="['/mapping', mapping?._id]" class="pointer">{{mapping?.name}}</p>
-            </div>
-            <div class="card-action">
-                <button class="btn grey darken-1 waves-effect s_top_space modal-trigger" data-target="assignMapping">Assign</button>
-                <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()" *ngIf="!config.mappingID || config.mappingID === ''">Create</button>
-            </div>
-        </div>
     </div>
 </div>
 
-<div id="assignMapping" class="modal">
-    <div class="modal-content">
-        <h4>Assign Mapping</h4>
-        <div class="collection">
-            <a class="collection-item pointer black-text" *ngFor="let mapping of allMappings | async" (click)="assignToMapping(mapping._id)">{{mapping.name}}</a>
-        </div>
-    </div>
-</div>
 

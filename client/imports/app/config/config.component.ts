@@ -10,7 +10,6 @@ import {NotificationService} from "../../services/notification.service";
 import {MappingsDataService} from "../../services/mappings-data.service";
 import {Mapping} from "../../../../both/models/mapping.model";
 import {Observable} from "rxjs/Observable";
-import {ConfirmationModalService} from "../../services/confirmationModal.service";
 
 declare let $ :any;
 
@@ -35,7 +34,6 @@ export class ConfigComponent implements OnInit{
         private mappingDS: MappingsDataService,
         private parser: ParamExtractor,
         private notification: NotificationService,
-        private confirm: ConfirmationModalService
     ) {
         this.config = {name: '', projectID: '', description: '', params: [], mappingID: ''};
         this.canSafe = false;
@@ -101,46 +99,5 @@ export class ConfigComponent implements OnInit{
 
     public toggleText() {
         this.hideText = !this.hideText;
-    }
-
-    public assignToMapping(mappingID) {
-        this.confirm.openModal("Assign To Mapping?", "Do you really want to assign this config to that mapping?").then((fullfilled) => {
-            if (fullfilled) {
-                this.mappingDS.assignConfigToMapping(this.config.params, mappingID).subscribe((unrelatedParams) => {
-                    if (unrelatedParams === -1) {
-                        this.notification.error("Assigning failed");
-                        return;
-                    } else {
-                        this.notification.warning(unrelatedParams + " unrelated Params");
-                        this.config.mappingID = mappingID;
-                        this.configDS.updateConfig(this.configID, this.config).subscribe(
-                            (changedDocuments) => {
-                                if (changedDocuments === 1) {
-                                    this.notification.success("Updated config");
-                                }
-                            }
-                        );
-                    }
-                });
-            }
-        });
-    }
-
-    public createMapping() {
-        this.mappingDS.addMappingFromConfig(this.config.name + ' Mapping', this.config.params).subscribe(
-            (mappingID) => {
-                if (mappingID != '' && mappingID != undefined) {
-                    this.notification.success('Mapping added');
-                    this.config.mappingID = mappingID;
-                    this.configDS.updateConfig(this.configID, this.config).subscribe(
-                        (changedDocuments) => {
-                            if (changedDocuments === 1) {
-                                this.notification.success("Updated config");
-                            }
-                        }
-                    );
-                }
-            }
-        );
     }
 }

@@ -16,7 +16,7 @@
             <tbody>
                 <tr *ngFor="let param of selectedMapping.params">
                     <td>{{param.key}}</td>
-                    <td (drop)="drop($event)" (dragover)="allowDrop($event)">
+                    <td class="chip_dropzone" (drop)="drop($event)" (dragover)="allowDrop($event)">
                         <ul>
                             <li *ngFor="let alias of param.aliases">{{alias}}</li>
                         </ul>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="card amber accent-2" *ngIf="selectedMapping">
-            <div class="card-content">
+            <div class="card-content chip_dropzone" (drop)="drop($event)" (dragover)="allowDrop($event)">
                 <span class="card-title">Unrelated Params</span>
                     <div class="chip grey darken-1 white-text" *ngFor="let param of selectedMapping?.unrelatedParams" draggable="true" (dragstart)="drag($event)">{{param}}</div>
             </div>
