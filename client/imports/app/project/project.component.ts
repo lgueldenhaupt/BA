@@ -14,6 +14,8 @@ import undefined = Match.undefined;
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
 import {MappingsDataService} from "../../services/mappings-data.service";
 import {Mapping} from "../../../../both/models/mapping.model";
+import {TrainingSet} from "../../../../both/models/trainingSet";
+import {ParamSet} from "../../../../both/models/paramSet";
 
 declare let $: any;
 
@@ -28,7 +30,7 @@ export class ProjectComponent implements OnInit {
     private mapping: Mapping;
     private configSets: ConfigSet[];
     private searchText: string;
-    private chosenConfig: Object;
+    private chosenConfig: ConfigSet;
     private view: number;
 
     constructor(private projectsDS: ProjectsDataService,
@@ -76,7 +78,7 @@ export class ProjectComponent implements OnInit {
         });
     }
 
-    createConfigSet(name, desc, params) {
+    createConfigSet(name, desc, params, results: TrainingSet[] = []) {
         if (name === '') {
             this.notification.error("Please enter a name!");
             return;
@@ -85,7 +87,8 @@ export class ProjectComponent implements OnInit {
             name: name,
             description: desc,
             projectID: this.projectID,
-            params: params
+            params: params,
+            results: results
         }).subscribe((newID) => {
             if (newID != '' || newID != undefined) {
                 this.notification.success("ConfigSet added");
@@ -183,8 +186,18 @@ export class ProjectComponent implements OnInit {
         let FR = new FileReader();
         FR.onload = (ev: FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
-            let params = this.parser.searchForParams(result);
-            this.createConfigSet(file.name, file.lastModifiedDate + '', params);
+            let splitted = result.split("\n");
+            let params = [];
+            let results = [];
+            if (splitted[0]) {
+                params = this.parser.searchForParams(splitted[0]);
+                if (splitted.length > 1) {
+                    splitted.splice(0, 1);
+                    results = this.parser.searchForTrainingSets(splitted);
+                }
+            }
+            this.createConfigSet(file.name, file.lastModifiedDate + '', params, results);
+
         };
         FR.readAsText(file);
     }
@@ -206,5 +219,18 @@ export class ProjectComponent implements OnInit {
         if (value >= 0 && value <= 1) {
             this.view = value;
         }
+    }
+
+    deleteParamSet(paramSet: ParamSet) {
+        this.confirm.openModal().then((yes) => {
+            if (yes) {
+                this.chosenConfig.params.splice(this.chosenConfig.params.indexOf(paramSet), 1);
+                this.configSetsDS.updateConfig((<any>this.chosenConfig)._id, this.chosenConfig).subscribe((changedItems) => {
+                    if (changedItems === 1) {
+                        this.notification.success("Parameter deleted");
+                    }
+                });
+            }
+        })
     }
 }

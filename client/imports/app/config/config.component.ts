@@ -26,7 +26,6 @@ export class ConfigComponent implements OnInit{
     private pureText: string;
     private canSafe: boolean;
     private hideText: boolean;
-    private stack: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -35,12 +34,9 @@ export class ConfigComponent implements OnInit{
         private parser: ParamExtractor,
         private notification: NotificationService,
     ) {
-        this.config = {name: '', projectID: '', description: '', params: [], mappingID: ''};
+        this.config = {name: '', projectID: '', description: '', params: [], mappingID: '', results: []};
         this.canSafe = false;
         this.hideText = true;
-        this.stack = [
-            'hey', 'hey', 'ho'
-        ]
     }
 
     ngOnInit(): void {
