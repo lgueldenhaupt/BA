@@ -52,9 +52,24 @@ export class MappingComponent implements OnInit{
 
     public drop(event) {
         event.preventDefault();
-        if (event.target.className.indexOf('chip_dropzone') != -1) {
-            event.target.appendChild(this.label);
+        if (event.target.className.indexOf('aliases') != -1) {
+            this.selectedMapping.unrelatedParams.splice(this.selectedMapping.unrelatedParams.indexOf(this.label.innerHTML), 1);
+            this.selectedMapping.params.forEach((paramAliases) => {
+                if (paramAliases.key === event.target.id) {
+                    paramAliases.aliases.push(this.label.innerHTML);
+                }
+            });
         }
-
+        if (this.label.parentElement.className.indexOf('aliases') != -1) {
+            this.selectedMapping.params.forEach((paramAliases) => {
+                if (paramAliases.key === this.label.parentElement.id) {
+                    paramAliases.aliases.splice(paramAliases.aliases.indexOf(this.label.innerHTML), 1)
+                }
+            });
+        }
+        if (event.target.className.indexOf('chip_dropzone') != -1) {
+            this.selectedMapping.unrelatedParams.push(this.label.innerHTML);
+        }
+        this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
     }
 }
