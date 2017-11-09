@@ -31,6 +31,7 @@ export class ProjectComponent implements OnInit {
     private configSets: ConfigSet[];
     private searchText: string;
     private chosenConfig: ConfigSet;
+    private chosenConfigID: string;
     private view: number;
 
     constructor(private projectsDS: ProjectsDataService,
@@ -57,7 +58,11 @@ export class ProjectComponent implements OnInit {
                     this.project = data[0];
                     this.getProjectMapping();
                 }
-            )
+            );
+            this.chosenConfigID = params['configID'];
+            this.configSetsDS.getConfigById(this.chosenConfigID).subscribe((data) => {
+                this.chosenConfig = data[0];
+            })
         });
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
@@ -119,10 +124,6 @@ export class ProjectComponent implements OnInit {
 
     goToConfig(id) {
         this.router.navigate(['/config', id]);
-    }
-
-    chooseConfig(configSet) {
-        this.chosenConfig = configSet;
     }
 
     createMapping() {
