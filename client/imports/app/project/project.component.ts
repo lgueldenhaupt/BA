@@ -18,6 +18,7 @@ import {TrainingSet} from "../../../../both/models/trainingSet";
 import {ParamSet} from "../../../../both/models/paramSet";
 
 declare let $: any;
+declare let _: any;
 
 @Component({
     selector: "project",
@@ -134,29 +135,38 @@ export class ProjectComponent implements OnInit {
         this.mappingDS.addMappingFromConfig(this.project.name + ' mapping', this.configSets[0].params).subscribe((mappingID) => {
             if (mappingID && mappingID != '') {
                 this.updateProjectWithMapping(mappingID);
-                if (this.configSets.length > 1) {
-                    let toAddParams = [];
-                    for (let i = 0; i < this.configSets.length; i++) {
-                        let configSet = this.configSets[i];
-                        this.mappingDS.assignConfigToMapping(configSet.params, mappingID).subscribe((unrelatedParams) => {
-                            if (unrelatedParams.length > 0) {
-                                toAddParams = toAddParams.concat(unrelatedParams);
-                            }
-                        }, () => {
-                            this.notification.error("Something went wrong while adding Configs to mapping");
-                        }, () => {
-                            if (i === this.configSets.length - 1) {
-                                this.mappingDS.addUnrelatedParamsToMapping(mappingID, toAddParams).subscribe((changedMappings)=> {
-                                    if (changedMappings == 1) {
-                                        this.notification.warning("Mapping has " + toAddParams.length + " unrelated Params");
-                                    }
-                                });
+                this.addAllConfigsToMapping(mappingID);
+            }
+        });
+    }
+
+    updateMapping() {
+        this.addAllConfigsToMapping((<any>this.mapping)._id);
+    }
+
+    private addAllConfigsToMapping(mappingID) {
+        if (this.configSets.length > 1) {
+            let toAddParams = [];
+            for (let i = 0; i < this.configSets.length; i++) {
+                let configSet = this.configSets[i];
+                this.mappingDS.assignConfigToMapping(configSet.params, mappingID).subscribe((unrelatedParams) => {
+                    if (unrelatedParams.length > 0) {
+                        toAddParams = toAddParams.concat(unrelatedParams);
+                        toAddParams = _.uniq(toAddParams);
+                    }
+                }, () => {
+                    this.notification.error("Something went wrong while adding Configs to mapping");
+                }, () => {
+                    if (i === this.configSets.length - 1) {
+                        this.mappingDS.addUnrelatedParamsToMapping(mappingID, toAddParams).subscribe((changedMappings)=> {
+                            if (changedMappings == 1) {
+                                this.notification.warning("Mapping has " + toAddParams.length + " unrelated Params");
                             }
                         });
                     }
-                }
+                });
             }
-        });
+        }
     }
 
     private updateProjectWithMapping(mappingID: string) {

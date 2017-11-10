@@ -109,6 +109,7 @@
                 <p [routerLink]="['/mapping', mapping?._id]" class="pointer">{{mapping?.name}}</p>
             </div>
             <div class="card-action">
+                <button class="btn grey darken-1 waves-effect s_top_space" (click)="updateMapping()" *ngIf="project.mappingID && project.mappingID != ''">Update</button>
                 <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()" *ngIf="!project.mappingID || project.mappingID === ''">Create</button>
             </div>
         </div>

@@ -73,6 +73,10 @@ export class MappingsDataService {
     public addUnrelatedParamsToMapping(mappingID, unrelatedParams: string[]) : Observable<number> {
         if (unrelatedParams.length > 0) {
             return MappingsCollection.update({_id: mappingID}, {$push: {unrelatedParams: { $each: unrelatedParams}}});
+        } else {
+            return Observable.create((obs)=> {
+                obs.next([]);
+            });
         }
     }
 
