@@ -28,7 +28,7 @@
 
                         <div class="card-action">
                             <a (click)="deleteConfigSet(set._id, set.name)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
-                            <a (click)="goToConfig(set._id)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                            <a [routerLink]="['/config', set._id]" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
                         </div>
                     </div>
                 </div>
@@ -60,6 +60,7 @@
             <span *ngIf="(configSets)?.length < 1" class="">No configs to display</span>
         </div>
 
+        <p *ngIf="this.chosenConfig?.results?.length == 0" class="center-align">No results available</p>
         <div class="row">
             <div class="col s2">
                 <ul id="colorList">

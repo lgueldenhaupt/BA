@@ -4,7 +4,7 @@ import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import template from "./project.component.html";
 import style from "./project.component.scss";
 import {Project} from "../../../../both/models/project.model";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
@@ -41,7 +41,6 @@ export class ProjectComponent implements OnInit {
                 private configSetsDS: ConfigSetsDataService,
                 private mappingDS: MappingsDataService,
                 private route: ActivatedRoute,
-                private router: Router,
                 private notification: NotificationService,
                 private search: SearchService,
                 private parser: ParamExtractor,
@@ -139,10 +138,6 @@ export class ProjectComponent implements OnInit {
                 });
             }
         });
-    }
-
-    goToConfig(id) {
-        this.router.navigate(['/config', id]);
     }
 
     createMapping() {
@@ -265,12 +260,11 @@ export class ProjectComponent implements OnInit {
 
     private initResultColors() {
         let colorList = d3.select('#colorList');
-        // $('#colorList').height($('#visualisation').height());
         this.chosenConfig.results.forEach((result, index) => {
             let color = ProjectComponent.getRandomColor();
             let text = result.name != '' ? result.name : index;
             this.chart.colors.push(color);
-            let row = colorList.append("div")
+            colorList.append("div")
                 .attr("class", "row")
                 .append("div")
                 .attr("class", "col s2")
@@ -283,6 +277,7 @@ export class ProjectComponent implements OnInit {
     }
 
     private initResults(chart, maxVal, minVal) {
+        if (this.chosenConfig.results.length <= 0) return;
         if (typeof chart.vis.remove === "function") {
             chart.vis.selectAll("*").remove();
         }
@@ -336,27 +331,33 @@ export class ProjectComponent implements OnInit {
 
     private getMaxVal(results) {
         let maxVal = 0;
-        results.forEach((trainingSet : TrainingSet) => {
-            trainingSet.epochs.forEach((epoch) => {
-                maxVal = epoch > maxVal ? epoch : maxVal;
+        if (results.length > 0) {
+            results.forEach((trainingSet : TrainingSet) => {
+                trainingSet.epochs.forEach((epoch) => {
+                    maxVal = epoch > maxVal ? epoch : maxVal;
+                });
             });
-        });
+        }
         return (+maxVal + 0.02);
     }
 
     private getMinVal(results) {
         let minVal = 1;
-        results.forEach((trainingSet : TrainingSet) => {
-            trainingSet.epochs.forEach((epoch) => {
-                minVal = epoch < minVal ? epoch : minVal;
+        if (results.length > 0) {
+            results.forEach((trainingSet : TrainingSet) => {
+                trainingSet.epochs.forEach((epoch) => {
+                    minVal = epoch < minVal ? epoch : minVal;
+                });
             });
-        });
+        }
         return (+minVal - 0.02);
     }
 
     resize() {
         $('#visualisation').width($('#results').width());
         this.chart.width = $('#results').width();
-        this.initResults(this.chart, this.getMaxVal(this.chosenConfig.results), this.getMinVal(this.chosenConfig.results));
+        if (this.chosenConfig.results) {
+            this.initResults(this.chart, this.getMaxVal(this.chosenConfig.results), this.getMinVal(this.chosenConfig.results));
+        }
     }
 }
