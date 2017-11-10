@@ -293,7 +293,7 @@ export class ProjectComponent implements OnInit {
             xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, this.chosenConfig.results[0].epochs.length -1]),
             yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([minVal,maxVal]),
             xAxis = d3.axisBottom()
-                .scale(xScale),
+                .scale(xScale).ticks(10),
             yAxis = d3.axisLeft()
                 .scale(yScale);
         vis.append("svg:g")
@@ -308,7 +308,7 @@ export class ProjectComponent implements OnInit {
             })
             .y(function(d) {
                 return yScale(d);
-            });
+            }).curve(d3.curveCardinal);
         this.chosenConfig.results.forEach((trainingSet, index) => {
             let color = this.chart.colors[index];
             vis.append('svg:path')
@@ -316,6 +316,39 @@ export class ProjectComponent implements OnInit {
                 .attr('stroke', color)
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
+            vis.append('g')
+                .attr("id", "trainingSet" + index);
+            vis.select('#trainingSet' + index).selectAll("circle").data(trainingSet.epochs)
+                .enter()
+                .append("svg:circle")
+                .attr("cx", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("cy", function (d) {
+                    return yScale(d);
+                })
+                .attr("r", 3)
+                .attr("fill", color)
+                .on("mouseover", function (d, i) {
+                    d3.select(this).transition()
+                        .ease(d3.easeElastic)
+                        .duration("500")
+                        .attr("r", 6);
+                    vis.append("text")
+                        .attr("x", xScale(i) - 30)
+                        .attr("y", yScale(d) - 15)
+                        .attr("id", "t" + d.x + "-" + d.y + "-" + i)
+                        .text(function () {
+                            return d
+                        })
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this).transition()
+                        .ease(d3.easeElastic)
+                        .duration("500")
+                        .attr("r", 3);
+                    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
+                })
         });
         chart.vis = vis;
     }
@@ -356,7 +389,7 @@ export class ProjectComponent implements OnInit {
     resize() {
         $('#visualisation').width($('#results').width());
         this.chart.width = $('#results').width();
-        if (this.chosenConfig.results) {
+        if (this.chosenConfig && this.chosenConfig.results) {
             this.initResults(this.chart, this.getMaxVal(this.chosenConfig.results), this.getMinVal(this.chosenConfig.results));
         }
     }
