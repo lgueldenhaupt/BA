@@ -17,9 +17,11 @@ import {Mapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
 import {ParamSet} from "../../../../both/models/paramSet";
 import * as d3 from "d3";
+import {AliasFinder} from "../../helpers/alias-finder";
 
 declare let $: any;
 declare let _: any;
+declare let Materialize : any;
 
 @Component({
     selector: "project",
@@ -44,7 +46,8 @@ export class ProjectComponent implements OnInit {
                 private notification: NotificationService,
                 private search: SearchService,
                 private parser: ParamExtractor,
-                private confirm: ConfirmationModalService) {
+                private confirm: ConfirmationModalService,
+                private aliasFinder: AliasFinder) {
         this.project = {name: '', description: '', mappingID: ''};
         this.chosenConfig = null;
         this.view = 1;
@@ -100,6 +103,21 @@ export class ProjectComponent implements OnInit {
             $('.modal').modal();
         });
     }
+
+    getAliases(value: string) {
+        console.log(value)
+        let aliases = this.aliasFinder.getAliasesStraight((<any>this.mapping)._id, value);
+        let str = "";
+        aliases.forEach((alias) => {
+            str += " " + alias + ",";
+        });
+        str = str.substring(0, str.length -1);
+        if (str.length === 0) {
+            str = "No aliases";
+        }
+        Materialize.toast(str, 5000)
+    }
+
 
     createConfigSet(name, desc, params, results: TrainingSet[] = []) {
         if (name === '') {

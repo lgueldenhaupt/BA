@@ -18,6 +18,7 @@ import {LoginComponent} from "./login/login.component";
 import {ConfirmationModalService} from "../services/confirmationModal.service";
 import {ConfigFilterComponent} from "./configFilter/configFilter.component";
 import {MappingsDataService} from "../services/mappings-data.service";
+import {AliasFinder} from "../helpers/alias-finder";
 
 const appRoutes: Routes = [
     {
@@ -67,7 +68,7 @@ const appRoutes: Routes = [
         MappingComponent,
         ConfigFilterComponent,
         ProjectFilterPipe,
-        FilterPipe
+        FilterPipe,
     ],
     // Entry Components
     entryComponents: [
@@ -82,6 +83,7 @@ const appRoutes: Routes = [
         ConfirmationModalService,
         SearchService,
         ParamExtractor,
+        AliasFinder
     ],
     // Modules
     imports: [
