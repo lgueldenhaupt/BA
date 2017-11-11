@@ -36,4 +36,15 @@ export class ProjectsDataService  {
         return ProjectsCollection.update({_id: id}, project);
     }
 
+    public getProjectsMapping(id) : Observable<string> {
+        return Observable.create(observer => {
+            ProjectsCollection.find({_id: id}).subscribe((found : Project[]) => {
+                if (found[0]) {
+                    observer.next(found[0].mappingID);
+                    observer.complete();
+                }
+            })
+        })
+    }
+
 }

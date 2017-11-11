@@ -7,11 +7,15 @@ import {ConfigSet} from "../../../../both/models/configSet.model";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import {ParamExtractor} from "../../helpers/param-extractor";
 import {NotificationService} from "../../services/notification.service";
-import {MappingsDataService} from "../../services/mappings-data.service";
-import {Mapping} from "../../../../both/models/mapping.model";
-import {Observable} from "rxjs/Observable";
+import {AliasFinder} from "../../helpers/alias-finder";
+import {ConfirmationModalService} from "../../services/confirmationModal.service";
+import {TrainingSet} from "../../../../both/models/trainingSet";
+import * as d3 from "d3";
+import {ParamSet} from "../../../../both/models/paramSet";
+import {ProjectsDataService} from "../../services/projects-data.service";
 
 declare let $ :any;
+declare let Materialize : any;
 
 @Component({
     selector: "config",
@@ -21,42 +25,54 @@ declare let $ :any;
 export class ConfigComponent implements OnInit{
     private configID: string;
     private config: ConfigSet;
-    private mapping: Mapping;
-    private allMappings: Observable<Mapping[]>;
+    private mappingID: string;
     private pureText: string;
     private canSafe: boolean;
     private hideText: boolean;
+    private chart;
 
     constructor(
         private route: ActivatedRoute,
         private configDS: ConfigSetsDataService,
-        private mappingDS: MappingsDataService,
         private parser: ParamExtractor,
         private notification: NotificationService,
+        private confirm: ConfirmationModalService,
+        private aliasFinder: AliasFinder,
+        private projectDS: ProjectsDataService
     ) {
-        this.config = {name: '', projectID: '', description: '', params: [], mappingID: '', results: []};
+        this.config = {name: '', projectID: '', description: '', params: [], results: []};
         this.canSafe = false;
         this.hideText = true;
     }
 
     ngOnInit(): void {
+        this.chart = {
+            width: $('#results').width(),
+            height: 300,
+            vis: {},
+            colors: []
+        };
+        $('#visualisation').width(this.chart.width);
+        $('#visualisation').height(this.chart.height);
+        $(window).resize(() => {
+            this.resize();
+        });
         this.route.params.subscribe(params =>{
             this.configID = params['id'];
             let config$ = this.configDS.getConfigById(this.configID);
             config$.subscribe(
                 (data) => {
                     this.config = data[0];
-                    if (this.config.mappingID && this.config.mappingID != '') {
-                        this.mappingDS.getMappingById(this.config.mappingID).subscribe((foundMappings) => {
-                            this.mapping = foundMappings[0];
-                        });
+                    this.projectDS.getProjectsMapping(this.config.projectID).subscribe(mappingID => {
+                        this.mappingID = mappingID;
+                    });
+                    if (this.config.results) {
+                        this.initResultColors();
+                        this.initResults(this.chart, this.getMaxVal(this.config.results), this.getMinVal(this.config.results));
                     }
                 }
             )
         });
-
-        this.allMappings = this.mappingDS.getData().zone();
-
 
         $(document).ready(function(){
             $('.collapsible').collapsible();
@@ -64,14 +80,37 @@ export class ConfigComponent implements OnInit{
         });
     }
 
+    public getAliases(value: string) {
+        let aliases = this.aliasFinder.getAliasesStraight(this.mappingID,value);
+        let str = "";
+        aliases.forEach((alias) => {
+            str += " " + alias + ",";
+        });
+        str = str.substring(0, str.length -1);
+        if (str.length === 0) {
+            str = "No aliases";
+        }
+        Materialize.toast(str, 5000)
+    }
+
     public dataInput(event) {
         var input = event.srcElement.files;
         let FR = new FileReader();
         FR.onload = (ev : FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
-            this.pureText = result;
-            this.config.params = this.parser.searchForParams(result);
-            this.canSafe = true;
+            let splitted = result.split("\n");
+            let params = [];
+            let results = [];
+            if (splitted[0]) {
+                params = this.parser.searchForParams(splitted[0]);
+                if (splitted.length > 1) {
+                    splitted.splice(0, 1);
+                    results = this.parser.searchForTrainingSets(splitted);
+                }
+            }
+            this.config.params = params;
+            this.config.results = results;
+            console.log(this.config)
         };
         FR.readAsText(input[0]);
     }
@@ -95,5 +134,154 @@ export class ConfigComponent implements OnInit{
 
     public toggleText() {
         this.hideText = !this.hideText;
+    }
+
+    deleteParamSet(paramSet: ParamSet) {
+        this.confirm.openModal().then((yes) => {
+            if (yes) {
+                this.config.params.splice(this.config.params.indexOf(paramSet), 1);
+                this.configDS.updateConfig((<any>this.config)._id, this.config).subscribe((changedItems) => {
+                    if (changedItems === 1) {
+                        this.notification.success("Parameter deleted");
+                    }
+                });
+            }
+        })
+    }
+
+    private initResultColors() {
+        let colorList = d3.select('#colorList');
+        this.config.results.forEach((result, index) => {
+            let color = ConfigComponent.getRandomColor();
+            let text = result.name != '' ? result.name : index;
+            this.chart.colors.push(color);
+            colorList.append("div")
+                .attr("class", "row")
+                .append("div")
+                .attr("class", "col s2")
+                .attr("style", "background-color: " + color + "; height: 30px; margin: 3px;")
+                .append("div")
+                .attr("class", "col s10")
+                .html(text)
+                .attr("style", "margin-left: 14px;");
+        });
+    }
+
+    private initResults(chart, maxVal, minVal) {
+        if (this.config.results.length <= 0) return;
+        if (typeof chart.vis.remove === "function") {
+            chart.vis.selectAll("*").remove();
+        }
+        let vis = d3.select("#visualisation"),
+            WIDTH = chart.width,
+            HEIGHT = chart.height,
+            MARGINS = {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 50
+            },
+            xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, this.config.results[0].epochs.length -1]),
+            yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([minVal,maxVal]),
+            xAxis = d3.axisBottom()
+                .scale(xScale).ticks(10),
+            yAxis = d3.axisLeft()
+                .scale(yScale);
+        vis.append("svg:g")
+            .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+            .call(xAxis);
+        vis.append("svg:g")
+            .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+            .call(yAxis);
+        let lineGen = d3.line()
+            .x(function(d, i) {
+                return xScale(i);
+            })
+            .y(function(d) {
+                return yScale(d);
+            }).curve(d3.curveCardinal);
+        this.config.results.forEach((trainingSet, index) => {
+            let color = this.chart.colors[index];
+            vis.append('svg:path')
+                .attr('d', lineGen(trainingSet.epochs))
+                .attr('stroke', color)
+                .attr('stroke-width', 2)
+                .attr('fill', 'none');
+            vis.append('g')
+                .attr("id", "trainingSet" + index);
+            vis.select('#trainingSet' + index).selectAll("circle").data(trainingSet.epochs)
+                .enter()
+                .append("svg:circle")
+                .attr("cx", function (d, i) {
+                    return xScale(i);
+                })
+                .attr("cy", function (d) {
+                    return yScale(d);
+                })
+                .attr("r", 3)
+                .attr("fill", color)
+                .on("mouseover", function (d, i) {
+                    d3.select(this).transition()
+                        .ease(d3.easeElastic)
+                        .duration("500")
+                        .attr("r", 6);
+                    vis.append("text")
+                        .attr("x", xScale(i) - 30)
+                        .attr("y", yScale(d) - 15)
+                        .attr("id", "t" + d.x + "-" + d.y + "-" + i)
+                        .text(function () {
+                            return d
+                        })
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this).transition()
+                        .ease(d3.easeElastic)
+                        .duration("500")
+                        .attr("r", 3);
+                    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
+                })
+        });
+        chart.vis = vis;
+    }
+
+    private static getRandomColor() {
+        let letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    private getMaxVal(results) {
+        let maxVal = 0;
+        if (results.length > 0) {
+            results.forEach((trainingSet : TrainingSet) => {
+                trainingSet.epochs.forEach((epoch) => {
+                    maxVal = epoch > maxVal ? epoch : maxVal;
+                });
+            });
+        }
+        return (+maxVal + 0.02);
+    }
+
+    private getMinVal(results) {
+        let minVal = 1;
+        if (results.length > 0) {
+            results.forEach((trainingSet : TrainingSet) => {
+                trainingSet.epochs.forEach((epoch) => {
+                    minVal = epoch < minVal ? epoch : minVal;
+                });
+            });
+        }
+        return (+minVal - 0.02);
+    }
+
+    resize() {
+        $('#visualisation').width($('#results').width());
+        this.chart.width = $('#results').width();
+        if (this.config && this.config.results) {
+            this.initResults(this.chart, this.getMaxVal(this.config.results), this.getMinVal(this.config.results));
+        }
     }
 }

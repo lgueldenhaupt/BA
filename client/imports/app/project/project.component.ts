@@ -15,13 +15,10 @@ import {ConfirmationModalService} from "../../services/confirmationModal.service
 import {MappingsDataService} from "../../services/mappings-data.service";
 import {Mapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
-import {ParamSet} from "../../../../both/models/paramSet";
-import * as d3 from "d3";
 import {AliasFinder} from "../../helpers/alias-finder";
 
 declare let $: any;
 declare let _: any;
-declare let Materialize : any;
 
 @Component({
     selector: "project",
@@ -54,17 +51,6 @@ export class ProjectComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.chart = {
-            width: $('#results').width(),
-            height: 300,
-            vis: {},
-            colors: []
-        };
-        $('#visualisation').width(this.chart.width);
-        $('#visualisation').height(this.chart.height);
-        $(window).resize(() => {
-            this.resize();
-        });
 
         //parse route params to get the project
         this.route.params.subscribe(params => {
@@ -76,14 +62,6 @@ export class ProjectComponent implements OnInit {
                     this.getProjectMapping();
                 }
             );
-            this.chosenConfigID = params['configID'];
-            this.configSetsDS.getConfigById(this.chosenConfigID).subscribe((data) => {
-                this.chosenConfig = data[0];
-                if (this.chosenConfig.results) {
-                    this.initResultColors();
-                    this.initResults(this.chart, this.getMaxVal(this.chosenConfig.results), this.getMinVal(this.chosenConfig.results));
-                }
-            })
         });
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
@@ -103,21 +81,6 @@ export class ProjectComponent implements OnInit {
             $('.modal').modal();
         });
     }
-
-    getAliases(value: string) {
-        console.log(value)
-        let aliases = this.aliasFinder.getAliasesStraight((<any>this.mapping)._id, value);
-        let str = "";
-        aliases.forEach((alias) => {
-            str += " " + alias + ",";
-        });
-        str = str.substring(0, str.length -1);
-        if (str.length === 0) {
-            str = "No aliases";
-        }
-        Materialize.toast(str, 5000)
-    }
-
 
     createConfigSet(name, desc, params, results: TrainingSet[] = []) {
         if (name === '') {
@@ -260,155 +223,6 @@ export class ProjectComponent implements OnInit {
     changeView(value: number) {
         if (value >= 0 && value <= 1) {
             this.view = value;
-        }
-    }
-
-    deleteParamSet(paramSet: ParamSet) {
-        this.confirm.openModal().then((yes) => {
-            if (yes) {
-                this.chosenConfig.params.splice(this.chosenConfig.params.indexOf(paramSet), 1);
-                this.configSetsDS.updateConfig((<any>this.chosenConfig)._id, this.chosenConfig).subscribe((changedItems) => {
-                    if (changedItems === 1) {
-                        this.notification.success("Parameter deleted");
-                    }
-                });
-            }
-        })
-    }
-
-    private initResultColors() {
-        let colorList = d3.select('#colorList');
-        this.chosenConfig.results.forEach((result, index) => {
-            let color = ProjectComponent.getRandomColor();
-            let text = result.name != '' ? result.name : index;
-            this.chart.colors.push(color);
-            colorList.append("div")
-                .attr("class", "row")
-                .append("div")
-                .attr("class", "col s2")
-                .attr("style", "background-color: " + color + "; height: 30px; margin: 3px;")
-                .append("div")
-                .attr("class", "col s10")
-                .html(text)
-                .attr("style", "margin-left: 14px;");
-        });
-    }
-
-    private initResults(chart, maxVal, minVal) {
-        if (this.chosenConfig.results.length <= 0) return;
-        if (typeof chart.vis.remove === "function") {
-            chart.vis.selectAll("*").remove();
-        }
-        let vis = d3.select("#visualisation"),
-            WIDTH = chart.width,
-            HEIGHT = chart.height,
-            MARGINS = {
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 50
-            },
-            xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, this.chosenConfig.results[0].epochs.length -1]),
-            yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([minVal,maxVal]),
-            xAxis = d3.axisBottom()
-                .scale(xScale).ticks(10),
-            yAxis = d3.axisLeft()
-                .scale(yScale);
-        vis.append("svg:g")
-            .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-            .call(xAxis);
-        vis.append("svg:g")
-            .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-            .call(yAxis);
-        let lineGen = d3.line()
-            .x(function(d, i) {
-                return xScale(i);
-            })
-            .y(function(d) {
-                return yScale(d);
-            }).curve(d3.curveCardinal);
-        this.chosenConfig.results.forEach((trainingSet, index) => {
-            let color = this.chart.colors[index];
-            vis.append('svg:path')
-                .attr('d', lineGen(trainingSet.epochs))
-                .attr('stroke', color)
-                .attr('stroke-width', 2)
-                .attr('fill', 'none');
-            vis.append('g')
-                .attr("id", "trainingSet" + index);
-            vis.select('#trainingSet' + index).selectAll("circle").data(trainingSet.epochs)
-                .enter()
-                .append("svg:circle")
-                .attr("cx", function (d, i) {
-                    return xScale(i);
-                })
-                .attr("cy", function (d) {
-                    return yScale(d);
-                })
-                .attr("r", 3)
-                .attr("fill", color)
-                .on("mouseover", function (d, i) {
-                    d3.select(this).transition()
-                        .ease(d3.easeElastic)
-                        .duration("500")
-                        .attr("r", 6);
-                    vis.append("text")
-                        .attr("x", xScale(i) - 30)
-                        .attr("y", yScale(d) - 15)
-                        .attr("id", "t" + d.x + "-" + d.y + "-" + i)
-                        .text(function () {
-                            return d
-                        })
-                })
-                .on("mouseout", function (d, i) {
-                    d3.select(this).transition()
-                        .ease(d3.easeElastic)
-                        .duration("500")
-                        .attr("r", 3);
-                    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
-                })
-        });
-        chart.vis = vis;
-    }
-
-    private static getRandomColor() {
-        let letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-    private getMaxVal(results) {
-        let maxVal = 0;
-        if (results.length > 0) {
-            results.forEach((trainingSet : TrainingSet) => {
-                trainingSet.epochs.forEach((epoch) => {
-                    maxVal = epoch > maxVal ? epoch : maxVal;
-                });
-            });
-        }
-        return (+maxVal + 0.02);
-    }
-
-    private getMinVal(results) {
-        let minVal = 1;
-        if (results.length > 0) {
-            results.forEach((trainingSet : TrainingSet) => {
-                trainingSet.epochs.forEach((epoch) => {
-                    minVal = epoch < minVal ? epoch : minVal;
-                });
-            });
-        }
-        return (+minVal - 0.02);
-    }
-
-    resize() {
-        $('#visualisation').width($('#results').width());
-        this.chart.width = $('#results').width();
-        if (this.chosenConfig && this.chosenConfig.results) {
-            this.initResults(this.chart, this.getMaxVal(this.chosenConfig.results), this.getMinVal(this.chosenConfig.results));
         }
     }
 }

@@ -7,5 +7,4 @@ export interface ConfigSet {
     projectID: string;
     params: ParamSet[];
     results: TrainingSet[];
-    mappingID: string;
 }
