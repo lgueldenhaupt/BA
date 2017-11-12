@@ -21,7 +21,7 @@
             <div *ngIf="view == 0">
                 <div class="flex_conti" *ngIf="(configSets)?.length > 0">
                     <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of configSets | projects: searchText">
-                        <div class="card-content pointer" [routerLink]="['/project', projectID, set._id]">
+                        <div class="card-content pointer" [routerLink]="['/config', set._id]">
                             <span class="card-title">{{set.name}}</span>
                             <p class="">{{set.description}}</p>
                         </div>

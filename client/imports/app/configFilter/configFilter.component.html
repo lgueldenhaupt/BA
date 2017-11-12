@@ -4,19 +4,25 @@
         {{mapping?.name}}
     </div>
 </div>
-<ul class="collapsible" style="overflow: auto;" *ngFor="let filter of filters">
+<ul class="collapsible" *ngFor="let filter of filters">
     <li>
         <div class="collapsible-header">
-            <i class="material-icons">filter_list</i>{{filter.key}}
-            <div class="switch">
-                <label>
-                    <input type="checkbox">
-                    <span class="lever"></span>
-                </label>
+            <div class="row filter-row">
+                <div class="col s9" style="overflow: auto;">
+                    {{filter.key}}
+                </div>
+                <div class="col s3">
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="collapsible-body grey lighten-3">
-            Body
+        <div class="collapsible-body grey lighten-3"  style="overflow: auto;">
+            <p *ngFor="let option of filter.options">{{option}}</p>
         </div>
     </li>
 </ul>
