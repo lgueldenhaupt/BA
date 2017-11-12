@@ -16,6 +16,8 @@ import {MappingsDataService} from "../../services/mappings-data.service";
 import {Mapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
 import {AliasFinder} from "../../helpers/alias-finder";
+import {Filter} from "../../../../both/models/filter";
+import {FilterService} from "../../services/filter.service";
 
 declare let $: any;
 declare let _: any;
@@ -30,6 +32,7 @@ export class ProjectComponent implements OnInit {
     private project: Project;
     private mapping: Mapping;
     private configSets: ConfigSet[];
+    private filters : Filter[];
     private searchText: string;
     private chosenConfig: ConfigSet;
     private view: number;
@@ -41,8 +44,7 @@ export class ProjectComponent implements OnInit {
                 private notification: NotificationService,
                 private search: SearchService,
                 private parser: ParamExtractor,
-                private confirm: ConfirmationModalService,
-                private aliasFinder: AliasFinder) {
+                private confirm: ConfirmationModalService) {
         this.project = {name: '', description: '', mappingID: ''};
         this.chosenConfig = null;
         this.view = 1;
@@ -66,6 +68,10 @@ export class ProjectComponent implements OnInit {
         });
         this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
             this.configSets = results;
+        });
+        FilterService.getFilters().subscribe((filters : Filter[]) => {
+            this.filters = filters;
+            this.configSets = FilterService.filterConfigs(this.configSets, this.mapping);
         });
 
         $(document).ready(function () {

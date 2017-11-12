@@ -6,6 +6,9 @@ import {MappingsDataService} from "../../services/mappings-data.service";
 import {Config} from "../../../../both/models/config";
 import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import {ConfigSet} from "../../../../both/models/configSet.model";
+import {Filter} from "../../../../both/models/filter";
+import {Option} from "../../../../both/models/option.interface";
+import {FilterService} from "../../services/filter.service";
 
 declare let $ :any;
 declare let _ : any;
@@ -20,11 +23,11 @@ export class ConfigFilterComponent implements OnInit{
 
     private mapping: Mapping;
     private configs: Config[];
-    private filters: any[];
+    private filters: Filter[];
 
     constructor(
         private mappingDS: MappingsDataService,
-        private configDS: ConfigSetsDataService
+        private configDS: ConfigSetsDataService,
     ) {
         this.filters = [];
         this.configs = [];
@@ -44,6 +47,15 @@ export class ConfigFilterComponent implements OnInit{
             $('.modal').modal({
                 complete: function () {
                     $('.collapsible').collapsible();
+                },
+                ready: function () {
+                    $('input.autocomplete').autocomplete({
+                        data: {
+                            "Apple": null,
+                            "Microsoft": null,
+                            "Google": 'https://placehold.it/250x250'
+                        }
+                    });
                 }
             });
         });
@@ -51,20 +63,20 @@ export class ConfigFilterComponent implements OnInit{
 
     addFilter(key: string) {
         if (this.canAddFilter(key)) {
-            let options = [];
+            let options : Option[] = [];
+            let values = [];
             this.configs.forEach((config : Config) => {
                 let val = config.getValueOf(key);
                 if (val != '') {
-                    options.push(val);
+                    values.push(val);
                 }
             });
-            options = _.uniq(options);
-            console.log(options);
-            this.filters.push({
-                key: key,
-                options: options
+            values = _.uniq(values);
+            values.forEach((val) => {
+                options.push({name: val, enabled: true});
             });
-
+            this.filters.push(new Filter(key, options));
+            FilterService.setFilters(this.filters);
         }
     }
 
@@ -77,4 +89,9 @@ export class ConfigFilterComponent implements OnInit{
         });
         return result;
     }
+
+    updateFilter() {
+        FilterService.setFilters(this.filters);
+    }
+
 }

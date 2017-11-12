@@ -6,31 +6,33 @@
 </div>
 <ul class="collapsible" *ngFor="let filter of filters">
     <li>
-        <div class="collapsible-header">
-            <div class="row filter-row">
-                <div class="col s9" style="overflow: auto;">
-                    {{filter.key}}
-                </div>
-                <div class="col s3">
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
+        <div class="collapsible-header" style="overflow:auto;">
+            <div class="switch">
+                <label>
+                    <input type="checkbox" (change)="filter.toggle(); updateFilter()" checked>
+                    <span class="lever"></span>
+                </label>
             </div>
+            {{filter.key}}
         </div>
         <div class="collapsible-body grey lighten-3"  style="overflow: auto;">
-            <p *ngFor="let option of filter.options">{{option}}</p>
+            <p *ngFor="let option of filter.options; let i = index">
+                <input type="checkbox" class="filled-in" id="{{i}}{{filter.key}}" checked="checked" (click)="option.enabled = !option.enabled; updateFilter()"/>
+                <label for="{{i}}{{filter.key}}" class="black-text">{{option.name}}</label>
+            </p>
         </div>
     </li>
+</ul>
 </ul>
 
 <div id="addFilterModal" class="modal">
     <div class="modal-content">
         <h4>Add new filter</h4>
-        <table>
+        <div class="input-field">
+            <input type="text" id="autocomplete-input" class="autocomplete">
+            <label for="autocomplete-input">Search</label>
+        </div>
+        <table class="bordered highlight">
             <thead>
             <th>Key</th>
             <th>Aliases</th>
@@ -39,7 +41,7 @@
             <tbody>
             <tr *ngFor="let paramWithAliases of mapping.params">
                 <td>{{paramWithAliases.key}}</td>
-                <td>{{paramWithAliases.aliases}}</td>
+                <td><p *ngFor="let a of paramWithAliases.aliases">{{a}} </p></td>
                 <td><i class="small material-icons grey-text pointer" (click)="addFilter(paramWithAliases.key)">add_circle</i>
                 </td>
             </tr>

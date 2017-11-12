@@ -19,6 +19,7 @@ import {ConfirmationModalService} from "../services/confirmationModal.service";
 import {ConfigFilterComponent} from "./configFilter/configFilter.component";
 import {MappingsDataService} from "../services/mappings-data.service";
 import {AliasFinder} from "../helpers/alias-finder";
+import {FilterService} from "../services/filter.service";
 
 const appRoutes: Routes = [
     {
@@ -77,6 +78,7 @@ const appRoutes: Routes = [
         MappingsDataService,
         NotificationService,
         ConfirmationModalService,
+        FilterService,
         SearchService,
         ParamExtractor,
         AliasFinder

@@ -53,4 +53,21 @@ export class AliasFinder{
         });
         return result;
     }
+
+    public static areEqual(first: string, second: string, mapping) : boolean {
+        let result = false;
+        first = first.toLowerCase();
+        second = second.toLowerCase();
+        if (first === second){
+            return true;
+        }
+        mapping.params.forEach((paramWithAliases : ParamAliases) => {
+            if (paramWithAliases.key === first && paramWithAliases.aliases.indexOf(second) != -1) {
+                result = true;
+            } else if (paramWithAliases.key === second && paramWithAliases.aliases.indexOf(first) != -1) {
+                result = true;
+            }
+        });
+        return result;
+    }
 }
