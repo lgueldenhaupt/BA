@@ -1,8 +1,8 @@
 import {Component, Input, OnInit} from "@angular/core";
 import template from "./configFilter.component.html";
 import style from "./configFilter.component.scss";
-import {ConfigSetsDataService} from "../../services/configsets-data.service";
-import {ConfigSet} from "../../../../both/models/configSet.model";
+import {Mapping} from "../../../../both/models/mapping.model";
+import {MappingsDataService} from "../../services/mappings-data.service";
 
 declare let $ :any;
 
@@ -12,18 +12,46 @@ declare let $ :any;
     styles: [ style ]
 })
 export class ConfigFilterComponent implements OnInit{
-    @Input() projectID: string;
-    private configSets: ConfigSet[];
+    @Input() mappingID: string;
+
+    private mapping: Mapping;
+    private filters: any[];
 
     constructor(
-        private configDS: ConfigSetsDataService
+        private mappingDS: MappingsDataService
     ) {
-
+        this.filters = [];
     }
 
     ngOnInit(): void {
-        this.configDS.getProjectConfigs(this.projectID).subscribe((configs) => {
-            this.configSets = configs;
+        this.mappingDS.getMappingById(this.mappingID).subscribe(mappings => {
+            this.mapping = mappings[0];
         });
+        $(document).ready(function () {
+            $('.modal').modal({
+                complete: function () {
+                    $('.collapsible').collapsible();
+                }
+            });
+        });
+    }
+
+    addFilter(key: string) {
+        if (this.canAddFilter(key)) {
+            this.filters.push({
+                key: key,
+                options: []
+            });
+        }
+    }
+
+    canAddFilter(key :string) : boolean {
+        let result = true;
+        this.filters.forEach(filter => {
+            if (filter.key === key) {
+                result = false;
+            }
+        });
+        return result;
     }
 }

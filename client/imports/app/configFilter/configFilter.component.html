@@ -1,8 +1,45 @@
 <div class="card grey lighten-3">
     <div class="card-content">
-        <span class="card-title">Filter</span>
-            <div *ngFor="let set of configSets">
-                {{set.name}}
+        <span class="card-title"><i class="material-icons grey-text pointer modal-trigger" data-target="addFilterModal">add_circle</i>  Filter</span>
+        {{mapping?.name}}
+    </div>
+</div>
+<ul class="collapsible" style="overflow: auto;" *ngFor="let filter of filters">
+    <li>
+        <div class="collapsible-header">
+            <i class="material-icons">filter_list</i>{{filter.key}}
+            <div class="switch">
+                <label>
+                    <input type="checkbox">
+                    <span class="lever"></span>
+                </label>
             </div>
+        </div>
+        <div class="collapsible-body grey lighten-3">
+            Body
+        </div>
+    </li>
+</ul>
+
+<div id="addFilterModal" class="modal">
+    <div class="modal-content">
+        <h4>Add new filter</h4>
+        <table>
+            <thead>
+            <th>Key</th>
+            <th>Aliases</th>
+            <th>Actions</th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let paramWithAliases of mapping.params">
+                <td>{{paramWithAliases.key}}</td>
+                <td>{{paramWithAliases.aliases}}</td>
+                <td><i class="small material-icons grey-text pointer" (click)="addFilter(paramWithAliases.key)">add_circle</i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
     </div>
 </div>

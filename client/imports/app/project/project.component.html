@@ -1,7 +1,7 @@
 <div class="row">
     <!----------------Left Side----------------------->
     <div class="col s2">
-        <configFilter [projectID]="projectID"></configFilter>
+        <configFilter [mappingID]="project.mappingID" *ngIf="project.mappingID"></configFilter>
     </div>
 
     <!-----------------Middle------------------------->
@@ -11,11 +11,11 @@
                 <h4>{{project.name}}</h4>
             </div>
             <div class="col s2">
-                <button *ngIf="chosenConfig === null" class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" (click)="openAddConfigSetModal()" data-target="configSetModal">Add</button>
+                <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" (click)="openAddConfigSetModal()" data-target="configSetModal">Add</button>
             </div>
         </div>
         <hr>
-        <div *ngIf="chosenConfig === null" class="center-align">
+        <div class="center-align">
             <h5>Configurations:</h5>
 
             <div *ngIf="view == 0">

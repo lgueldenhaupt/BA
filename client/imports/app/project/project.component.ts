@@ -32,9 +32,7 @@ export class ProjectComponent implements OnInit {
     private configSets: ConfigSet[];
     private searchText: string;
     private chosenConfig: ConfigSet;
-    private chosenConfigID: string;
     private view: number;
-    private chart: any;
 
     constructor(private projectsDS: ProjectsDataService,
                 private configSetsDS: ConfigSetsDataService,
@@ -154,7 +152,9 @@ export class ProjectComponent implements OnInit {
                     if (i === this.configSets.length - 1) {
                         this.mappingDS.addUnrelatedParamsToMapping(mappingID, toAddParams).subscribe((changedMappings)=> {
                             if (changedMappings == 1) {
-                                this.notification.warning("Mapping has " + toAddParams.length + " unrelated Params");
+                                this.notification.warning("Mapping has " + toAddParams.length + " new unrelated Params");
+                            } else {
+                                this.notification.warning("Nothing to update");
                             }
                         });
                     }

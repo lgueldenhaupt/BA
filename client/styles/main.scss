@@ -90,6 +90,14 @@ app {
   border: 2px solid #424242 !important;
 }
 
+.switch label input[type=checkbox]:checked + .lever {
+  background-color: #ffc107;
+}
+
+.switch label input[type=checkbox]:checked + .lever:after {
+  background-color: #ff8f00 ;
+}
+
 .card {
   overflow: auto;
 }
