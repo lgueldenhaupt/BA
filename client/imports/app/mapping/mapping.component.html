@@ -1,11 +1,11 @@
 <div class="row">
-    <div class="col s2">
+    <div class="col s12 l2">
         <div class="collection with-header">
             <div class="collection-header grey darken-1"><h5 class="white-text">Existing Mappings</h5></div>
             <a class="collection-item pointer black-text" *ngFor="let mapping of mappings | async" (click)="selectMapping(mapping)">{{mapping.name}}</a>
         </div>
     </div>
-    <div class="col s8">
+    <div class="col s12 l8">
         <h4 *ngIf="!selectedMapping" class="center-align grey-text">Nothing selected</h4>
         <h4 *ngIf="selectedMapping" class="center-align">{{selectedMapping.name}}</h4>
         <table *ngIf="selectedMapping" class="highlight bordered">
@@ -23,7 +23,7 @@
             </tbody>
         </table>
     </div>
-    <div class="col s2">
+    <div class="col s12 l2">
         <div class="card amber accent-2" id="data">
             <div class="card-content">
                 <span class="card-title">Mappings</span>

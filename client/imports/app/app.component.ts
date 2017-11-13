@@ -21,9 +21,11 @@ export class AppComponent implements OnInit {
     private initMaterializeJS() {
         $(document).ready(function(){
             $('.carousel').carousel();
-        });
-        $(document).ready(function () {
             $('.tooltipped').tooltip({delay: 50});
+            $(".button-collapse").sideNav({
+                closeOnClick: true
+            });
         });
+
     }
 }

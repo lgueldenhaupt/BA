@@ -26,7 +26,6 @@ export class ConfigComponent implements OnInit{
     private configID: string;
     private config: ConfigSet;
     private mappingID: string;
-    private pureText: string;
     private canSafe: boolean;
     private hideText: boolean;
     private chart;
@@ -113,27 +112,6 @@ export class ConfigComponent implements OnInit{
             console.log(this.config)
         };
         FR.readAsText(input[0]);
-    }
-
-    public saveChanges() {
-        this.configDS.updateConfig(this.configID, this.config).subscribe((n) => {
-            if (n == 1) {
-                this.notification.success("Config updated");
-            } else {
-                this.notification.error("Could not update");
-            }
-        }, (err) => {
-            console.log(err)
-        });
-        this.canSafe = false;
-    }
-
-    public changedAttr() {
-        this.canSafe = true;
-    }
-
-    public toggleText() {
-        this.hideText = !this.hideText;
     }
 
     deleteParamSet(paramSet: ParamSet) {
