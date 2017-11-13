@@ -19,8 +19,8 @@
             <h5>Configurations:</h5>
 
             <div *ngIf="view == 0">
-                <div class="flex_conti" *ngIf="(configSets)?.length > 0">
-                    <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of configSets | projects: searchText">
+                <div class="flex_conti" *ngIf="(filteredConfigs)?.length > 0">
+                    <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of filteredConfigs | projects: searchText">
                         <div class="card-content pointer" [routerLink]="['/config', set._id]">
                             <span class="card-title">{{set.name}}</span>
                             <p class="">{{set.description}}</p>
@@ -45,7 +45,7 @@
                     </thead>
 
                     <tbody>
-                    <tr *ngFor="let set of configSets | projects: searchText">
+                    <tr *ngFor="let set of filteredConfigs | projects: searchText">
                         <td [routerLink]="['/config', set._id]" class="pointer">{{set.name}}</td>
                         <td [routerLink]="['/config', set._id]"  class="pointer">{{set.description}}</td>
                         <td>
@@ -57,7 +57,7 @@
                 </table>
             </div>
 
-            <span *ngIf="(configSets)?.length < 1" class="">No configs to display</span>
+            <span *ngIf="(filteredConfigs)?.length < 1" class="">No configs to display</span>
         </div>
     </div>
 

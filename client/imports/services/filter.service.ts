@@ -20,16 +20,17 @@ export class FilterService {
         let result = [];
         configSets.forEach(configSet => {
             let add = true;
-            configSet.params.forEach((paramSet) => {
-                FilterService.filters.forEach(filter => {
-                    if (filter.isActive() && AliasFinder.areEqual(paramSet.param, filter.key, mapping)) {
-                        if (!filter.isEnabledOption(paramSet.value)) {
-                            console.log("do not add");
-                            add = false;
+            if (configSet.params && FilterService.filters) {
+                configSet.params.forEach((paramSet) => {
+                    FilterService.filters.forEach(filter => {
+                        if (filter.isActive() && AliasFinder.areEqual(paramSet.param, filter.key, mapping)) {
+                            if (!filter.isEnabledOption(paramSet.value)) {
+                                add = false;
+                            }
                         }
-                    }
+                    });
                 });
-            });
+            }
             if (add) {
                 result.push(configSet);
             }
