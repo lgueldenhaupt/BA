@@ -44,7 +44,6 @@ export class ProjectComponent implements OnInit {
                 private parser: ParamExtractor,
                 private confirm: ConfirmationModalService) {
         this.project = {name: '', description: '', mappingID: ''};
-        this.chosenConfig = null;
         this.view = 1;
     }
 
@@ -74,14 +73,15 @@ export class ProjectComponent implements OnInit {
 
         $(document).ready(function () {
             $('.tooltipped').tooltip({delay: 50});
-            $('select').material_select();
+            $('.modal').modal();
         });
     }
 
-    openAddConfigSetModal() {
-        $(document).ready(function () {
-            $('.modal').modal();
-        });
+    openConfigSetEditModal(set: ConfigSet) {
+        this.chosenConfig = set;
+        $('#editName').val(this.chosenConfig.name);
+        $('#editDesc').val(this.chosenConfig.description);
+        $('#configSetEditModal').modal('open');
     }
 
     createConfigSet(name, desc, params, results: TrainingSet[] = []) {
@@ -106,7 +106,22 @@ export class ProjectComponent implements OnInit {
         if ($('.modal').modal()) {
             $('.modal').modal('close');
         }
+    }
 
+    editChosenConfig(name: string, description: string) {
+        if (this.chosenConfig === null) {
+            this.notification.error("No config chosen");
+            return;
+        } else {
+            this.chosenConfig.name = name;
+            this.chosenConfig.description = description;
+            this.configSetsDS.updateConfig((<any>this.chosenConfig)._id, this.chosenConfig).subscribe((changedConfigs) => {
+                if (changedConfigs == 1) {
+                    this.notification.success("Config udpdated");
+                    $('#configSetEditModal').modal('close');
+                }
+            });
+        }
     }
 
     deleteConfigSet(id, name) {

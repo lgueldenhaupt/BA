@@ -44,7 +44,7 @@ export class ConfigFilterComponent implements OnInit{
             });
         });
         $(document).ready(function () {
-            $('.modal').modal({
+            $('#addFilterModal').modal({
                 complete: function () {
                     $('.collapsible').collapsible();
                 },

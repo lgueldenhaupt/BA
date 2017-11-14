@@ -61,9 +61,7 @@ export class DashboardComponent implements OnInit{
     }
 
     openAddProjectModal() {
-        $(document).ready(function(){
-            $('.modal').modal();
-        });
+        $('.modal').modal();
     }
 
     openProject(ID) {

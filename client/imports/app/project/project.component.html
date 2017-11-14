@@ -11,7 +11,7 @@
                 <h4>{{project.name}}</h4>
             </div>
             <div class="col s12 m2 l2">
-                <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" (click)="openAddConfigSetModal()" data-target="configSetModal">Add</button>
+                <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" data-target="configSetModal">Add</button>
             </div>
         </div>
         <hr>
@@ -28,7 +28,7 @@
 
                         <div class="card-action">
                             <a (click)="deleteConfigSet(set._id, set.name)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
-                            <a [routerLink]="['/config', set._id]" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                            <a (click)="openConfigSetEditModal(set)" class="secondary-content pointer right modal-trigger" data-target="configSetEditModal"><i class="material-icons grey-text text-darken-2">edit</i></a>
                         </div>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         <td [routerLink]="['/config', set._id]" class="pointer">{{set.name}}</td>
                         <td [routerLink]="['/config', set._id]"  class="pointer">{{set.description}}</td>
                         <td>
-                            <a [routerLink]="['/config', set._id]"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                            <a (click)="openConfigSetEditModal(set)" class="modal-trigger" data-target="configSetEditModal"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
                             <a (click)="deleteConfigSet(set._id, set.name)"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
                         </td>
                     </tr>
@@ -105,15 +105,32 @@
     <div class="modal-content">
         <h4>Add new configuration set</h4>
         <div class="input-field">
-            <input placeholder="Name" id="name" type="text" class="validate" #name>
+            <input placeholder="Name" id="name" type="text" class="validate">
             <label for="name">Name</label>
         </div>
         <div class="input-field">
-            <textarea placeholder="Description" id="desc" type="text" class="materialize-textarea" #desc></textarea>
+            <textarea placeholder="Description" id="desc" type="text" class="materialize-textarea"></textarea>
             <label for="desc">Description</label>
         </div>
     </div>
     <div class="modal-footer">
         <button class="modal-action waves-effect waves-green btn-flat" (click)="createConfigSet(name.value, desc.value, [])">Create</button>
+    </div>
+</div>
+
+<div id="configSetEditModal" class="modal">
+    <div class="modal-content">
+        <h4>Edit Config</h4>
+        <div class="input-field">
+            <input placeholder="Name" id="editName" type="text" class="validate" #editName>
+            <label for="name">Name</label>
+        </div>
+        <div class="input-field">
+            <textarea placeholder="Description" id="editDesc" type="text" class="materialize-textarea" #editDesc></textarea>
+            <label for="desc">Description</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action waves-effect waves-green btn-flat" (click)="editChosenConfig(editName.value, editDesc.value)">Edit</button>
     </div>
 </div>
