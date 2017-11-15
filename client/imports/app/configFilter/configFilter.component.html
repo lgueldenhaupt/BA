@@ -27,26 +27,13 @@
 
 <div id="addFilterModal" class="modal">
     <div class="modal-content">
-        <h4>Add new filter</h4>
+        <h4>Add new filter </h4>
+        <span class="grey-text key_aliases">{{hintText}}</span><br>
         <!--<div class="input-field">-->
             <!--<input type="text" id="autocomplete-input" class="autocomplete">-->
             <!--<label for="autocomplete-input">Search</label>-->
         <!--</div>-->
-        <table class="bordered highlight">
-            <thead>
-            <th>Key</th>
-            <th>Aliases</th>
-            <th>Actions</th>
-            </thead>
-            <tbody>
-            <tr *ngFor="let paramWithAliases of mapping.params">
-                <td>{{paramWithAliases.key}}</td>
-                <td><p *ngFor="let a of paramWithAliases.aliases">{{a}} </p></td>
-                <td><i class="small material-icons grey-text pointer" (click)="addFilter(paramWithAliases.key)">add_circle</i>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <p class="chip grey darken-1 white-text pointer" *ngFor="let paramWithAliases of mapping.params" (click)="addFilter(paramWithAliases.key)" (mouseover)="setModalHintText(paramWithAliases)" (mouseleave)="hintText = ''">{{paramWithAliases.key}}</p>
     </div>
     <div class="modal-footer">
     </div>

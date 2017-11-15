@@ -1,4 +1,4 @@
-export interface Option {
-    name: string;
-    enabled: boolean;
+export class Option {
+    public name: string;
+    public enabled: boolean;
 }

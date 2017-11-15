@@ -16,8 +16,6 @@
         </div>
         <hr>
         <div class="center-align">
-            <h5>Configurations:</h5>
-
             <div *ngIf="view == 0">
                 <div class="flex_conti" *ngIf="(filteredConfigs)?.length > 0">
                     <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of filteredConfigs | projects: searchText">
@@ -105,11 +103,11 @@
     <div class="modal-content">
         <h4>Add new configuration set</h4>
         <div class="input-field">
-            <input placeholder="Name" id="name" type="text" class="validate">
+            <input placeholder="Name" id="name" type="text" class="validate" #name>
             <label for="name">Name</label>
         </div>
         <div class="input-field">
-            <textarea placeholder="Description" id="desc" type="text" class="materialize-textarea"></textarea>
+            <textarea placeholder="Description" id="desc" type="text" class="materialize-textarea" #desc></textarea>
             <label for="desc">Description</label>
         </div>
     </div>

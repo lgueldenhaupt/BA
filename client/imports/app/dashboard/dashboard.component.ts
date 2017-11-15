@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit{
         private router: Router,
         private confirmation: ConfirmationModalService
     ) {
-        this.editedProject = {name: '', description: '', mappingID: ''};
+        this.editedProject = new Project();
         this.projectID = '';
     }
 

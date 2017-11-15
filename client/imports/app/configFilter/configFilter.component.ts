@@ -9,6 +9,7 @@ import {ConfigSet} from "../../../../both/models/configSet.model";
 import {Filter} from "../../../../both/models/filter";
 import {Option} from "../../../../both/models/option.interface";
 import {FilterService} from "../../services/filter.service";
+import {ParamAliases} from "../../../../both/models/paramAliases";
 
 declare let $ :any;
 declare let _ : any;
@@ -24,6 +25,7 @@ export class ConfigFilterComponent implements OnInit{
     private mapping: Mapping;
     private configs: Config[];
     private filters: Filter[];
+    private hintText: string;
 
     constructor(
         private mappingDS: MappingsDataService,
@@ -92,6 +94,13 @@ export class ConfigFilterComponent implements OnInit{
 
     updateFilter() {
         FilterService.setFilters(this.filters);
+    }
+
+    setModalHintText(paramWithAliases : ParamAliases) {
+        this.hintText = paramWithAliases.key;
+        paramWithAliases.aliases.forEach((alias) => {
+            this.hintText += " - " + alias;
+        });
     }
 
 }

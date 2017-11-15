@@ -16,6 +16,7 @@ import {MappingsDataService} from "../../services/mappings-data.service";
 import {Mapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
+import {Config} from "../../../../both/models/config";
 
 declare let $: any;
 declare let _: any;
@@ -26,7 +27,7 @@ declare let _: any;
     styles: [style]
 })
 export class ProjectComponent implements OnInit {
-    private projectID: any;
+    private projectID: string;
     private project: Project;
     private mapping: Mapping;
     private configSets: ConfigSet[];
@@ -43,7 +44,7 @@ export class ProjectComponent implements OnInit {
                 private search: SearchService,
                 private parser: ParamExtractor,
                 private confirm: ConfirmationModalService) {
-        this.project = {name: '', description: '', mappingID: ''};
+        this.project = new Project();
         this.view = 1;
     }
 
@@ -54,12 +55,13 @@ export class ProjectComponent implements OnInit {
             this.projectID = params['id'];
             let project$ = this.projectsDS.getProject(this.projectID);
             project$.subscribe(
-                data => {
+                (data : Project[]) => {
                     this.project = data[0];
                     this.getProjectMapping();
                 }
             );
         });
+
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
         });

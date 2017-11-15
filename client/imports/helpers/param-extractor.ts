@@ -3,42 +3,64 @@ import {TrainingSet} from "../../../both/models/trainingSet";
 
 export class ParamExtractor {
 
+    /**
+     * This function takes an input string and converts it into a ParamSet array. If the string matches the criteria
+     * the param name and value are separated and put into the result array.
+     * @param {string} input The input string
+     * @returns {ParamSet[]} The array of found paramSets
+     */
     public searchForParams(input: string): ParamSet[] {
         let splitByMinus;
         splitByMinus = input.split('-');
         return this.separateParamFromValue(splitByMinus);
     }
 
+    /**
+     * This function takes an input array of strings and separates them into TrainingSets.
+     * It should be used for searching for results in a string array.
+     * One string of the input array should be one epoch with comma separated trainingSets.
+     * @param {string[]} input ConfigResults
+     * @returns {TrainingSet[]} Found TrainingSets
+     */
     public searchForTrainingSets(input: string[]): TrainingSet[] {
         if (input.length == 0) {
             return [];
         }
+        //get rid of the last epoch if empty
         if (input[input.length - 1] == "") {
             input.splice(input.length -1, 1);
         }
-        let trainingSets = [];
+        let trainingSets : TrainingSet[] = [];
+        //get the amount of trainingSets by example of the first line
         let splitToEpochs = input[0].split(',');
         let trainingSetCount = splitToEpochs.length;
+        //get rid of empty trainingset (caused my comma at the end of a line, etc)
         if ((splitToEpochs[trainingSetCount -1].length === 1 && splitToEpochs[trainingSetCount -1].match("[\\n\\r]+")) || splitToEpochs[trainingSetCount -1] === "") {
             trainingSetCount--;
         }
+        //add empty trainingSets
         for (let j = 0; j < trainingSetCount; j++) {
-            trainingSets.push({
-                name: '',
-                epochs: []
-            })
+            trainingSets.push(new TrainingSet());
         }
+
+        //add the input to the trainingSets
         input.forEach((currentEpoch) => {
+            //split an epoch to the trainingSets and insert them
             let splitEpoch = currentEpoch.split(',');
             for (let i = 0; i < trainingSetCount; i++) {
-                trainingSets[i].epochs.push(splitEpoch[i]);
+                trainingSets[i].addEpoch(+splitEpoch[i]);
             }
         });
         return trainingSets;
     }
 
-    private separateParamFromValue(input: string[]) {
-        let result = [];
+    /**
+     * This function splits the param names from their values and returns an array of ParamSets
+     * @param {string[]} input
+     * @returns {Array}
+     */
+    private separateParamFromValue(input: string[]) : ParamSet[] {
+        let result : ParamSet[] = [];
         input.forEach(function (str) {
             if (str.length > 0) {
                 let splitted = str.split(' ');
