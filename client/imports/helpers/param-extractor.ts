@@ -1,5 +1,6 @@
 import {ParamSet} from "../../../both/models/paramSet";
 import {TrainingSet} from "../../../both/models/trainingSet";
+import {Flag} from "../../../both/models/flag";
 
 export class ParamExtractor {
 
@@ -9,10 +10,10 @@ export class ParamExtractor {
      * @param {string} input The input string
      * @returns {ParamSet[]} The array of found paramSets
      */
-    public searchForParams(input: string): ParamSet[] {
+    public static searchForParams(input: string): ParamSet[] {
         let splitByMinus;
         splitByMinus = input.split('-');
-        return this.separateParamFromValue(splitByMinus);
+        return ParamExtractor.separateParamFromValue(splitByMinus);
     }
 
     /**
@@ -22,7 +23,7 @@ export class ParamExtractor {
      * @param {string[]} input ConfigResults
      * @returns {TrainingSet[]} Found TrainingSets
      */
-    public searchForTrainingSets(input: string[]): TrainingSet[] {
+    public static searchForTrainingSets(input: string[]): TrainingSet[] {
         if (input.length == 0) {
             return [];
         }
@@ -54,12 +55,32 @@ export class ParamExtractor {
         return trainingSets;
     }
 
+    public static extractFlags(input: string) : Flag[] {
+        let result = [];
+        let splitLines = input.split("\n");
+        splitLines.forEach((line) => {
+            let separator = '';
+            if (line.indexOf('=') != -1) {
+                separator = "=";
+            } else if (line.indexOf(':') != -1) {
+                separator = ":";
+            } else {
+                return [];
+            }
+            line = line.replace(/\s/g, '');
+            let flag = new Flag(line.split(separator)[0], line.split(separator)[1]);
+            flag.key = flag.key.split(".").pop();
+            result.push(flag);
+        });
+        return result;
+    }
+
     /**
      * This function splits the param names from their values and returns an array of ParamSets
      * @param {string[]} input
      * @returns {Array}
      */
-    private separateParamFromValue(input: string[]) : ParamSet[] {
+    private static separateParamFromValue(input: string[]) : ParamSet[] {
         let result : ParamSet[] = [];
         input.forEach(function (str) {
             if (str.length > 0) {
@@ -75,5 +96,4 @@ export class ParamExtractor {
         });
         return result;
     }
-
 }

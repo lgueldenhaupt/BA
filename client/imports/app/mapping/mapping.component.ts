@@ -5,6 +5,8 @@ import {MappingsDataService} from "../../services/mappings-data.service";
 import {Observable} from "rxjs/Observable";
 import {Mapping} from "../../../../both/models/mapping.model";
 import {ActivatedRoute, Router} from "@angular/router";
+import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
+import {ParamExtractor} from "../../helpers/param-extractor";
 
 declare let $ :any;
 
@@ -76,6 +78,18 @@ export class MappingComponent implements OnInit{
         if (needToUpdate) {
             this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
         }
+    }
+
+    public dropFlagFile(e) {
+        let file = e.dataTransfer.files[0];
+        e.preventDefault();
+        let FR = new FileReader();
+        FR.onload = (ev: FileReaderEvent) => {
+            let result = ev.target.result ? ev.target.result : '';
+            let flags = ParamExtractor.extractFlags(result);
+            this.selectedMapping.flags = flags;
+        };
+        FR.readAsText(file);
     }
 
     private addToAliases(event: any) {

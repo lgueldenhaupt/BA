@@ -13,7 +13,7 @@ import {ParamExtractor} from "../../helpers/param-extractor";
 import undefined = Match.undefined;
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
 import {MappingsDataService} from "../../services/mappings-data.service";
-import {Mapping} from "../../../../both/models/mapping.model";
+import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
@@ -29,11 +29,11 @@ declare let _: any;
 export class ProjectComponent implements OnInit {
     private projectID: string;
     private project: Project;
-    private mapping: Mapping;
+    private mapping: ParamMapping;
     private configSets: ConfigSet[];
     private filteredConfigs: ConfigSet[];
     private searchText: string;
-    private chosenConfig: ConfigSet;
+    private chosenConfig: Config;
     private view: number;
 
     constructor(private projectsDS: ProjectsDataService,
@@ -42,7 +42,6 @@ export class ProjectComponent implements OnInit {
                 private route: ActivatedRoute,
                 private notification: NotificationService,
                 private search: SearchService,
-                private parser: ParamExtractor,
                 private confirm: ConfirmationModalService) {
         this.project = new Project();
         this.view = 1;
@@ -79,7 +78,7 @@ export class ProjectComponent implements OnInit {
         });
     }
 
-    openConfigSetEditModal(set: ConfigSet) {
+    openConfigSetEditModal(set: Config) {
         this.chosenConfig = set;
         $('#editName').val(this.chosenConfig.name);
         $('#editDesc').val(this.chosenConfig.description);
@@ -117,7 +116,7 @@ export class ProjectComponent implements OnInit {
         } else {
             this.chosenConfig.name = name;
             this.chosenConfig.description = description;
-            this.configSetsDS.updateConfig((<any>this.chosenConfig)._id, this.chosenConfig).subscribe((changedConfigs) => {
+            this.configSetsDS.updateConfig(this.chosenConfig._id, this.chosenConfig).subscribe((changedConfigs) => {
                 if (changedConfigs == 1) {
                     this.notification.success("Config udpdated");
                     $('#configSetEditModal').modal('close');
@@ -154,7 +153,7 @@ export class ProjectComponent implements OnInit {
     }
 
     updateMapping() {
-        this.addAllConfigsToMapping((<any>this.mapping)._id);
+        this.addAllConfigsToMapping(this.mapping._id);
     }
 
     private addAllConfigsToMapping(mappingID) {
@@ -196,9 +195,10 @@ export class ProjectComponent implements OnInit {
 
     private getProjectMapping() {
         if (this.project.mappingID && this.project.mappingID != '') {
-            this.mappingDS.getMappingById(this.project.mappingID).subscribe((mappings) => {
+            this.mappingDS.getMappingById(this.project.mappingID).subscribe((mappings : Mapping[]) => {
                 if (mappings && mappings[0]) {
-                    this.mapping = mappings[0];
+                    let m  = mappings[0];
+                    this.mapping = new ParamMapping(m.name, m.params, m.unrelatedParams, m.flags,(<any>m)._id);
                 }
             });
         }
@@ -216,15 +216,16 @@ export class ProjectComponent implements OnInit {
             let params = [];
             let results = [];
             if (splitted[0]) {
-                params = this.parser.searchForParams(splitted[0]);
+                params = ParamExtractor.searchForParams(splitted[0]);
                 if (splitted.length > 1) {
                     splitted.splice(0, 1);
-                    results = this.parser.searchForTrainingSets(splitted);
+                    results = ParamExtractor.searchForTrainingSets(splitted);
                 }
             }
             this.createConfigSet(file.name, file.lastModifiedDate + '', params, results);
 
         };
+        console.log(typeof file.name == 'string');
         FR.readAsText(file);
     }
 

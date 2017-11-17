@@ -20,7 +20,8 @@ export class MappingsDataService {
         let mapping = {
             name: name,
             params: [],
-            unrelatedParams: []
+            unrelatedParams: [],
+            flags: []
         };
         configParams.forEach((paramSet) => {
            mapping.params.push({key: paramSet.param, aliases: []});

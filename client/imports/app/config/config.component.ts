@@ -33,7 +33,6 @@ export class ConfigComponent implements OnInit{
     constructor(
         private route: ActivatedRoute,
         private configDS: ConfigSetsDataService,
-        private parser: ParamExtractor,
         private notification: NotificationService,
         private confirm: ConfirmationModalService,
         private aliasFinder: AliasFinder,
@@ -101,10 +100,10 @@ export class ConfigComponent implements OnInit{
             let params = [];
             let results = [];
             if (splitted[0]) {
-                params = this.parser.searchForParams(splitted[0]);
+                params = ParamExtractor.searchForParams(splitted[0]);
                 if (splitted.length > 1) {
                     splitted.splice(0, 1);
-                    results = this.parser.searchForTrainingSets(splitted);
+                    results = ParamExtractor.searchForTrainingSets(splitted);
                 }
             }
             this.config.params = params;

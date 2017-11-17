@@ -2,7 +2,19 @@
     <div class="col s12 l2">
         <div class="collection with-header">
             <div class="collection-header grey darken-1"><h5 class="white-text">Existing Mappings</h5></div>
-            <a class="collection-item pointer black-text" *ngFor="let mapping of mappings | async" (click)="selectMapping(mapping)">{{mapping.name}}</a>
+            <a class="collection-item pointer black-text" *ngFor="let mapping of mappings | async"
+               (click)="selectMapping(mapping)">{{mapping.name}}</a>
+        </div>
+
+        <div class="card amber accent-2" id="data">
+            <div class="card-content">
+                <span class="card-title">Mappings</span>
+                <p>This is the mapping page. Here you can create or adjust parameter mappings. For every parameter in a
+                    mapping you can
+                    chose as many aliases as you want. All configurations of a mapping can be filtered.</p>
+            </div>
+            <div class="card-action">
+            </div>
         </div>
     </div>
     <div class="col s12 l8">
@@ -14,33 +26,41 @@
             <th>Aliases</th>
             </thead>
             <tbody>
-                <tr *ngFor="let param of selectedMapping.params">
-                    <td>{{param.key}}</td>
-                    <td class="aliases" (drop)="drop($event)" (dragover)="allowDrop($event)" id="{{param.key}}">
-                        <div *ngFor="let alias of param.aliases" class="chip grey darken-1 white-text" draggable="true" (dragstart)="drag($event)">{{alias}}</div>
-                    </td>
-                </tr>
+            <tr *ngFor="let param of selectedMapping.params">
+                <td>{{param.key}}</td>
+                <td class="aliases" (drop)="drop($event)" (dragover)="allowDrop($event)" id="{{param.key}}">
+                    <div *ngFor="let alias of param.aliases" class="chip grey darken-1 white-text" draggable="true"
+                         (dragstart)="drag($event)">{{alias}}</div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
     <div class="col s12 l2">
-        <div class="card amber accent-2" id="data">
-            <div class="card-content">
-                <span class="card-title">Mappings</span>
-                <p>This is the mapping page. Here you can create or adjust parameter mappings. For every parameter in a mapping you can
-                chose as many aliases as you want. All configurations of a mapping can be filtered.</p>
+
+        <div class="card amber accent-2" *ngIf="selectedMapping">
+            <div id="unrelatedParamPlace" class="card-content chip_dropzone unrelatedParamsContent" (drop)="drop($event)"
+                 (dragover)="allowDrop($event)">
+                <span class="card-title">Unrelated Params</span>
+                <div class="chip grey darken-1 white-text" *ngFor="let param of selectedMapping?.unrelatedParams"
+                     draggable="true" (dragstart)="drag($event)">{{param}}</div>
             </div>
             <div class="card-action">
+                <button class="btn grey darken-3" id="addNewKey" (drop)="drop($event)" (dragover)="allowDrop($event)">
+                    Add
+                </button>
             </div>
         </div>
 
-        <div class="card amber accent-2" *ngIf="selectedMapping">
-            <div id="unrelatedParamPlace" class="card-content chip_dropzone" (drop)="drop($event)" (dragover)="allowDrop($event)">
-                <span class="card-title">Unrelated Params</span>
-                    <div class="chip grey darken-1 white-text" *ngFor="let param of selectedMapping?.unrelatedParams" draggable="true" (dragstart)="drag($event)">{{param}}</div>
+        <div class="card amber accent-2" *ngIf="selectedMapping" (drop)="dropFlagFile($event)" (dragover)="allowDrop($event)">
+            <div class="card-content">
+                <span class="card-title">Flags</span>
+                <div class="chip grey darken-1 white-text" *ngFor="let flag of selectedMapping.flags">{{flag.key}}</div>
             </div>
             <div class="card-action">
-                <button class="btn grey darken-3" id="addNewKey" (drop)="drop($event)" (dragover)="allowDrop($event)">Add</button>
+                <button class="btn grey darken-3" id="addNewKey" (drop)="drop($event)" (dragover)="allowDrop($event)">
+                    Add
+                </button>
             </div>
         </div>
     </div>
