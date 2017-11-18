@@ -14,6 +14,8 @@ import * as d3 from "d3";
 import {ParamSet} from "../../../../both/models/paramSet";
 import {ProjectsDataService} from "../../services/projects-data.service";
 import {SearchService} from "../../services/search.service";
+import {DomSanitizer} from "@angular/platform-browser";
+let domtoimage = require('dom-to-image');
 
 declare let $ :any;
 declare let Materialize : any;
@@ -30,6 +32,7 @@ export class ConfigComponent implements OnInit{
     private canSafe: boolean;
     private hideText: boolean;
     private searchText: string;
+    private pdfLink : any;
     private colors: string[] = [
         "#DC143C",
         "#228B22",
@@ -46,7 +49,8 @@ export class ConfigComponent implements OnInit{
         private confirm: ConfirmationModalService,
         private aliasFinder: AliasFinder,
         private projectDS: ProjectsDataService,
-        private search: SearchService
+        private search: SearchService,
+        private sanitizer: DomSanitizer
     ) {
         this.config = {name: '', projectID: '', description: '', params: [], results: []};
         this.canSafe = false;
@@ -90,6 +94,10 @@ export class ConfigComponent implements OnInit{
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
         });
+    }
+
+    public sanitize(url :string) {
+        return this.sanitizer.bypassSecurityTrustUrl(url);
     }
 
     public getAliases(value: string) {
@@ -137,6 +145,17 @@ export class ConfigComponent implements OnInit{
                 });
             }
         })
+    }
+
+    public filterNode(node) {
+        return (node.tagName !== 'i');
+    }
+
+    public convertToPdf() {
+        domtoimage.toSvg(document.getElementById('toDownload'), {filter: this.filterNode}).then((dataUrl) => {
+            this.pdfLink = dataUrl;
+        });
+
     }
 
     private getFlags() {

@@ -1,6 +1,8 @@
 <div class="row">
     <!-----------------------Left Area------------------------->
     <div class="col s12 l2">
+        <button class="btn grey darken-3 top_space" (click)="convertToPdf()" *ngIf="!pdfLink">Convert to svg</button>
+        <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results" *ngIf="pdfLink">Download</a>
         <div class="card grey lighten-2" *ngIf="config">
             <div class="card-content">
                 <span class="card-title">Description</span>
@@ -13,7 +15,7 @@
     <!----------------------Main Area------------------------->
     <div class="col s12 l8">
         <p *ngIf="config?.results?.length == 0" class="center-align">No results available</p>
-        <div class="row">
+        <div class="row" id="toDownload">
             <div class="col s2">
                 <ul id="colorList">
                 </ul>
