@@ -69,9 +69,27 @@
                 </div>
             </div>
             <div class="card-action">
-                <button class="btn grey darken-3" id="addNewKey" (drop)="drop($event)" (dragover)="allowDrop($event)">Add</button>
+                <button class="btn grey darken-3 modal-trigger" data-target="createFlag">Add</button>
                 <button class="btn grey darken-3" (click)="clearFlags()" *ngIf="selectedMapping.flags && selectedMapping.flags != []">Clear</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!--------------------Modals------------------->
+<div id="createFlag" class="modal">
+    <div class="modal-content">
+        <h4>Add new Flag</h4>
+        <div class="input-field">
+            <input placeholder="Name" id="createModal_name" type="text" class="validate" #key>
+            <label for="createModal_name">Key</label>
+        </div>
+        <div class="input-field">
+            <textarea placeholder="Description" id="createModal_desc" type="text" class="materialize-textarea" #meaning></textarea>
+            <label for="createModal_desc">Meaning</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action waves-effect waves-green btn-flat" (click)="createFlag(key.value, meaning.value)">Create</button>
     </div>
 </div>

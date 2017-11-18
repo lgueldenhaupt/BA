@@ -28,7 +28,8 @@ export class MappingComponent implements OnInit{
         private mappingDS: MappingsDataService,
         private route: ActivatedRoute,
         private router: Router,
-        private confirm: ConfirmationModalService
+        private confirm: ConfirmationModalService,
+        private notification: NotificationService
     ) {
     }
 
@@ -39,6 +40,9 @@ export class MappingComponent implements OnInit{
             this.mappingDS.getMappingById(this.id).subscribe((foundMappings) => {
                 this.selectedMapping = foundMappings[0];
             });
+        });
+        $(document).ready(function () {
+            $('.modal').modal();
         });
     }
 
@@ -129,5 +133,17 @@ export class MappingComponent implements OnInit{
     public deleteFlag(flag: Flag) {
         this.selectedMapping.flags.splice(this.selectedMapping.flags.indexOf(flag), 1);
         this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
+    }
+
+    public createFlag(key: string, meaning: string) {
+        this.selectedMapping.flags.push(new Flag(key, meaning));
+        this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping).subscribe((changedEntries) => {
+            if (changedEntries === 1) {
+                this.notification.success("New Flag created");
+                $('#createFlag').modal('close');
+            } else {
+                this.notification.error("Something went wrong");
+            }
+        });
     }
 }
