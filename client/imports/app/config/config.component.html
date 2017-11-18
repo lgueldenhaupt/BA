@@ -53,7 +53,7 @@
     <!----------------------Right Area------------------------->
     <div class="col s12 l2">
         <button class="btn grey darken-3 top_space" (click)="convertToPdf()" *ngIf="config?.results?.length != 0 && !pdfLink">Convert to svg</button>
-        <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results" *ngIf="config?.results?.length != 0 && pdfLink">Download</a>
+        <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results.svg" *ngIf="config?.results?.length != 0 && pdfLink">Download</a>
     </div>
 </div>
 
