@@ -37,7 +37,7 @@
                 </thead>
 
                 <tbody>
-                <tr *ngFor="let paramSet of config.params">
+                <tr *ngFor="let paramSet of config.params | configs: searchText">
                     <td (click)="getAliases(paramSet.param)">{{paramSet.param}}</td>
                     <td>{{paramSet.value}}</td>
                     <td>

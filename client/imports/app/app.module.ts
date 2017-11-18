@@ -8,7 +8,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {ProjectsDataService} from "../services/projects-data.service";
 import {ConfigSetsDataService} from "../services/configsets-data.service";
 import {NotificationService} from "../services/notification.service";
-import {FilterPipe, ProjectFilterPipe} from "../helpers/filter.pipe";
+import {ConfigsPipe, FilterPipe, ProjectFilterPipe} from "../helpers/filter.pipe";
 import {SearchService} from "../services/search.service";
 import {ParamExtractor} from "../helpers/param-extractor";
 import {ConfigComponent} from "./config/config.component";
@@ -66,6 +66,7 @@ const appRoutes: Routes = [
         ConfigFilterComponent,
         ProjectFilterPipe,
         FilterPipe,
+        ConfigsPipe
     ],
     // Entry Components
     entryComponents: [

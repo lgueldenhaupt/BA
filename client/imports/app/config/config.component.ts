@@ -13,6 +13,7 @@ import {TrainingSet} from "../../../../both/models/trainingSet";
 import * as d3 from "d3";
 import {ParamSet} from "../../../../both/models/paramSet";
 import {ProjectsDataService} from "../../services/projects-data.service";
+import {SearchService} from "../../services/search.service";
 
 declare let $ :any;
 declare let Materialize : any;
@@ -28,6 +29,7 @@ export class ConfigComponent implements OnInit{
     private mappingID: string;
     private canSafe: boolean;
     private hideText: boolean;
+    private searchText: string;
     private colors: string[] = [
         "#DC143C",
         "#228B22",
@@ -43,7 +45,8 @@ export class ConfigComponent implements OnInit{
         private notification: NotificationService,
         private confirm: ConfirmationModalService,
         private aliasFinder: AliasFinder,
-        private projectDS: ProjectsDataService
+        private projectDS: ProjectsDataService,
+        private search: SearchService
     ) {
         this.config = {name: '', projectID: '', description: '', params: [], results: []};
         this.canSafe = false;
@@ -83,6 +86,9 @@ export class ConfigComponent implements OnInit{
         $(document).ready(function(){
             $('.collapsible').collapsible();
             $('.modal').modal();
+        });
+        this.search.getSearchQuery().subscribe(x => {
+            this.searchText = (<HTMLInputElement>x.target).value;
         });
     }
 
