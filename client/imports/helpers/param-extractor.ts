@@ -68,8 +68,8 @@ export class ParamExtractor {
                 return [];
             }
             line = line.replace(/\s/g, '');
-            let flag = new Flag(line.split(separator)[0], line.split(separator)[1]);
-            flag.key = flag.key.split(".").pop();
+            let flag = new Flag(line.split(separator)[1], line.split(separator)[0]);
+            flag.meaning = flag.meaning.split(".").pop();
             result.push(flag);
         });
         return result;

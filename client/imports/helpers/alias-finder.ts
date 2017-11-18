@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {MappingsDataService} from "../services/mappings-data.service";
 import {ParamAliases} from "../../../both/models/paramAliases";
 import {Observable} from "rxjs/Observable";
-import {Mapping} from "../../../both/models/mapping.model";
+import {Mapping, ParamMapping} from "../../../both/models/mapping.model";
 
 @Injectable()
 export class AliasFinder{
@@ -66,6 +66,16 @@ export class AliasFinder{
                 result = true;
             } else if (paramWithAliases.key === second && paramWithAliases.aliases.indexOf(first) != -1) {
                 result = true;
+            }
+        });
+        return result;
+    }
+
+    public getFlagMeaning(mappingID, key: string) : string {
+        let result = key;
+        this.mappings.forEach((mapping: Mapping) => {
+            if ((<ParamMapping>mapping)._id === mappingID) {
+                result = ParamMapping.getFlagName(mapping.flags, key);
             }
         });
         return result;

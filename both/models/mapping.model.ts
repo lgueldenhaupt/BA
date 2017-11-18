@@ -22,4 +22,14 @@ export class ParamMapping implements Mapping {
         this.flags = flags;
         this._id = _id;
     }
+
+    public static getFlagName(flags : Flag[], key : string) : string {
+        let result = key;
+        flags.forEach((flag : Flag) => {
+            if (flag.key === key) {
+                result = flag.meaning;
+            }
+        });
+        return result;
+    }
 }

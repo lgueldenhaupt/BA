@@ -68,6 +68,7 @@ app {
 ::-webkit-scrollbar
 {
   width: 12px;
+  height: 12px;
   background-color: #F5F5F5;
 }
 
@@ -118,4 +119,12 @@ tr {
 
 td {
   padding: 8px 5px;
+}
+
+.collapsible-body {
+  padding: 0.2rem 0.2rem 0.2rem 1rem;
+}
+
+.collapsible-header {
+  padding: 0.57rem;
 }

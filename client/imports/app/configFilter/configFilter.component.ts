@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import template from "./configFilter.component.html";
 import style from "./configFilter.component.scss";
-import {Mapping} from "../../../../both/models/mapping.model";
+import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";
 import {MappingsDataService} from "../../services/mappings-data.service";
 import {Config} from "../../../../both/models/config";
 import {ConfigSetsDataService} from "../../services/configsets-data.service";
@@ -75,7 +75,7 @@ export class ConfigFilterComponent implements OnInit{
             });
             values = _.uniq(values);
             values.forEach((val) => {
-                options.push({name: val, enabled: true});
+                options.push({name: val, enabled: true, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
             });
             this.filters.push(new Filter(key, options));
             FilterService.setFilters(this.filters);

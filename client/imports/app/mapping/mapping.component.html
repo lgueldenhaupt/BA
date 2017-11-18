@@ -1,4 +1,5 @@
 <div class="row">
+    <!------------------------------- Left side ---------------------------------------------------------->
     <div class="col s12 l2">
         <div class="collection with-header">
             <div class="collection-header grey darken-1"><h5 class="white-text">Existing Mappings</h5></div>
@@ -17,6 +18,8 @@
             </div>
         </div>
     </div>
+
+    <!------------------------------- Middle ---------------------------------------------------------->
     <div class="col s12 l8">
         <h4 *ngIf="!selectedMapping" class="center-align grey-text">Nothing selected</h4>
         <h4 *ngIf="selectedMapping" class="center-align">{{selectedMapping.name}}</h4>
@@ -36,10 +39,13 @@
             </tbody>
         </table>
     </div>
+
+    <!------------------------------- Right side ---------------------------------------------------------->
     <div class="col s12 l2">
 
+        <!------------------------------Unrelated Params------------------------------------------------->
         <div class="card amber accent-2" *ngIf="selectedMapping">
-            <div id="unrelatedParamPlace" class="card-content chip_dropzone unrelatedParamsContent" (drop)="drop($event)"
+            <div id="maxCardHeight" class="card-content chip_dropzone unrelatedParamsContent" (drop)="drop($event)"
                  (dragover)="allowDrop($event)">
                 <span class="card-title">Unrelated Params</span>
                 <div class="chip grey darken-1 white-text" *ngFor="let param of selectedMapping?.unrelatedParams"
@@ -52,15 +58,19 @@
             </div>
         </div>
 
+        <!-----------------------------------------Flags------------------------------------------------->
         <div class="card amber accent-2" *ngIf="selectedMapping" (drop)="dropFlagFile($event)" (dragover)="allowDrop($event)">
             <div class="card-content">
                 <span class="card-title">Flags</span>
-                <div class="chip grey darken-1 white-text" *ngFor="let flag of selectedMapping.flags">{{flag.key}}</div>
+                <p *ngIf="!selectedMapping.flags">Here you can drop or create flag translations.</p>
+                <span class="grey-text text-darken-2" *ngIf="flagHint && flagHint != ''">Key: {{flagHint}}</span><br>
+                <div class="maxCardHeight">
+                    <div class="chip grey darken-1 white-text" *ngFor="let flag of selectedMapping.flags" (mouseover)="flagHint = flag.key" (mouseleave)="flagHint = ''">{{flag.meaning}}<i class="close material-icons" (click)="deleteFlag(flag)">close</i></div>
+                </div>
             </div>
             <div class="card-action">
-                <button class="btn grey darken-3" id="addNewKey" (drop)="drop($event)" (dragover)="allowDrop($event)">
-                    Add
-                </button>
+                <button class="btn grey darken-3" id="addNewKey" (drop)="drop($event)" (dragover)="allowDrop($event)">Add</button>
+                <button class="btn grey darken-3" (click)="clearFlags()" *ngIf="selectedMapping.flags && selectedMapping.flags != []">Clear</button>
             </div>
         </div>
     </div>

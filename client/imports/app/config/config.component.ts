@@ -63,6 +63,7 @@ export class ConfigComponent implements OnInit{
                     this.config = data[0];
                     this.projectDS.getProjectsMapping(this.config.projectID).subscribe(mappingID => {
                         this.mappingID = mappingID;
+                        this.getFlags();
                     });
                     if (this.config.results) {
                         this.initResultColors();
@@ -108,12 +109,11 @@ export class ConfigComponent implements OnInit{
             }
             this.config.params = params;
             this.config.results = results;
-            console.log(this.config)
         };
         FR.readAsText(input[0]);
     }
 
-    deleteParamSet(paramSet: ParamSet) {
+    public deleteParamSet(paramSet: ParamSet) {
         this.confirm.openModal().then((yes) => {
             if (yes) {
                 this.config.params.splice(this.config.params.indexOf(paramSet), 1);
@@ -124,6 +124,12 @@ export class ConfigComponent implements OnInit{
                 });
             }
         })
+    }
+
+    private getFlags() {
+        this.config.params.forEach((param: ParamSet) => {
+            param.value = this.aliasFinder.getFlagMeaning(this.mappingID, param.value);
+        });
     }
 
     private initResultColors() {

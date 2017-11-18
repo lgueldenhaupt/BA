@@ -7,6 +7,9 @@ import {Mapping} from "../../../../both/models/mapping.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
 import {ParamExtractor} from "../../helpers/param-extractor";
+import {NotificationService} from "../../services/notification.service";
+import {ConfirmationModalService} from "../../services/confirmationModal.service";
+import {Flag} from "../../../../both/models/flag";
 
 declare let $ :any;
 
@@ -24,7 +27,8 @@ export class MappingComponent implements OnInit{
     constructor(
         private mappingDS: MappingsDataService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private confirm: ConfirmationModalService
     ) {
     }
 
@@ -36,7 +40,6 @@ export class MappingComponent implements OnInit{
                 this.selectedMapping = foundMappings[0];
             });
         });
-
     }
 
     public selectMapping(mapping: any) {
@@ -81,13 +84,18 @@ export class MappingComponent implements OnInit{
     }
 
     public dropFlagFile(e) {
+        if (e.dataTransfer.files.length <= 0) return;
         let file = e.dataTransfer.files[0];
         e.preventDefault();
         let FR = new FileReader();
         FR.onload = (ev: FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
             let flags = ParamExtractor.extractFlags(result);
-            this.selectedMapping.flags = flags;
+            if (!this.selectedMapping.flags) {
+                this.selectedMapping.flags = [];
+            }
+            this.selectedMapping.flags = this.selectedMapping.flags.concat(flags);
+            this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
         };
         FR.readAsText(file);
     }
@@ -107,5 +115,19 @@ export class MappingComponent implements OnInit{
                 paramAliases.aliases.splice(paramAliases.aliases.indexOf(this.label.innerHTML), 1)
             }
         });
+    }
+
+    public clearFlags() {
+        this.confirm.openModal("Clear all Flags?").then((fulfilled) => {
+            if (fulfilled) {
+                this.selectedMapping.flags = [];
+                this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
+            }
+        });
+    }
+
+    public deleteFlag(flag: Flag) {
+        this.selectedMapping.flags.splice(this.selectedMapping.flags.indexOf(flag), 1);
+        this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
     }
 }
