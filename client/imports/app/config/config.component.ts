@@ -28,6 +28,13 @@ export class ConfigComponent implements OnInit{
     private mappingID: string;
     private canSafe: boolean;
     private hideText: boolean;
+    private colors: string[] = [
+        "#DC143C",
+        "#228B22",
+        "#4169E1",
+        "#FFD700",
+        "#778899"
+    ];
     private chart;
 
     constructor(
@@ -135,7 +142,12 @@ export class ConfigComponent implements OnInit{
     private initResultColors() {
         let colorList = d3.select('#colorList');
         this.config.results.forEach((result, index) => {
-            let color = ConfigComponent.getRandomColor();
+            let color;
+            if (index > this.colors.length -1) {
+                color = ConfigComponent.getRandomColor();
+            } else {
+                color = this.colors[index];
+            }
             let text = result.name != '' ? result.name : index;
             this.chart.colors.push(color);
             colorList.append("div")
@@ -161,11 +173,11 @@ export class ConfigComponent implements OnInit{
             MARGINS = {
                 top: 20,
                 right: 20,
-                bottom: 20,
+                bottom: 33,
                 left: 50
             },
             xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, this.config.results[0].epochs.length -1]),
-            yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([minVal,maxVal]),
+            yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top - (MARGINS.bottom - MARGINS.top), MARGINS.bottom - (MARGINS.bottom - MARGINS.top)]).domain([minVal,maxVal]),
             xAxis = d3.axisBottom()
                 .scale(xScale).ticks(10),
             yAxis = d3.axisLeft()
@@ -176,6 +188,15 @@ export class ConfigComponent implements OnInit{
         vis.append("svg:g")
             .attr("transform", "translate(" + (MARGINS.left) + ",0)")
             .call(yAxis);
+        vis.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (20/2) +","+(HEIGHT/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Accuracy ");
+        vis.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ (WIDTH/2) +","+(HEIGHT -3)+")")  // centre below axis
+            .text("Epoch");
+
         let lineGen = d3.line()
             .x(function(d, i) {
                 return xScale(i);
@@ -201,7 +222,7 @@ export class ConfigComponent implements OnInit{
                 .attr("cy", function (d) {
                     return yScale(d);
                 })
-                .attr("r", 3)
+                .attr("r", 4)
                 .attr("fill", color)
                 .on("mouseover", function (d, i) {
                     d3.select(this).transition()
@@ -220,20 +241,11 @@ export class ConfigComponent implements OnInit{
                     d3.select(this).transition()
                         .ease(d3.easeElastic)
                         .duration("500")
-                        .attr("r", 3);
+                        .attr("r", 4);
                     d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
                 })
         });
         chart.vis = vis;
-    }
-
-    private static getRandomColor() {
-        let letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 
     private getMaxVal(results) {
@@ -266,5 +278,14 @@ export class ConfigComponent implements OnInit{
         if (this.config && this.config.results) {
             this.initResults(this.chart, this.getMaxVal(this.config.results), this.getMinVal(this.config.results));
         }
+    }
+
+    private static getRandomColor() {
+        let letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
     }
 }
