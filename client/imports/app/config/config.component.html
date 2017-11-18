@@ -1,8 +1,6 @@
 <div class="row">
     <!-----------------------Left Area------------------------->
     <div class="col s12 l2">
-        <button class="btn grey darken-3 top_space" (click)="convertToPdf()" *ngIf="!pdfLink">Convert to svg</button>
-        <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results" *ngIf="pdfLink">Download</a>
         <div class="card grey lighten-2" *ngIf="config">
             <div class="card-content">
                 <span class="card-title">Description</span>
@@ -16,12 +14,12 @@
     <div class="col s12 l8">
         <p *ngIf="config?.results?.length == 0" class="center-align">No results available</p>
         <div class="row" id="toDownload">
+            <div id="results" class="col s10">
+                <svg id="visualisation"></svg>
+            </div>
             <div class="col s2">
                 <ul id="colorList">
                 </ul>
-            </div>
-            <div id="results" class="col s10">
-                <svg id="visualisation"></svg>
             </div>
         </div>
 
@@ -54,16 +52,8 @@
 
     <!----------------------Right Area------------------------->
     <div class="col s12 l2">
-        <div class="file-field input-field">
-            <div class="btn grey darken-3">
-                <span *ngIf="config.params.length < 1">Add</span>
-                <span *ngIf="config.params.length > 0">Change</span>
-                <input type="file" (change)="dataInput($event)">
-            </div>
-            <div class="file-path-wrapper">
-                <input class="file-path validate" type="text">
-            </div>
-        </div>
+        <button class="btn grey darken-3 top_space" (click)="convertToPdf()" *ngIf="config?.results?.length != 0 && !pdfLink">Convert to svg</button>
+        <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results" *ngIf="config?.results?.length != 0 && pdfLink">Download</a>
     </div>
 </div>
 
