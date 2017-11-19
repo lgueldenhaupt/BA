@@ -1,3 +1,5 @@
+import {Pipe, PipeTransform} from "@angular/core";
+
 export class DynamicTableColumn {
     public name: string;
     public property: string;
@@ -23,10 +25,12 @@ export class DynamicTableOptions {
     public name: string;
     public classes: string;
     public containsConfigSets: boolean;
+    public searchFilter: PipeTransform;
 
-    constructor(name: string, containsConfigSets: boolean = false, classes : string = "") {
+    constructor(name: string, containsConfigSets: boolean = false, classes : string = "", searchFilter : PipeTransform = null) {
         this.name = name;
         this.classes = classes;
         this.containsConfigSets = containsConfigSets;
+        this.searchFilter = searchFilter;
     }
 }

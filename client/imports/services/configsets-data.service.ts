@@ -35,4 +35,13 @@ export class ConfigSetsDataService {
     public updateConfig(ID, config : ConfigSet) : Observable<number> {
         return ConfigSetsCollection.update({_id: ID}, config);
     }
+
+    public deleteProjectsConfigs(projectID : string) {
+        let configs = this.data.fetch();
+        configs.forEach((config) => {
+            if (config.projectID === projectID) {
+                ConfigSetsCollection.remove((<any>config)._id);
+            }
+        });
+    }
 }

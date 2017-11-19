@@ -1,8 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output, PipeTransform} from "@angular/core";
 import template from "./dynamic.table.html";
 import style from "./dynamic.table.scss";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable";
 import {ConfigSet} from "../../../../both/models/configSet.model";
+import {SearchService} from "../../services/search.service";
+import {ProjectFilterPipe} from "../filter.pipe";
 
 declare let $ :any;
 
@@ -21,8 +23,11 @@ export class DynamicTable implements OnInit{
     private activeColumns : DynamicTableColumn[];
     private fixColumns: DynamicTableColumn[];
     private possibleColumns : DynamicTableColumn[];
+    private trueInput : any[];
+    private searchText: string = "";
 
     constructor(
+        private search : SearchService
     ) {
     }
 
@@ -35,6 +40,17 @@ export class DynamicTable implements OnInit{
             } else {
                 this.activeColumns.push(column);
             }
+        });
+        $(document).ready(function () {
+            $('.modal').modal();
+        });
+        this.search.getSearchQuery().subscribe(x => {
+            let searchText = (<HTMLInputElement>x.target).value;
+            if (!this.trueInput) {
+                this.trueInput = Object.assign([], this.input);
+            }
+            let filter = this.options.searchFilter;
+            this.input = filter.transform(this.trueInput, searchText);
         });
     }
 
@@ -70,7 +86,7 @@ export class DynamicTable implements OnInit{
         this.possibleColumns.forEach((column) => {
             column.toggle();
         });
-        if (this.input.length > 0) {
+        if (this.input && this.input.length > 0) {
             let configSet : ConfigSet = this.input[0];
             for (let prop in configSet) {
                 if (configSet.hasOwnProperty(prop)) {

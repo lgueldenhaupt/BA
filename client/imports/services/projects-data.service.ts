@@ -3,12 +3,15 @@ import {ObservableCursor} from "meteor-rxjs";
 import {Project} from "../../../both/models/project.model";
 import {ProjectsCollection} from "../../../both/collections/projects.collection";
 import {Observable} from "rxjs/Observable";
+import {ConfigSetsDataService} from "./configsets-data.service";
 
 @Injectable()
 export class ProjectsDataService  {
     private data: ObservableCursor<Project>;
 
-    constructor() {
+    constructor(
+        private configDS : ConfigSetsDataService
+    ) {
         this.data = ProjectsCollection.find({});
     }
 
@@ -25,6 +28,7 @@ export class ProjectsDataService  {
     }
 
     public delete(ID) : Observable<number> {
+        this.configDS.deleteProjectsConfigs(ID);
         return ProjectsCollection.remove(ID);
     }
 

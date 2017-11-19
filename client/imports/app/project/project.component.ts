@@ -18,6 +18,7 @@ import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable";
+import {ConfigsPipe, ProjectFilterPipe} from "../../helpers/filter.pipe";
 
 declare let $: any;
 declare let _: any;
@@ -53,7 +54,7 @@ export class ProjectComponent implements OnInit {
         this.onColumnClick = (item) => {
             this.router.navigate(['/config', item._id]);
         };
-        this.tableOptions = new DynamicTableOptions("Configurations", true, "highlight");
+        this.tableOptions = new DynamicTableOptions("Configurations", true, "highlight",new ProjectFilterPipe());
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
         this.initialColumns.push(new DynamicTableColumn('Description', 'description', false));
@@ -223,7 +224,7 @@ export class ProjectComponent implements OnInit {
     }
 
     private getProjectMapping() {
-        if (this.project.mappingID && this.project.mappingID != '') {
+        if (this.project && this.project.mappingID && this.project.mappingID != '') {
             this.mappingDS.getMappingById(this.project.mappingID).subscribe((mappings : Mapping[]) => {
                 if (mappings && mappings[0]) {
                     let m  = mappings[0];
