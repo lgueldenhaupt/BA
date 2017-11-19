@@ -1,0 +1,49 @@
+<div *ngIf="options" class="left-align">
+    <span class="tableHeading">{{options.name}}</span>
+    <i class="material-icons right_float grey-text text-darken-2 pointer" (click)="openSettings()">settings</i>
+</div>
+<table [ngClass]="options?.classes ? options.classes : ''">
+    <thead>
+    <tr>
+        <th *ngFor="let column of activeColumns">{{column.name}}</th>
+        <th *ngFor="let column of fixColumns">{{column.name}}</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let set of input" [ngClass]="{'pointer': onColumnClick}">
+        <td *ngFor="let column of activeColumns">
+            <div *ngIf="!column.columnActions" (click)="clickColumn(set)">{{set[column.property]}}</div>
+            <div *ngIf="column.columnActions">
+                <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
+            </div>
+        </td>
+        <td *ngFor="let column of fixColumns">
+            <div *ngIf="!column.columnActions" (click)="clickColumn(set)">{{set[column.property]}}</div>
+            <div *ngIf="column.columnActions">
+                <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <h4>Table Settings</h4>
+        <hr>
+
+        <div class=" left-align">
+            <h5>Columns</h5>
+            <div class="flex_conti">
+                <div *ngFor="let column of possibleColumns" class="propertyCheckbox" (change)="toggleColumn(column)">
+                    <input type="checkbox" class="filled-in" id="{{column.name}}" [checked]="column.active" [disabled]="column.fix"/>
+                    <label for="{{column.name}}">{{column.name}}</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+    </div>
+</div>

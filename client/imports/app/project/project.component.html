@@ -33,26 +33,7 @@
             </div>
 
             <div *ngIf="view == 1">
-                <table class="highlight">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr *ngFor="let set of filteredConfigs | projects: searchText">
-                        <td [routerLink]="['/config', set._id]" class="pointer">{{set.name}}</td>
-                        <td [routerLink]="['/config', set._id]"  class="pointer">{{set.description}}</td>
-                        <td>
-                            <a (click)="openConfigSetEditModal(set)" class="modal-trigger" data-target="configSetEditModal"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
-                            <a (click)="deleteConfigSet(set._id, set.name)"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" [onColumnClick]="onColumnClick" (called)="handleDynTableCall($event)" [options]="tableOptions"></dynTable>
             </div>
 
             <span *ngIf="(filteredConfigs)?.length < 1" class="">No configs to display</span>

@@ -4,7 +4,7 @@ import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import template from "./project.component.html";
 import style from "./project.component.scss";
 import {Project} from "../../../../both/models/project.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {NotificationService} from "../../services/notification.service";
 import {SearchService} from "../../services/search.service";
@@ -17,6 +17,7 @@ import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
+import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable";
 
 declare let $: any;
 declare let _: any;
@@ -35,6 +36,9 @@ export class ProjectComponent implements OnInit {
     private searchText: string;
     private chosenConfig: Config;
     private view: number;
+    private initialColumns: DynamicTableColumn[];
+    private onColumnClick: Function;
+    private tableOptions: DynamicTableOptions;
 
     constructor(private projectsDS: ProjectsDataService,
                 private configSetsDS: ConfigSetsDataService,
@@ -42,9 +46,20 @@ export class ProjectComponent implements OnInit {
                 private route: ActivatedRoute,
                 private notification: NotificationService,
                 private search: SearchService,
-                private confirm: ConfirmationModalService) {
+                private confirm: ConfirmationModalService,
+                private router: Router) {
         this.project = new Project();
         this.view = 1;
+        this.onColumnClick = (item) => {
+            this.router.navigate(['/config', item._id]);
+        };
+        this.tableOptions = new DynamicTableOptions("Configurations", true, "highlight");
+        this.initialColumns = [];
+        this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
+        this.initialColumns.push(new DynamicTableColumn('Description', 'description', false));
+        this.initialColumns.push(new DynamicTableColumn('Actions', 'name', true, [
+            "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
+            "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]));
     }
 
     ngOnInit(): void {
@@ -76,6 +91,19 @@ export class ProjectComponent implements OnInit {
             $('.tooltipped').tooltip({delay: 50});
             $('.modal').modal();
         });
+    }
+
+    handleDynTableCall(event) {
+        switch (event.index) {
+            case 0:
+                this.openConfigSetEditModal(event.item);
+                break;
+            case 1:
+                this.deleteConfigSet(event.item);
+                break;
+            default:
+                break;
+        }
     }
 
     openConfigSetEditModal(set: Config) {
@@ -125,7 +153,8 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    deleteConfigSet(id, name) {
+    deleteConfigSet(item) {
+        let id = item._id;
         this.confirm.openModal('Delete ' + name, "Do you really want to delete that config?").then((fullfilled) => {
             if (fullfilled) {
                 this.configSetsDS.delete(id).subscribe((changedEntries) => {

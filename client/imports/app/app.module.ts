@@ -20,6 +20,7 @@ import {ConfigFilterComponent} from "./configFilter/configFilter.component";
 import {MappingsDataService} from "../services/mappings-data.service";
 import {AliasFinder} from "../helpers/alias-finder";
 import {FilterService} from "../services/filter.service";
+import {DynamicTable} from "../helpers/dynamic.table/dynamic.table";
 
 const appRoutes: Routes = [
     {
@@ -66,7 +67,8 @@ const appRoutes: Routes = [
         ConfigFilterComponent,
         ProjectFilterPipe,
         FilterPipe,
-        ConfigsPipe
+        ConfigsPipe,
+        DynamicTable
     ],
     // Entry Components
     entryComponents: [
