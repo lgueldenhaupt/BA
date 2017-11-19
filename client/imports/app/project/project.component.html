@@ -33,7 +33,7 @@
             </div>
 
             <div *ngIf="view == 1">
-                <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" [onColumnClick]="onColumnClick" (called)="handleDynTableCall($event)" [options]="tableOptions"></dynTable>
+                <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableColumnClicked($event)" [options]="tableOptions"></dynTable>
             </div>
 
             <span *ngIf="(filteredConfigs)?.length < 1" class="">No configs to display</span>

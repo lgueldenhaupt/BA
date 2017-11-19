@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import template from "./dynamic.table.html";
 import style from "./dynamic.table.scss";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
-import {ConfigSet} from "../../../../both/models/configSet.model";
 import {SearchService} from "../../services/search.service";
 
 declare let $ :any;
@@ -16,9 +15,9 @@ declare let _ : any;
 export class DynamicTable implements OnInit{
     @Input() input: any[];
     @Input() initialColumns: DynamicTableColumn[];
-    @Input() onColumnClick: Function;
     @Input() options: DynamicTableOptions;
     @Output() called: EventEmitter<any> = new EventEmitter();
+    @Output() clickedOnColumn: EventEmitter<any> = new EventEmitter();
 
     private activeColumns : DynamicTableColumn[];
     private fixColumns: DynamicTableColumn[];
@@ -34,30 +33,32 @@ export class DynamicTable implements OnInit{
     ngOnInit(): void {
         this.activeColumns = [];
         this.fixColumns = [];
-        this.initialColumns.forEach((column) => {
-            if (column.fix) {
-                this.fixColumns.push(column);
-            } else {
-                this.activeColumns.push(column);
-            }
-        });
+        if (this.initialColumns) {
+            this.initialColumns.forEach((column) => {
+                if (column.fix) {
+                    this.fixColumns.push(column);
+                } else {
+                    this.activeColumns.push(column);
+                }
+            });
+        }
         $(document).ready(function () {
             $('.modal').modal();
         });
-        this.search.getSearchQuery().subscribe(x => {
-            let searchText = (<HTMLInputElement>x.target).value;
-            if (!this.trueInput) {
-                this.trueInput = Object.assign([], this.input);
-            }
-            let filter = this.options.searchFilter;
-            this.input = filter.transform(this.trueInput, searchText);
-        });
+        if (this.options && this.options.searchFilter) {
+            this.search.getSearchQuery().subscribe(x => {
+                let searchText = (<HTMLInputElement>x.target).value;
+                if (!this.trueInput) {
+                    this.trueInput = Object.assign([], this.input);
+                }
+                let filter = this.options.searchFilter;
+                this.input = filter.transform(this.trueInput, searchText);
+            });
+        }
     }
 
     public clickColumn(item : any) {
-        if (this.onColumnClick) {
-            this.onColumnClick(item);
-        }
+        this.clickedOnColumn.emit(item);
     }
 
     public orderBy(criteria : any) {

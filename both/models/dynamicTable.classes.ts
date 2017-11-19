@@ -25,11 +25,13 @@ export class DynamicTableOptions {
     public classes: string;
     public containsConfigSets: boolean;
     public searchFilter: PipeTransform;
+    public configurable: boolean;
 
-    constructor(name: string, containsConfigSets: boolean = false, classes : string = "", searchFilter : PipeTransform = null) {
+    constructor(name: string, searchFilter : PipeTransform = null, classes : string = "", configurable : boolean = false, containsConfigSets: boolean = false) {
         this.name = name;
         this.classes = classes;
         this.containsConfigSets = containsConfigSets;
         this.searchFilter = searchFilter;
+        this.configurable = configurable;
     }
 }

@@ -1,4 +1,4 @@
-<div *ngIf="options" class="left-align">
+<div *ngIf="options && options.configurable" class="left-align">
     <span class="tableHeading">{{options.name}}</span>
     <i class="material-icons right_float grey-text text-darken-2 pointer" (click)="openSettings()">settings</i>
 </div>
@@ -13,13 +13,13 @@
     <tbody>
     <tr *ngFor="let set of input" [ngClass]="{'pointer': onColumnClick}">
         <td *ngFor="let column of activeColumns">
-            <div *ngIf="!column.columnActions" (click)="clickColumn(set)">{{set[column.property]}}</div>
+            <div *ngIf="!column.columnActions" (click)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
             <div *ngIf="column.columnActions">
                 <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
             </div>
         </td>
         <td *ngFor="let column of fixColumns">
-            <div *ngIf="!column.columnActions" (click)="clickColumn(set)">{{set[column.property]}}</div>
+            <div *ngIf="!column.columnActions" (click)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
             <div *ngIf="column.columnActions">
                 <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
             </div>

@@ -15,6 +15,8 @@ import {ParamSet} from "../../../../both/models/paramSet";
 import {ProjectsDataService} from "../../services/projects-data.service";
 import {SearchService} from "../../services/search.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
+import {ConfigsPipe} from "../../helpers/filter.pipe";
 let domtoimage = require('dom-to-image');
 
 declare let $ :any;
@@ -33,6 +35,8 @@ export class ConfigComponent implements OnInit{
     private hideText: boolean;
     private searchText: string;
     private pdfLink : any;
+    private initalParamColumns: DynamicTableColumn[];
+    private tableOptions: DynamicTableOptions;
     private colors: string[] = [
         "#DC143C",
         "#228B22",
@@ -55,6 +59,13 @@ export class ConfigComponent implements OnInit{
         this.config = {name: '', projectID: '', description: '', params: [], results: []};
         this.canSafe = false;
         this.hideText = true;
+        this.initalParamColumns = [];
+        this.initalParamColumns.push(new DynamicTableColumn('Param', 'param', true));
+        this.initalParamColumns.push(new DynamicTableColumn('Value', 'value', true));
+        this.initalParamColumns.push(new DynamicTableColumn('Actions', '', true, [
+            '<i class="material-icons grey-text text-darken-2 pointer">delete</i>'
+        ]));
+        this.tableOptions = new DynamicTableOptions("Params", new ConfigsPipe(), "highlight");
     }
 
     ngOnInit(): void {
@@ -96,11 +107,23 @@ export class ConfigComponent implements OnInit{
         });
     }
 
+    public handleTableActions(event) {
+        switch (event.index) {
+            case 0:
+                this.deleteParamSet(event.item);
+                break;
+            default:
+                break;
+        }
+    }
+
     public sanitize(url :string) {
         return this.sanitizer.bypassSecurityTrustUrl(url);
     }
 
-    public getAliases(value: string) {
+    public getAliases(item : any) {
+        console.log(this.config.params)
+        let value = item.param;
         let aliases = this.aliasFinder.getAliasesStraight(this.mappingID,value);
         let str = "";
         aliases.forEach((alias) => {

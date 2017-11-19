@@ -38,7 +38,6 @@ export class ProjectComponent implements OnInit {
     private chosenConfig: Config;
     private view: number;
     private initialColumns: DynamicTableColumn[];
-    private onColumnClick: Function;
     private tableOptions: DynamicTableOptions;
 
     constructor(private projectsDS: ProjectsDataService,
@@ -51,10 +50,7 @@ export class ProjectComponent implements OnInit {
                 private router: Router) {
         this.project = new Project();
         this.view = 1;
-        this.onColumnClick = (item) => {
-            this.router.navigate(['/config', item._id]);
-        };
-        this.tableOptions = new DynamicTableOptions("Configurations", true, "highlight", new ProjectFilterPipe());
+        this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true,true);
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
         this.initialColumns.push(new DynamicTableColumn('Description', 'description', false));
@@ -105,6 +101,10 @@ export class ProjectComponent implements OnInit {
             default:
                 break;
         }
+    }
+
+    onTableColumnClicked(event) {
+        this.router.navigate(['/config', event._id]);
     }
 
     openConfigSetEditModal(set: Config) {
