@@ -18,7 +18,6 @@ export class DynamicTableColumn {
     public toggle() {
         this.active = !this.active;
     }
-
 }
 
 export class DynamicTableOptions {

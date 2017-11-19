@@ -5,8 +5,8 @@
 <table [ngClass]="options?.classes ? options.classes : ''">
     <thead>
     <tr>
-        <th *ngFor="let column of activeColumns">{{column.name}}</th>
-        <th *ngFor="let column of fixColumns">{{column.name}}</th>
+        <th *ngFor="let column of activeColumns" (click)="orderBy(column.property)" class="pointer">{{column.name}}</th>
+        <th *ngFor="let column of fixColumns" (click)="orderBy(column.property)" class="pointer">{{column.name}}</th>
     </tr>
     </thead>
 

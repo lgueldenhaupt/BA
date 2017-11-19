@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output, PipeTransform} from "@angular/core";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import template from "./dynamic.table.html";
 import style from "./dynamic.table.scss";
-import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable";
+import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
 import {ConfigSet} from "../../../../both/models/configSet.model";
 import {SearchService} from "../../services/search.service";
-import {ProjectFilterPipe} from "../filter.pipe";
 
 declare let $ :any;
+declare let _ : any;
 
 @Component({
     selector: "dynTable",
@@ -24,7 +24,7 @@ export class DynamicTable implements OnInit{
     private fixColumns: DynamicTableColumn[];
     private possibleColumns : DynamicTableColumn[];
     private trueInput : any[];
-    private searchText: string = "";
+    private sortDescending: boolean = false;
 
     constructor(
         private search : SearchService
@@ -60,12 +60,22 @@ export class DynamicTable implements OnInit{
         }
     }
 
+    public orderBy(criteria : any) {
+        if (!this.sortDescending) {
+            this.input = _.sortBy(this.input, criteria);
+            this.sortDescending = true;
+        } else {
+            this.input = _.sortBy(this.input,criteria).reverse();
+            this.sortDescending = false;
+        }
+    }
+
     public callFunction(index : number, item: any) {
         this.called.emit({index, item});
     }
 
     public openSettings() {
-        if (this.options.containsConfigSets && !this.possibleColumns) {
+        if (!this.possibleColumns) {
             this.initPossibleColumns();
         }
         $('#settingsModal').modal('open');
@@ -87,9 +97,9 @@ export class DynamicTable implements OnInit{
             column.toggle();
         });
         if (this.input && this.input.length > 0) {
-            let configSet : ConfigSet = this.input[0];
-            for (let prop in configSet) {
-                if (configSet.hasOwnProperty(prop)) {
+            let item = this.input[0];
+            for (let prop in item) {
+                if (item.hasOwnProperty(prop)) {
                     let propName = prop.charAt(0).toUpperCase() + prop.slice(1);
                     if (!this.existsInColumns(this.possibleColumns, propName)) {
                         this.possibleColumns.push(new DynamicTableColumn(propName, prop));
@@ -97,6 +107,12 @@ export class DynamicTable implements OnInit{
                 }
             }
         }
+        // if (this.options.containsConfigSets) {
+        //     this.initConfigSpecificColumns();
+        // }
+    }
+
+    private initConfigSpecificColumns() {
     }
 
     public existsInColumns(columns : DynamicTableColumn[], name: string) : boolean {

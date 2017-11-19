@@ -17,7 +17,7 @@ import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
-import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable";
+import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
 import {ConfigsPipe, ProjectFilterPipe} from "../../helpers/filter.pipe";
 
 declare let $: any;
@@ -54,11 +54,11 @@ export class ProjectComponent implements OnInit {
         this.onColumnClick = (item) => {
             this.router.navigate(['/config', item._id]);
         };
-        this.tableOptions = new DynamicTableOptions("Configurations", true, "highlight",new ProjectFilterPipe());
+        this.tableOptions = new DynamicTableOptions("Configurations", true, "highlight", new ProjectFilterPipe());
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
         this.initialColumns.push(new DynamicTableColumn('Description', 'description', false));
-        this.initialColumns.push(new DynamicTableColumn('Actions', 'name', true, [
+        this.initialColumns.push(new DynamicTableColumn('Actions', '', true, [
             "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
             "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]));
     }
@@ -70,7 +70,7 @@ export class ProjectComponent implements OnInit {
             this.projectID = params['id'];
             let project$ = this.projectsDS.getProject(this.projectID);
             project$.subscribe(
-                (data : Project[]) => {
+                (data: Project[]) => {
                     this.project = data[0];
                     this.getProjectMapping();
                 }
@@ -200,7 +200,7 @@ export class ProjectComponent implements OnInit {
                     this.notification.error("Something went wrong while adding Configs to mapping");
                 }, () => {
                     if (i === this.configSets.length - 1) {
-                        this.mappingDS.addUnrelatedParamsToMapping(mappingID, toAddParams).subscribe((changedMappings)=> {
+                        this.mappingDS.addUnrelatedParamsToMapping(mappingID, toAddParams).subscribe((changedMappings) => {
                             if (changedMappings == 1) {
                                 this.notification.warning("Mapping has " + toAddParams.length + " new unrelated Params");
                             } else {
@@ -225,10 +225,10 @@ export class ProjectComponent implements OnInit {
 
     private getProjectMapping() {
         if (this.project && this.project.mappingID && this.project.mappingID != '') {
-            this.mappingDS.getMappingById(this.project.mappingID).subscribe((mappings : Mapping[]) => {
+            this.mappingDS.getMappingById(this.project.mappingID).subscribe((mappings: Mapping[]) => {
                 if (mappings && mappings[0]) {
-                    let m  = mappings[0];
-                    this.mapping = new ParamMapping(m.name, m.params, m.unrelatedParams, m.flags,(<any>m)._id);
+                    let m = mappings[0];
+                    this.mapping = new ParamMapping(m.name, m.params, m.unrelatedParams, m.flags, (<any>m)._id);
                 }
             });
         }
@@ -255,7 +255,6 @@ export class ProjectComponent implements OnInit {
             this.createConfigSet(file.name, file.lastModifiedDate + '', params, results);
 
         };
-        console.log(typeof file.name == 'string');
         FR.readAsText(file);
     }
 
