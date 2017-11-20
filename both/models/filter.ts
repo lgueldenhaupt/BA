@@ -4,12 +4,12 @@ import {Option} from "./option.interface";
 export class Filter  {
     public key : string;
     public active: boolean;
-    private options: Option[];
+    public options: Option[];
 
-    constructor(key : string, options: Option[] = []) {
+    constructor(key : string, options: Option[] = [], active : boolean = true) {
         this.key = key;
         this.options = options;
-        this.active = true;
+        this.active = active;
     }
 
     toggle() {

@@ -6,7 +6,7 @@
 </div>
 <ul class="collapsible" *ngFor="let filter of filters">
     <li>
-        <div class="collapsible-header filterHead">
+        <div class="collapsible-header filterHead" (click)="openHeader()">
             <div class="switch">
                 <label>
                     <input type="checkbox" (change)="filter.toggle(); updateFilter()" checked>
@@ -17,7 +17,7 @@
         </div>
         <div class="collapsible-body grey lighten-3"  style="overflow: auto;">
             <p *ngFor="let option of filter.options; let i = index">
-                <input type="checkbox" class="filled-in" id="{{i}}{{filter.key}}" checked="checked" (click)="option.enabled = !option.enabled; updateFilter()"/>
+                <input type="checkbox" class="filled-in" id="{{i}}{{filter.key}}" [checked]="option.enabled" (click)="option.enabled = !option.enabled; updateFilter()"/>
                 <label for="{{i}}{{filter.key}}" class="black-text">{{option.meaning}}</label>
             </p>
         </div>

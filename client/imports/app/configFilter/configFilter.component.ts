@@ -10,6 +10,7 @@ import {Filter} from "../../../../both/models/filter";
 import {Option} from "../../../../both/models/option.interface";
 import {FilterService} from "../../services/filter.service";
 import {ParamAliases} from "../../../../both/models/paramAliases";
+import { Session } from 'meteor/session'
 
 declare let $ :any;
 declare let _ : any;
@@ -36,6 +37,13 @@ export class ConfigFilterComponent implements OnInit{
     }
 
     ngOnInit(): void {
+        if (Session.get('filters')) {
+            let sessionFilters = Session.get('filters');
+            sessionFilters.forEach((filter : Filter) => {
+                this.filters.push(new Filter(filter.key, filter.options, filter.active));
+            });
+            this.updateFilter();
+        }
         this.mappingDS.getMappingById(this.mappingID).subscribe(mappings => {
             this.mapping = mappings[0];
         });
@@ -46,7 +54,6 @@ export class ConfigFilterComponent implements OnInit{
             });
         });
         $(document).ready(function () {
-            $('.collapsible').collapsible();
             $('#addFilterModal').modal({
                 complete: function () {
                     $('.collapsible').collapsible();
@@ -95,6 +102,7 @@ export class ConfigFilterComponent implements OnInit{
 
     updateFilter() {
         FilterService.setFilters(this.filters);
+        Session.set('filters', this.filters);
     }
 
     setModalHintText(paramWithAliases : ParamAliases) {
@@ -102,6 +110,10 @@ export class ConfigFilterComponent implements OnInit{
         paramWithAliases.aliases.forEach((alias) => {
             this.hintText += " - " + alias;
         });
+    }
+
+    openHeader() {
+        $('.collapsible').collapsible();
     }
 
 }
