@@ -46,11 +46,14 @@ export class ConfigFilterComponent implements OnInit{
             });
         });
         $(document).ready(function () {
+            $('.collapsible').collapsible();
             $('#addFilterModal').modal({
                 complete: function () {
                     $('.collapsible').collapsible();
+                    console.log("collapse")
                 },
                 ready: function () {
+                    console.log("ready")
                     $('input.autocomplete').autocomplete({
                         data: {
                             "Apple": null,

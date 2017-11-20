@@ -100,7 +100,6 @@ export class ConfigComponent implements OnInit{
 
         $(document).ready(function(){
             $('.collapsible').collapsible();
-            $('.modal').modal();
         });
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;

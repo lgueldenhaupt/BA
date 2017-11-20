@@ -28,7 +28,7 @@ export class ConfirmationModalService {
             $('#confirm_modal_content').empty().append(content);
 
             //init modal with modal options
-            $('.modal').modal({
+            $('#confirmModal').modal({
                 dismissible: false
             });
 

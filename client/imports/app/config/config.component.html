@@ -28,25 +28,6 @@
         <div *ngIf="config != null">
             <h5>{{config.name}}</h5>
             <dynTable [input]="config.params" [initialColumns]="initalParamColumns" (called)="handleTableActions($event)" [options]="tableOptions" (clickedOnColumn)="getAliases($event)"></dynTable>
-            <!--<table class="highlight">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--<th>Parameter</th>-->
-                    <!--<th>Value</th>-->
-                    <!--<th>Actions</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-
-                <!--<tbody>-->
-                <!--<tr *ngFor="let paramSet of config.params | configs: searchText">-->
-                    <!--<td (click)="getAliases(paramSet.param)">{{paramSet.param}}</td>-->
-                    <!--<td>{{paramSet.value}}</td>-->
-                    <!--<td>-->
-                        <!--<a (click)="deleteParamSet(paramSet)"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>-->
-                    <!--</td>-->
-                <!--</tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
         </div>
     </div>
 

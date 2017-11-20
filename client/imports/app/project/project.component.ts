@@ -86,7 +86,8 @@ export class ProjectComponent implements OnInit {
 
         $(document).ready(function () {
             $('.tooltipped').tooltip({delay: 50});
-            $('.modal').modal();
+            $('#configSetEditModal').modal();
+            $('#configSetModal').modal();
         });
     }
 
@@ -133,8 +134,8 @@ export class ProjectComponent implements OnInit {
                 this.notification.error("Could not add Config Set");
             }
         });
-        if ($('.modal').modal()) {
-            $('.modal').modal('close');
+        if ($('#configSetModal').modal()) {
+            $('#configSetModal').modal('close');
         }
     }
 

@@ -43,7 +43,7 @@ export class DynamicTable implements OnInit{
             });
         }
         $(document).ready(function () {
-            $('.modal').modal();
+            $('#settingsModal').modal();
         });
         if (this.options && this.options.searchFilter) {
             this.search.getSearchQuery().subscribe(x => {

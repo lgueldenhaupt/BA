@@ -42,7 +42,7 @@ export class MappingComponent implements OnInit{
             });
         });
         $(document).ready(function () {
-            $('.modal').modal();
+            $('#createFlag').modal();
         });
     }
 

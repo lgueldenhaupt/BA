@@ -61,7 +61,7 @@ export class DashboardComponent implements OnInit{
     }
 
     openAddProjectModal() {
-        $('.modal').modal();
+        $('#modal1').modal();
     }
 
     openProject(ID) {
@@ -104,7 +104,7 @@ export class DashboardComponent implements OnInit{
         this.editedProject.name = name;
         this.editedProject.description = description;
         this.projectID = id;
-        $('.modal').modal();
+        $('#editModal').modal();
     }
 
     editProject() {
