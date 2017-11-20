@@ -50,10 +50,8 @@ export class ConfigFilterComponent implements OnInit{
             $('#addFilterModal').modal({
                 complete: function () {
                     $('.collapsible').collapsible();
-                    console.log("collapse")
                 },
                 ready: function () {
-                    console.log("ready")
                     $('input.autocomplete').autocomplete({
                         data: {
                             "Apple": null,

@@ -78,6 +78,15 @@ export class ProjectComponent implements OnInit {
         });
         this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
             this.configSets = results;
+            //add result max and min vals to every config file to show in table
+            this.configSets.forEach((configSet : ConfigSet) => {
+                if (configSet.results && configSet.results.length > 0) {
+                    configSet.results.forEach((result : TrainingSet, index) => {
+                        configSet[index + '. Set Max'] = Math.round(10000 * _.max(result.epochs)) / 10000;
+                        configSet[index + '. Set Min'] = Math.round(10000 * _.min(result.epochs)) / 10000;
+                    });
+                }
+            });
             this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
         });
         FilterService.getFilters().subscribe(() => {
