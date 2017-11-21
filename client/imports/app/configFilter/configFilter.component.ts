@@ -53,17 +53,21 @@ export class ConfigFilterComponent implements OnInit{
                 this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.params, configSet.results, (<any>configSet)._id));
             });
         });
-        $(document).ready(function () {
+        $(document).ready(() => {
             $('#addFilterModal').modal({
-                complete: function () {
+                complete: () => {
                     $('.collapsible').collapsible();
                 },
-                ready: function () {
+                ready: () => {
+                    let autoCompleteData = {};
+                    this.mapping.params.forEach((paramWithAliases : ParamAliases) => {
+                        autoCompleteData[paramWithAliases.key] = 0;
+                    });
                     $('input.autocomplete').autocomplete({
-                        data: {
-                            "Apple": null,
-                            "Microsoft": null,
-                            "Google": 'https://placehold.it/250x250'
+                        data: autoCompleteData,
+                        onAutocomplete: (val) => {
+                            this.addFilter(val);
+                            this.updateFilter();
                         }
                     });
                 }

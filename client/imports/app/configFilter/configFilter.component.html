@@ -28,11 +28,11 @@
 <div id="addFilterModal" class="modal">
     <div class="modal-content">
         <h4>Add new filter </h4>
+         <div class="input-field">
+            <input type="text" id="autocomplete-input" class="autocomplete">
+            <label for="autocomplete-input">Search</label>
+        </div>
         <span class="grey-text key_aliases">{{hintText}}</span><br>
-        <!--<div class="input-field">-->
-            <!--<input type="text" id="autocomplete-input" class="autocomplete">-->
-            <!--<label for="autocomplete-input">Search</label>-->
-        <!--</div>-->
         <p class="chip grey darken-1 white-text pointer" *ngFor="let paramWithAliases of mapping.params" (click)="addFilter(paramWithAliases.key)" (mouseover)="setModalHintText(paramWithAliases)" (mouseleave)="hintText = ''">{{paramWithAliases.key}}</p>
     </div>
     <div class="modal-footer">
