@@ -97,23 +97,27 @@ export class DynamicTable implements OnInit{
         this.possibleColumns.forEach((column) => {
             column.toggle();
         });
-        if (this.input && this.input.length > 0) {
-            let item = this.input[0];
-            for (let prop in item) {
-                if (item.hasOwnProperty(prop)) {
-                    let propName = prop.charAt(0).toUpperCase() + prop.slice(1);
-                    if (!this.existsInColumns(this.possibleColumns, propName)) {
-                        this.possibleColumns.push(new DynamicTableColumn(propName, prop));
-                    }
-                }
-            }
-        }
-        // if (this.options.containsConfigSets) {
-        //     this.initConfigSpecificColumns();
-        // }
+        this.deepSearchForColumns(this.input);
     }
 
-    private initConfigSpecificColumns() {
+    private deepSearchForColumns(input : any) {
+        if (input && input.length > 0) {
+            input.forEach((item) => {
+                for (let prop in item) {
+                    if (item.hasOwnProperty(prop)) {
+                        let propName = prop.charAt(0).toUpperCase() + prop.slice(1);
+                        if (!this.existsInColumns(this.possibleColumns, propName)) {
+                            this.possibleColumns.push(new DynamicTableColumn(propName, prop));
+                        }
+                        // if (item[prop] instanceof Array) {
+                        //     let array = item[prop];
+                        //     array.forEach((i) => {
+                        //     })
+                        // }
+                    }
+                }
+            });
+        }
     }
 
     public existsInColumns(columns : DynamicTableColumn[], name: string) : boolean {

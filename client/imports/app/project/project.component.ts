@@ -19,6 +19,7 @@ import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
 import {ConfigsPipe, ProjectFilterPipe} from "../../helpers/filter.pipe";
+import {ParamSet} from "../../../../both/models/paramSet";
 
 declare let $: any;
 declare let _: any;
@@ -53,7 +54,6 @@ export class ProjectComponent implements OnInit {
         this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true,true);
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
-        this.initialColumns.push(new DynamicTableColumn('Description', 'description', false));
         this.initialColumns.push(new DynamicTableColumn('Actions', '', true, [
             "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
             "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]));
@@ -86,6 +86,7 @@ export class ProjectComponent implements OnInit {
                         configSet[index + '. Set Min'] = Math.round(10000 * _.min(result.epochs)) / 10000;
                     });
                 }
+                this.flattenParams(configSet);
             });
             this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
         });
@@ -98,6 +99,12 @@ export class ProjectComponent implements OnInit {
             $('#configSetEditModal').modal();
             $('#configSetModal').modal();
         });
+    }
+
+    private flattenParams(configSet: ConfigSet) {
+        configSet.params.forEach((paramSet : ParamSet) => {
+            configSet[paramSet.param] = paramSet.value;
+        })
     }
 
     handleDynTableCall(event) {

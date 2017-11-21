@@ -38,7 +38,7 @@
             <div class="flex_conti">
                 <div *ngFor="let column of possibleColumns" class="propertyCheckbox" (change)="toggleColumn(column)">
                     <input type="checkbox" class="filled-in" id="{{column.name}}" [checked]="column.active" [disabled]="column.fix"/>
-                    <label for="{{column.name}}">{{column.name}}</label>
+                    <label class="black-text" for="{{column.name}}">{{column.name}}</label>
                 </div>
             </div>
         </div>
