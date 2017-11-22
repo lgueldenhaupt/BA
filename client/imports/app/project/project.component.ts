@@ -37,7 +37,6 @@ export class ProjectComponent implements OnInit {
     private filteredConfigs: ConfigSet[];
     private searchText: string;
     private chosenConfig: Config;
-    private view: number;
     private initialColumns: DynamicTableColumn[];
     private tableOptions: DynamicTableOptions;
 
@@ -50,7 +49,6 @@ export class ProjectComponent implements OnInit {
                 private confirm: ConfirmationModalService,
                 private router: Router) {
         this.project = new Project();
-        this.view = 1;
         this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true,true);
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
@@ -286,11 +284,5 @@ export class ProjectComponent implements OnInit {
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-2 dropCard';
         return false;
-    }
-
-    changeView(value: number) {
-        if (value >= 0 && value <= 1) {
-            this.view = value;
-        }
     }
 }

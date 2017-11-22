@@ -16,26 +16,7 @@
         </div>
         <hr>
         <div class="center-align">
-            <div *ngIf="view == 0">
-                <div class="flex_conti" *ngIf="(filteredConfigs)?.length > 0">
-                    <div class="card grey lighten-1 card_space hoverable" *ngFor="let set of filteredConfigs | projects: searchText">
-                        <div class="card-content pointer" [routerLink]="['/config', set._id]">
-                            <span class="card-title">{{set.name}}</span>
-                            <p class="">{{set.description}}</p>
-                        </div>
-
-                        <div class="card-action">
-                            <a (click)="deleteConfigSet(set._id, set.name)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
-                            <a (click)="openConfigSetEditModal(set)" class="secondary-content pointer right modal-trigger" data-target="configSetEditModal"><i class="material-icons grey-text text-darken-2">edit</i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div *ngIf="view == 1">
-                <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableColumnClicked($event)" [options]="tableOptions"></dynTable>
-            </div>
-
+            <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableColumnClicked($event)" [options]="tableOptions"></dynTable>
             <span *ngIf="(filteredConfigs)?.length < 1" class="">No configs to display</span>
         </div>
     </div>
@@ -59,21 +40,6 @@
             <div class="card-action">
                 <button class="btn grey darken-1 waves-effect s_top_space" (click)="updateMapping()" *ngIf="project.mappingID && project.mappingID != ''">Update</button>
                 <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()" *ngIf="!project.mappingID || project.mappingID === ''">Create</button>
-            </div>
-        </div>
-        <div class="card grey lighten-3 hide-on-small-and-down">
-            <div class="card-content">
-                <span class="card-title">View</span>
-                <form action="#">
-                    <p>
-                        <input name="group1" type="radio" id="card" (change)="changeView(0)"/>
-                        <label for="card" class="grey-text">Card</label>
-                    </p>
-                    <p>
-                        <input name="group1" type="radio" id="list" checked (change)="changeView(1)"/>
-                        <label for="list">List</label>
-                    </p>
-                </form>
             </div>
         </div>
     </div>

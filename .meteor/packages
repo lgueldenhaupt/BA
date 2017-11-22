@@ -24,3 +24,6 @@ dispatch:mocha-phantomjs
 shell-server@0.2.1
 materialize:materialize
 session
+typ:accounts-ldap
+npm-bcrypt
+accounts-password

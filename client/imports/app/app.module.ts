@@ -21,11 +21,13 @@ import {MappingsDataService} from "../services/mappings-data.service";
 import {AliasFinder} from "../helpers/alias-finder";
 import {FilterService} from "../services/filter.service";
 import {DynamicTable} from "../helpers/dynamic.table/dynamic.table";
+import {IsLoggedIn} from "../helpers/isLoggedIn";
 
 const appRoutes: Routes = [
     {
         path: 'dashboard',
-        component: DashboardComponent
+        component: DashboardComponent,
+        // canActivate: [IsLoggedIn]
     },
     {
         path: 'login',
@@ -33,19 +35,23 @@ const appRoutes: Routes = [
     },
     {
         path: 'mapping',
-        component: MappingComponent
+        component: MappingComponent,
+        // canActivate: [IsLoggedIn]
     },
     {
         path: 'mapping/:id',
-        component: MappingComponent
+        component: MappingComponent,
+        // canActivate: [IsLoggedIn]
     },
     {
         path: 'project/:id',
-        component: ProjectComponent
+        component: ProjectComponent,
+        // canActivate: [IsLoggedIn]
     },
     {
         path: 'config/:id',
-        component: ConfigComponent
+        component: ConfigComponent,
+        // canActivate: [IsLoggedIn]
     },
     {
         path: '',
@@ -84,7 +90,8 @@ const appRoutes: Routes = [
         FilterService,
         SearchService,
         ParamExtractor,
-        AliasFinder
+        AliasFinder,
+        IsLoggedIn
     ],
     // Modules
     imports: [
