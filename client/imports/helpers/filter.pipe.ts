@@ -48,11 +48,11 @@ export class ConfigsPipe implements PipeTransform {
     name: 'filterBubble'
 })
 export class FilterBubblePipe implements PipeTransform {
-    transform(array: Array<ParamAliases>, args: string): Array<ParamAliases> {
-        array.sort((a: ParamAliases, b: ParamAliases) => {
-            if (a.key < b.key) {
+    transform(array: Array<any>, property: string): Array<any> {
+        array.sort((a: any, b: any) => {
+            if (a[property] < b[property]) {
                 return -1;
-            } else if (a.key > b.key) {
+            } else if (a[property] > b[property]) {
                 return 1;
             } else {
                 return 0;

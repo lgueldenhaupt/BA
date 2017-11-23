@@ -92,10 +92,10 @@ export class ConfigFilterComponent implements OnInit{
                 options.push({name: val, enabled: true, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
             });
             this.filters.push(new Filter(key, options));
-            FilterService.setFilters(this.filters);
         } else {
             this.filters.splice(this.filters.indexOf(this.canAddFilter(key)), 1);
         }
+        this.updateFilter();
     }
 
     canAddFilter(key :string) : Filter {
