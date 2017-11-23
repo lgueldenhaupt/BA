@@ -9,7 +9,7 @@
         <div class="collapsible-header filterHead" (click)="openHeader()">
             <div class="switch">
                 <label>
-                    <input type="checkbox" (change)="filter.toggle(); updateFilter()" checked>
+                    <input type="checkbox" (change)="filter.toggle(); updateFilter()" [checked]="filter.active">
                     <span class="lever"></span>
                 </label>
             </div>
@@ -33,8 +33,11 @@
             <label for="autocomplete-input">Search</label>
         </div>
         <span class="grey-text key_aliases">{{hintText}}</span><br>
-        <p class="chip grey darken-1 white-text pointer" *ngFor="let paramWithAliases of mapping.params" (click)="addFilter(paramWithAliases.key)" (mouseover)="setModalHintText(paramWithAliases)" (mouseleave)="hintText = ''">{{paramWithAliases.key}}</p>
+        <p class="chip grey darken-1 white-text pointer noselect" *ngFor="let paramWithAliases of mapping.params | filterBubble" (click)="addFilter(paramWithAliases.key)" (mouseover)="setModalHintText(paramWithAliases)" (mouseleave)="hintText = ''">
+            {{paramWithAliases.key}}<i class="icon material-icons" *ngIf="!canAddFilter(paramWithAliases.key)">add</i><i class="icon material-icons" *ngIf="canAddFilter(paramWithAliases.key)">delete</i>
+        </p>
     </div>
     <div class="modal-footer">
     </div>
+
 </div>

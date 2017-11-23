@@ -8,7 +8,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {ProjectsDataService} from "../services/projects-data.service";
 import {ConfigSetsDataService} from "../services/configsets-data.service";
 import {NotificationService} from "../services/notification.service";
-import {ConfigsPipe, FilterPipe, ProjectFilterPipe} from "../helpers/filter.pipe";
+import {ConfigsPipe, FilterBubblePipe, FilterPipe, ProjectFilterPipe, StringSort} from "../helpers/filter.pipe";
 import {SearchService} from "../services/search.service";
 import {ParamExtractor} from "../helpers/param-extractor";
 import {ConfigComponent} from "./config/config.component";
@@ -74,7 +74,9 @@ const appRoutes: Routes = [
         ProjectFilterPipe,
         FilterPipe,
         ConfigsPipe,
-        DynamicTable
+        DynamicTable,
+        FilterBubblePipe,
+        StringSort
     ],
     // Entry Components
     entryComponents: [

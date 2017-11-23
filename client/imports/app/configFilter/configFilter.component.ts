@@ -78,7 +78,7 @@ export class ConfigFilterComponent implements OnInit{
     }
 
     addFilter(key: string) {
-        if (this.canAddFilter(key)) {
+        if (this.canAddFilter(key) == null) {
             let options : Option[] = [];
             let values = [];
             this.configs.forEach((config : Config) => {
@@ -93,14 +93,16 @@ export class ConfigFilterComponent implements OnInit{
             });
             this.filters.push(new Filter(key, options));
             FilterService.setFilters(this.filters);
+        } else {
+            this.filters.splice(this.filters.indexOf(this.canAddFilter(key)), 1);
         }
     }
 
-    canAddFilter(key :string) : boolean {
-        let result = true;
+    canAddFilter(key :string) : Filter {
+        let result = null;
         this.filters.forEach(filter => {
             if (filter.key === key) {
-                result = false;
+                result = filter;
             }
         });
         return result;

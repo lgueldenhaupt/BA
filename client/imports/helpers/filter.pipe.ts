@@ -1,5 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import {ParamSet} from "../../../both/models/paramSet";
+import {Filter} from "../../../both/models/filter";
+import {ParamAliases} from "../../../both/models/paramAliases";
 @Pipe({
     name: 'projects'
 })
@@ -41,3 +43,40 @@ export class ConfigsPipe implements PipeTransform {
         });
     }
 }
+
+@Pipe({
+    name: 'filterBubble'
+})
+export class FilterBubblePipe implements PipeTransform {
+    transform(array: Array<ParamAliases>, args: string): Array<ParamAliases> {
+        array.sort((a: ParamAliases, b: ParamAliases) => {
+            if (a.key < b.key) {
+                return -1;
+            } else if (a.key > b.key) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        return array;
+    }
+}
+
+@Pipe({
+    name: 'stringSort'
+})
+export class StringSort implements PipeTransform {
+    transform(array: Array<string>, args: string): Array<string> {
+        array.sort((a: any, b: any) => {
+            if (a < b) {
+                return -1;
+            } else if (a > b) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        return array;
+    }
+}
+
