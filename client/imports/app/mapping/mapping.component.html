@@ -4,7 +4,9 @@
         <div class="collection with-header">
             <div class="collection-header grey darken-1"><h5 class="white-text">Existing Mappings</h5></div>
             <a class="collection-item pointer black-text" *ngFor="let mapping of mappings | async"
-               (click)="selectMapping(mapping)">{{mapping.name}}</a>
+               (click)="selectMapping(mapping)">{{mapping.name}}
+                <a (click)="$event.stopPropagation(); deleteMapping(mapping._id)" class="secondary-content pointer grey-text"><i class="material-icons">delete</i></a>
+            </a>
         </div>
 
         <div class="card amber accent-2" id="data">
@@ -17,12 +19,13 @@
             <div class="card-action">
             </div>
         </div>
+
     </div>
 
     <!------------------------------- Middle ---------------------------------------------------------->
     <div class="col s12 l8">
         <h4 *ngIf="!selectedMapping" class="center-align grey-text">Nothing selected</h4>
-        <h4 *ngIf="selectedMapping" class="center-align">{{selectedMapping.name}}</h4>
+        <h4 *ngIf="selectedMapping" class="center-align">{{selectedMapping.name}}<a (click)="$event.stopPropagation(); openEditMapping()" class="pointer grey-text right_float"><i class="material-icons">edit</i></a></h4>
         <table *ngIf="selectedMapping" class="highlight bordered">
             <thead>
             <th>Parameter Key</th>
@@ -69,8 +72,8 @@
                 </div>
             </div>
             <div class="card-action">
-                <button class="btn grey darken-3 modal-trigger" data-target="createFlag">Add</button>
-                <button class="btn grey darken-3" (click)="clearFlags()" *ngIf="selectedMapping.flags && selectedMapping.flags != []">Clear</button>
+                <button class="btn grey darken-3 modal-trigger top_space" data-target="createFlag">Add</button>
+                <button class="btn grey darken-3 top_space" (click)="clearFlags()" *ngIf="selectedMapping.flags && selectedMapping.flags != []">Clear</button>
             </div>
         </div>
     </div>
@@ -91,5 +94,18 @@
     </div>
     <div class="modal-footer">
         <button class="modal-action waves-effect waves-green btn-flat" (click)="createFlag(key.value, meaning.value)">Create</button>
+    </div>
+</div>
+
+<div id="editMapping" class="modal">
+    <div class="modal-content">
+        <h4>Edit Mapping</h4>
+        <div class="input-field">
+            <input placeholder="Name" id="editMappingName" type="text" #name>
+            <label for="editMappingName">Name</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action waves-effect waves-grey btn-flat" (click)="editMapping(name.value)">Edit</button>
     </div>
 </div>

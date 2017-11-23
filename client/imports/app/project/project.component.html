@@ -1,7 +1,7 @@
 <div class="row">
     <!----------------Left Side----------------------->
     <div class="col s12 l2">
-        <configFilter [mappingID]="project.mappingID" *ngIf="project.mappingID"></configFilter>
+        <configFilter [mappingID]="project.mappingID" *ngIf="project.mappingID && project.mappingID != ''"></configFilter>
     </div>
 
     <!-----------------Middle------------------------->

@@ -51,4 +51,8 @@ export class ProjectsDataService  {
         })
     }
 
+    public getProjectsWithMapping(mappingID: string) : ObservableCursor<Project> {
+       return ProjectsCollection.find({mappingID: mappingID});
+    }
+
 }

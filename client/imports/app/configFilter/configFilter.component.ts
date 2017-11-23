@@ -60,9 +60,11 @@ export class ConfigFilterComponent implements OnInit{
                 },
                 ready: () => {
                     let autoCompleteData = {};
-                    this.mapping.params.forEach((paramWithAliases : ParamAliases) => {
-                        autoCompleteData[paramWithAliases.key] = 0;
-                    });
+                    if (this.mapping) {
+                        this.mapping.params.forEach((paramWithAliases : ParamAliases) => {
+                            autoCompleteData[paramWithAliases.key] = 0;
+                        });
+                    }
                     $('input.autocomplete').autocomplete({
                         data: autoCompleteData,
                         onAutocomplete: (val) => {

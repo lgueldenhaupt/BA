@@ -10,6 +10,7 @@ import {ParamExtractor} from "../../helpers/param-extractor";
 import {NotificationService} from "../../services/notification.service";
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
 import {Flag} from "../../../../both/models/flag";
+import {ProjectsDataService} from "../../services/projects-data.service";
 
 declare let $ :any;
 
@@ -21,11 +22,13 @@ declare let $ :any;
 export class MappingComponent implements OnInit{
     private mappings: Observable<Mapping[]>;
     private selectedMapping: Mapping;
+    private editedMapping: Mapping;
     private id: string;
     private label: any;
 
     constructor(
         private mappingDS: MappingsDataService,
+        private projectDS: ProjectsDataService,
         private route: ActivatedRoute,
         private router: Router,
         private confirm: ConfirmationModalService,
@@ -43,6 +46,7 @@ export class MappingComponent implements OnInit{
         });
         $(document).ready(function () {
             $('#createFlag').modal();
+            $('#editMapping').modal();
         });
     }
 
@@ -143,6 +147,37 @@ export class MappingComponent implements OnInit{
                 $('#createFlag').modal('close');
             } else {
                 this.notification.error("Something went wrong");
+            }
+        });
+    }
+
+    public deleteMapping(ID) {
+        this.confirm.openModal("Delete Mapping?", "If you delete the mapping, all projects using this mapping will lose their filter options. Delete anyway?").then((fulfilled) => {
+            if (fulfilled) {
+                this.projectDS.getProjectsWithMapping(ID).subscribe((data) => {
+                    data.forEach((project) => {
+                        project.mappingID = "";
+                        this.projectDS.updateProject(project._id, project);
+                    })
+                });
+                this.mappingDS.deleteMapping(ID);
+                this.selectedMapping = null;
+            }
+        });
+    }
+
+    public openEditMapping() {
+        this.editedMapping = this.selectedMapping;
+        $('#editMapping').modal('open');
+        $('#editMappingName').val(this.selectedMapping.name);
+    }
+
+    public editMapping(name) {
+        this.editedMapping.name = name;
+        this.mappingDS.updateMapping((<any>this.editedMapping)._id, this.editedMapping).subscribe((changedEntries) => {
+            if (changedEntries === 1) {
+                $('#editMapping').modal('close');
+                this.notification.success("Mapping updated");
             }
         });
     }

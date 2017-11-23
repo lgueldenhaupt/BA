@@ -3,6 +3,8 @@ import {ObservableCursor} from "meteor-rxjs";
 import {Observable} from "rxjs/Observable";
 import {Mapping} from "../../../both/models/mapping.model";
 import {MappingsCollection} from "../../../both/collections/mappings.collection";
+import {ProjectsCollection} from "../../../both/collections/projects.collection";
+import {ProjectsDataService} from "./projects-data.service";
 
 @Injectable()
 export class MappingsDataService {
