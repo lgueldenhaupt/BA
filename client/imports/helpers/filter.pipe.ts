@@ -45,10 +45,11 @@ export class ConfigsPipe implements PipeTransform {
 }
 
 @Pipe({
-    name: 'filterBubble'
+    name: 'sortByCriteria'
 })
-export class FilterBubblePipe implements PipeTransform {
+export class CriteriaSortPipe implements PipeTransform {
     transform(array: Array<any>, property: string): Array<any> {
+        if (!array || array.length == 0) return [];
         array.sort((a: any, b: any) => {
             if (a[property] < b[property]) {
                 return -1;
