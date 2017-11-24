@@ -15,12 +15,19 @@ import { Session } from 'meteor/session'
 declare let $ :any;
 declare let _ : any;
 
+/**
+ * The configFilter component gives the option to set filters for a given mappings. With every action the FilterService gets updated.
+ * The filters gets saved in the session.
+ */
 @Component({
     selector: "configFilter",
     template,
     styles: [ style ]
 })
 export class ConfigFilterComponent implements OnInit{
+    /**
+     * mappingID: the id of the mapping to filter for
+     */
     @Input() mappingID: string;
 
     private mapping: Mapping;
@@ -37,6 +44,7 @@ export class ConfigFilterComponent implements OnInit{
     }
 
     ngOnInit(): void {
+        //searches for filters in the session and sets them
         if (Session.get('filters')) {
             let sessionFilters = Session.get('filters');
             sessionFilters.forEach((filter : Filter) => {
@@ -44,15 +52,21 @@ export class ConfigFilterComponent implements OnInit{
             });
             this.updateFilter();
         }
+
+        //gets the corresponding mapping
         this.mappingDS.getMappingById(this.mappingID).subscribe(mappings => {
             this.mapping = mappings[0];
         });
+
+        //gets all configs of that mapping to search for possible values
         this.configDS.getData().subscribe((data : ConfigSet[]) => {
             this.configs = [];
             data.forEach((configSet : ConfigSet) => {
                 this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.params, configSet.results, (<any>configSet)._id));
             });
         });
+
+        //inits materialize css things
         $(document).ready(() => {
             $('#addFilterModal').modal({
                 complete: () => {
@@ -77,7 +91,11 @@ export class ConfigFilterComponent implements OnInit{
         });
     }
 
-    addFilter(key: string) {
+    /**
+     * Adds a filter with the given key or removes the filter if existent already
+     * @param {string} key
+     */
+    public addFilter(key: string) {
         if (this.canAddFilter(key) == null) {
             let options : Option[] = [];
             let values = [];
@@ -98,7 +116,12 @@ export class ConfigFilterComponent implements OnInit{
         this.updateFilter();
     }
 
-    canAddFilter(key :string) : Filter {
+    /**
+     * Checks if a filter is existent and returns it if so
+     * @param {string} key The filter to search for
+     * @returns {Filter} Filter if found || null
+     */
+    public canAddFilter(key :string) : Filter {
         let result = null;
         this.filters.forEach(filter => {
             if (filter.key === key) {
@@ -108,19 +131,29 @@ export class ConfigFilterComponent implements OnInit{
         return result;
     }
 
-    updateFilter() {
+    /**
+     * Updates the filterservice and session
+     */
+    public updateFilter() {
         FilterService.setFilters(this.filters);
         Session.set('filters', this.filters);
     }
 
-    setModalHintText(paramWithAliases : ParamAliases) {
+    /**
+     * Sets the modal hint text to the aliases of the given param
+     * @param {ParamAliases} paramWithAliases The aliases to display
+     */
+    public setModalHintText(paramWithAliases : ParamAliases) {
         this.hintText = paramWithAliases.key;
         paramWithAliases.aliases.forEach((alias) => {
             this.hintText += " - " + alias;
         });
     }
 
-    openHeader() {
+    /**
+     * Opens the collapsible
+     */
+    public openHeader() {
         $('.collapsible').collapsible();
     }
 

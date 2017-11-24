@@ -2,6 +2,9 @@ import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from "@angular/router";
 import {Observable} from "rxjs/Observable";
 
+/**
+ * This is the guard to check if a person is logged in
+ */
 @Injectable()
 export class IsLoggedIn implements CanActivate {
 

@@ -13,6 +13,10 @@ import {ConfirmationModalService} from "../../services/confirmationModal.service
 
 declare const $ :any;
 
+/**
+ * The dashboard component displays all projects.
+ * Here are the animations declared for the project cards
+ */
 @Component({
     selector: "dashboard",
     template,
@@ -55,20 +59,34 @@ export class DashboardComponent implements OnInit{
 
     ngOnInit(): void {
         this.projects = this.projectsDS.getData().zone();
+
+        //subscribe to top search
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
         });
     }
 
-    openAddProjectModal() {
+    /**
+     * Opens the project create modal
+     */
+    public openAddProjectModal() {
         $('#modal1').modal();
     }
 
-    openProject(ID) {
+    /**
+     * Navigates to the project with the given id
+     * @param ID
+     */
+    public openProject(ID) {
         this.router.navigate(['/project', ID]);
     }
 
-    createProject(name, description) {
+    /**
+     * Creates a project with the name and description
+     * @param name
+     * @param description
+     */
+    public createProject(name, description) {
         if (name === '') {
             this.notification.error("Please insert a name!");
             return;
@@ -86,7 +104,12 @@ export class DashboardComponent implements OnInit{
 
     }
 
-    deleteItem(id, name) {
+    /**
+     * Deletes the project with the given id after confirmation.
+     * @param id Project id of the project to delete.
+     * @param name Name to be displayed in confirm modal
+     */
+    public deleteItem(id, name) {
         this.confirmation.openModal('Delete ' + name, 'Do you really want to delete this project? <br>All related configs will be deleted too!').then((fullfilled) => {
             if (fullfilled) {
                 this.projectsDS.delete(id).subscribe((removedItems) => {
@@ -100,18 +123,30 @@ export class DashboardComponent implements OnInit{
         });
     }
 
-    openEditModal(id, name, description) {
+    /**
+     * Opens the edit modal for a project
+     * @param id
+     * @param name
+     * @param description
+     */
+    public openEditModal(id, name, description) {
         this.editedProject.name = name;
         this.editedProject.description = description;
         this.projectID = id;
         $('#editModal').modal();
     }
 
-    editProject() {
-        this.projectsDS.updateProject(this.projectID, this.editedProject);
-        this.editedProject.name = '';
-        this.editedProject.description = '';
-        this.projectID = '';
-        this.notification.success("Entry updated");
+    /**
+     * Updates the project.
+     */
+    public editProject() {
+        this.projectsDS.updateProject(this.projectID, this.editedProject).subscribe((changedEntries) => {
+            if (changedEntries === 1) {
+                this.editedProject.name = '';
+                this.editedProject.description = '';
+                this.projectID = '';
+                this.notification.success("Entry updated");
+            }
+        });
     }
 }

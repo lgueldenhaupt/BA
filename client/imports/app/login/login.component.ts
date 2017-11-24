@@ -7,6 +7,9 @@ import {Router} from "@angular/router";
 declare let $ :any;
 declare let Meteor : any;
 
+/**
+ * This component represents the login page
+ */
 @Component({
     selector: "login",
     template,
@@ -26,11 +29,20 @@ export class LoginComponent implements OnInit, OnDestroy{
     ngOnDestroy() {
     }
 
+    /**
+     * Tries to log in the user with the username and password.
+     * @param {string} username
+     * @param {string} password
+     */
     logIn(username: string, password: string) {
+        // get LDAP information from settings.json
         if (!Meteor.settings.public.ldap.dn || !Meteor.settings.public.ldap.url) return;
         let dn = Meteor.settings.public.ldap.dn;
         let url = Meteor.settings.public.ldap.url;
+
         if (!Meteor.user()) {
+            // try to log in if no user is logged in.
+            // loginWithLDAP is a function of accounts-ldap package
             Meteor.loginWithLDAP(username, password, {dn: dn, url: url}, (err) => {
                 if (err) {
                     if (err.reason === "Invalid Credentials") {

@@ -1,7 +1,10 @@
+<!----------------------------Header------------------------------------------------>
 <div *ngIf="options && options.configurable" class="left-align">
     <span class="tableHeading">{{options.name}}</span>
     <i class="material-icons right_float grey-text text-darken-2 pointer" (click)="openSettings()">settings</i>
 </div>
+
+<!----------------------------Table------------------------------------------------>
 <table [ngClass]="options?.classes ? options.classes : ''">
     <thead>
     <tr>
@@ -28,6 +31,7 @@
     </tbody>
 </table>
 
+<!----------------------------Configure/Settings Modal------------------------------------------------>
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <h4>Table Settings</h4>

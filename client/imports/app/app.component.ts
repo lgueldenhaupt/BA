@@ -7,6 +7,9 @@ import {el} from "@angular/platform-browser/testing/src/browser_util";
 
 declare let $: any;
 
+/**
+ * This is the main component containing the main bar and main functions.
+ */
 @Component({
     selector: "app",
     template,
@@ -34,6 +37,9 @@ export class AppComponent implements OnInit {
         });
     }
 
+    /**
+     * Logs the current user out
+     */
     public logOut() {
         Meteor.logout((err) => {
             if (!err) {
@@ -43,6 +49,9 @@ export class AppComponent implements OnInit {
         this.router.navigate(["/login"]);
     }
 
+    /**
+     * Give a toast info about the current logged in user
+     */
     public info() {
         if (Meteor.user()) {
             this.notification.warning(Meteor.user().username + " " + Meteor.user()._id);

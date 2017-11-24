@@ -2,6 +2,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {ParamSet} from "../../../both/models/paramSet";
 import {Filter} from "../../../both/models/filter";
 import {ParamAliases} from "../../../both/models/paramAliases";
+
+/**
+ * This filter pipe is used to filter projects by name or description.
+ * compares given searchText with name and description.
+ */
 @Pipe({
     name: 'projects'
 })
@@ -16,6 +21,9 @@ export class ProjectFilterPipe implements PipeTransform {
     }
 }
 
+/**
+ * This filter pipe is used to filter strings by the given searchText
+ */
 @Pipe({
     name: 'filter'
 })
@@ -30,6 +38,10 @@ export class FilterPipe implements PipeTransform {
     }
 }
 
+/**
+ * This filter pipe is used to filter configs by name or description.
+ * compares given searchText with name and description.
+ */
 @Pipe({
     name: 'configs'
 })
@@ -44,6 +56,9 @@ export class ConfigsPipe implements PipeTransform {
     }
 }
 
+/**
+ * This filter pipe sorts the given array by the given criteria
+ */
 @Pipe({
     name: 'sortByCriteria'
 })
@@ -63,6 +78,9 @@ export class CriteriaSortPipe implements PipeTransform {
     }
 }
 
+/**
+ * This filter pipe sorts the array of strings
+ */
 @Pipe({
     name: 'stringSort'
 })

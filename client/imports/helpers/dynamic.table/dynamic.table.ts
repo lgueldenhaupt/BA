@@ -7,12 +7,23 @@ import {SearchService} from "../../services/search.service";
 declare let $ :any;
 declare let _ : any;
 
+/**
+ * This component is a dynamic table. It can be configured in many ways displaying any input array of objects.
+ */
 @Component({
     selector: "dynTable",
     template,
     styles: [ style ]
 })
 export class DynamicTable implements OnInit{
+    /**
+     * input: Any array of objects. One object represents one row
+     * initialColumns: The columns that should be displayed by default. See 'DynamicTableColumn' for more information.
+     * options: Several table options. See 'DynamicTableOptions' for info
+     *
+     * called: EventEmitter that gets called with index of the given function and referring object
+     * clickedonColumn: EventEmitter that gets called when clicking on a row. Returns the clicked object
+     */
     @Input() input: any[];
     @Input() initialColumns: DynamicTableColumn[];
     @Input() options: DynamicTableOptions;
@@ -33,6 +44,7 @@ export class DynamicTable implements OnInit{
     ngOnInit(): void {
         this.activeColumns = [];
         this.fixColumns = [];
+        //init columns
         if (this.initialColumns) {
             this.initialColumns.forEach((column) => {
                 if (column.fix) {
@@ -45,6 +57,7 @@ export class DynamicTable implements OnInit{
         $(document).ready(function () {
             $('#settingsModal').modal();
         });
+        //apply options, e.g filter
         if (this.options && this.options.searchFilter) {
             this.search.getSearchQuery().subscribe(x => {
                 let searchText = (<HTMLInputElement>x.target).value;
@@ -57,10 +70,18 @@ export class DynamicTable implements OnInit{
         }
     }
 
+    /**
+     * Emits clickedOnColumn with the given item
+     * @param item
+     */
     public clickColumn(item : any) {
         this.clickedOnColumn.emit(item);
     }
 
+    /**
+     * Sorts the table by the given criteria. Toggles ascending and descending
+     * @param criteria
+     */
     public orderBy(criteria : any) {
         if (!this.sortDescending) {
             this.input = _.sortBy(this.input, criteria);
@@ -71,10 +92,18 @@ export class DynamicTable implements OnInit{
         }
     }
 
+    /**
+     * Emits the function 'called' with index and item
+     * @param {number} index
+     * @param item
+     */
     public callFunction(index : number, item: any) {
         this.called.emit({index, item});
     }
 
+    /**
+     * opens the configure table modal
+     */
     public openSettings() {
         if (!this.possibleColumns) {
             this.initPossibleColumns();
@@ -82,6 +111,10 @@ export class DynamicTable implements OnInit{
         $('#settingsModal').modal('open');
     }
 
+    /**
+     * Toggles the column visibility
+     * @param {DynamicTableColumn} column The given column to toggle
+     */
     public toggleColumn(column: DynamicTableColumn) {
         if (column.fix) return;
         column.toggle();
@@ -92,6 +125,9 @@ export class DynamicTable implements OnInit{
         }
     }
 
+    /**
+     * Inits the first columns and looks for possible ones
+     */
     private initPossibleColumns() {
         this.possibleColumns = Object.assign([], this.initialColumns);
         this.possibleColumns.forEach((column) => {
@@ -100,6 +136,10 @@ export class DynamicTable implements OnInit{
         this.deepSearchForColumns(this.input);
     }
 
+    /**
+     * Searches for the input object properties and converts them to possible columns
+     * @param input
+     */
     private deepSearchForColumns(input : any) {
         if (input && input.length > 0) {
             input.forEach((item) => {
@@ -120,6 +160,12 @@ export class DynamicTable implements OnInit{
         }
     }
 
+    /**
+     * Checks if there is a possible column with the given name
+     * @param {DynamicTableColumn[]} columns The columns to check
+     * @param {string} name The name to seach for
+     * @returns {boolean} Returns true if the name exists as a column name
+     */
     public existsInColumns(columns : DynamicTableColumn[], name: string) : boolean {
         let result = false;
         columns.forEach((column) => {

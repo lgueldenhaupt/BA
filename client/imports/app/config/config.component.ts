@@ -22,6 +22,10 @@ let domtoimage = require('dom-to-image');
 declare let $ :any;
 declare let Materialize : any;
 
+/**
+ * This component represents the Config Page.
+ * It diplays the params of a config and the results. An svg can be downloaded containing the results
+ */
 @Component({
     selector: "config",
     template,
@@ -59,6 +63,8 @@ export class ConfigComponent implements OnInit{
         this.config = {name: '', projectID: '', description: '', params: [], results: []};
         this.canSafe = false;
         this.hideText = true;
+
+        //get information for the dyn table
         this.initalParamColumns = [];
         this.initalParamColumns.push(new DynamicTableColumn('Param', 'param', true));
         this.initalParamColumns.push(new DynamicTableColumn('Value', 'value', true));
@@ -69,6 +75,7 @@ export class ConfigComponent implements OnInit{
     }
 
     ngOnInit(): void {
+        //for the results svg
         this.chart = {
             width: $('#results').width(),
             height: 300,
@@ -80,16 +87,21 @@ export class ConfigComponent implements OnInit{
         $(window).resize(() => {
             this.resize();
         });
+
+        //get routing params
         this.route.params.subscribe(params =>{
             this.configID = params['id'];
             let config$ = this.configDS.getConfigById(this.configID);
             config$.subscribe(
                 (data) => {
+                    // get mapping and flags
                     this.config = data[0];
                     this.projectDS.getProjectsMapping(this.config.projectID).subscribe(mappingID => {
                         this.mappingID = mappingID;
                         this.getFlags();
                     });
+
+                    // init the results svg
                     if (this.config.results) {
                         this.initResultColors();
                         this.initResults(this.chart, this.getMaxVal(this.config.results), this.getMinVal(this.config.results));
@@ -101,11 +113,17 @@ export class ConfigComponent implements OnInit{
         $(document).ready(function(){
             $('.collapsible').collapsible();
         });
+
+        //subscribe to the top search
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
         });
     }
 
+    /**
+     * Function that gets called if an action on the dyn table was activated. Even containing index and item (see dynTable)
+     * @param event
+     */
     public handleTableActions(event) {
         switch (event.index) {
             case 0:
@@ -116,12 +134,20 @@ export class ConfigComponent implements OnInit{
         }
     }
 
+    /**
+     * Sanitizes the given url to not be 'unsafe'
+     * @param {string} url
+     * @returns {SafeUrl}
+     */
     public sanitize(url :string) {
         return this.sanitizer.bypassSecurityTrustUrl(url);
     }
 
-    public getAliases(item : any) {
-        console.log(this.config.params)
+    /**
+     * Gets the aliases for the given param and shows them in a toast.
+     * @param item The paramset to get the aliases of
+     */
+    public getAliases(item : ParamSet) {
         let value = item.param;
         let aliases = this.aliasFinder.getAliasesStraight(this.mappingID,value);
         let str = "";
@@ -135,27 +161,10 @@ export class ConfigComponent implements OnInit{
         Materialize.toast(str, 5000)
     }
 
-    public dataInput(event) {
-        var input = event.srcElement.files;
-        let FR = new FileReader();
-        FR.onload = (ev : FileReaderEvent) => {
-            let result = ev.target.result ? ev.target.result : '';
-            let splitted = result.split("\n");
-            let params = [];
-            let results = [];
-            if (splitted[0]) {
-                params = ParamExtractor.searchForParams(splitted[0]);
-                if (splitted.length > 1) {
-                    splitted.splice(0, 1);
-                    results = ParamExtractor.searchForTrainingSets(splitted);
-                }
-            }
-            this.config.params = params;
-            this.config.results = results;
-        };
-        FR.readAsText(input[0]);
-    }
-
+    /**
+     * Call function to delete a paramset. Opens a confirmModal and deletes the given Paramset if confirmed.
+     * @param {ParamSet} paramSet The paramSet to delete
+     */
     public deleteParamSet(paramSet: ParamSet) {
         this.confirm.openModal().then((yes) => {
             if (yes) {
@@ -169,10 +178,18 @@ export class ConfigComponent implements OnInit{
         })
     }
 
+    /**
+     * Filter to convert to svg. Filters for <i> tags
+     * @param node
+     * @returns {boolean}
+     */
     public filterNode(node) {
         return (node.tagName !== 'i');
     }
 
+    /**
+     * Converts the results svg to a downloadable svg and safes the link.
+     */
     public convertToPdf() {
         domtoimage.toSvg(document.getElementById('toDownload'), {filter: this.filterNode}).then((dataUrl) => {
             this.pdfLink = dataUrl;
@@ -180,12 +197,18 @@ export class ConfigComponent implements OnInit{
 
     }
 
+    /**
+     * Gets the flags and applies them to the parmSet values.
+     */
     private getFlags() {
         this.config.params.forEach((param: ParamSet) => {
             param.value = this.aliasFinder.getFlagMeaning(this.mappingID, param.value);
         });
     }
 
+    /**
+     * Inits the result colors and the legend on the right of the results svg
+     */
     private initResultColors() {
         let colorList = d3.select('#colorList');
         this.config.results.forEach((result, index) => {
@@ -209,6 +232,12 @@ export class ConfigComponent implements OnInit{
         });
     }
 
+    /**
+     * Creates a svg for the results using d3js.
+     * @param chart The chart options
+     * @param maxVal The max value of the results
+     * @param minVal The min value of the results
+     */
     private initResults(chart, maxVal, minVal) {
         if (this.config.results.length <= 0) return;
         if (typeof chart.vis.remove === "function") {
@@ -295,6 +324,11 @@ export class ConfigComponent implements OnInit{
         chart.vis = vis;
     }
 
+    /**
+     * Returns the max value of the results
+     * @param results
+     * @returns {number}
+     */
     private getMaxVal(results) {
         let maxVal = 0;
         if (results.length > 0) {
@@ -307,6 +341,11 @@ export class ConfigComponent implements OnInit{
         return (+maxVal + 0.02);
     }
 
+    /**
+     * Returns the min value of the results
+     * @param results
+     * @returns {number}
+     */
     private getMinVal(results) {
         let minVal = 1;
         if (results.length > 0) {
@@ -319,7 +358,10 @@ export class ConfigComponent implements OnInit{
         return (+minVal - 0.02);
     }
 
-    resize() {
+    /**
+     * Called on resize window. Scales the svg new.
+     */
+    public resize() {
         $('#visualisation').width($('#results').width());
         this.chart.width = $('#results').width();
         if (this.config && this.config.results) {
@@ -327,6 +369,10 @@ export class ConfigComponent implements OnInit{
         }
     }
 
+    /**
+     * Returns a random hex color.
+     * @returns {string}
+     */
     private static getRandomColor() {
         let letters = '0123456789ABCDEF';
         let color = '#';

@@ -23,6 +23,18 @@ import {FilterService} from "../services/filter.service";
 import {DynamicTable} from "../helpers/dynamic.table/dynamic.table";
 import {IsLoggedIn} from "../helpers/isLoggedIn";
 
+/**
+ * This is the app module configuration. Every created component, filter, service, submodule for the main module must be declared here.
+ * Also the routes for the router are declared here.
+ */
+
+
+/**
+ * App Routes.
+ * Path: url part
+ * Component: responsible component
+ * CanActivate: Guard for access control
+ */
 const appRoutes: Routes = [
     {
         path: 'dashboard',

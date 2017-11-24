@@ -16,7 +16,7 @@
         </div>
         <hr>
         <div class="center-align">
-            <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableColumnClicked($event)" [options]="tableOptions"></dynTable>
+            <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableRowClicked($event)" [options]="tableOptions"></dynTable>
             <span *ngIf="(filteredConfigs)?.length < 1" class="">No configs to display</span>
         </div>
     </div>

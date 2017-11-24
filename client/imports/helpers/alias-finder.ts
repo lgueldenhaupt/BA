@@ -16,6 +16,13 @@ export class AliasFinder{
         });
     }
 
+    /**
+     * Gets the aliases of a value. Returns an observable
+     * @param mappingID
+     * @param {string} value
+     * @param {boolean} getOnlyKey
+     * @returns {Observable<string[]>}
+     */
     public getAliases(mappingID, value: string, getOnlyKey : boolean = false) : Observable<string[]> {
         return Observable.create((observer) => {
             this.mappingDS.getMappingById(mappingID).subscribe((mapping) => {
@@ -36,11 +43,20 @@ export class AliasFinder{
         });
     }
 
+    /**
+     * Gets the aliases of a value for a mapping. Returns a string array without async operations.
+     * @param mappingID
+     * @param {string} value
+     * @param {boolean} getOnlyKey
+     * @returns {string[]}
+     */
     public getAliasesStraight(mappingID, value: string, getOnlyKey: boolean = false) : string[] {
         let result = [];
+        // goes through all mappings
         this.mappings.forEach((mapping : Mapping) => {
             if ((<any>mapping)._id === mappingID) {
                 mapping.params.forEach((paramWithAliases : ParamAliases) => {
+                    // add aliases to result array or only key if 'getOnlyKey'
                     if (paramWithAliases.key === value || paramWithAliases.aliases.indexOf(value) != -1) {
                         if (getOnlyKey) {
                             result.push(paramWithAliases.key);
@@ -54,6 +70,13 @@ export class AliasFinder{
         return result;
     }
 
+    /**
+     *  Checks if two strings are equal on mappings layer. key === key || key === alias
+     * @param {string} first
+     * @param {string} second
+     * @param mapping
+     * @returns {boolean}
+     */
     public static areEqual(first: string, second: string, mapping) : boolean {
         let result = false;
         first = first.toLowerCase();
@@ -71,6 +94,12 @@ export class AliasFinder{
         return result;
     }
 
+    /**
+     * Gets the meaning of a flag
+     * @param mappingID
+     * @param {string} key
+     * @returns {string}
+     */
     public getFlagMeaning(mappingID, key: string) : string {
         let result = key;
         this.mappings.forEach((mapping: Mapping) => {

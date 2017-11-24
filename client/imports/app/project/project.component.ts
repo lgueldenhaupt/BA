@@ -24,6 +24,9 @@ import {ParamSet} from "../../../../both/models/paramSet";
 declare let $: any;
 declare let _: any;
 
+/**
+ * This component respresents the project page
+ */
 @Component({
     selector: "project",
     template,
@@ -49,6 +52,8 @@ export class ProjectComponent implements OnInit {
                 private confirm: ConfirmationModalService,
                 private router: Router) {
         this.project = new Project();
+
+        //inits the dyn table configurations
         this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true,true);
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
@@ -88,10 +93,13 @@ export class ProjectComponent implements OnInit {
             });
             this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
         });
+
+        // subscribe to the filterservice to update displayed configs
         FilterService.getFilters().subscribe(() => {
             this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
         });
 
+        // init materialize css things
         $(document).ready(function () {
             $('.tooltipped').tooltip({delay: 50});
             $('#configSetEditModal').modal();
@@ -99,13 +107,22 @@ export class ProjectComponent implements OnInit {
         });
     }
 
+    /**
+     * Gets all configSet params and puts them as a first layer property in the object.
+     * Made to configure the dyntable with params
+     * @param {ConfigSet} configSet
+     */
     private flattenParams(configSet: ConfigSet) {
         configSet.params.forEach((paramSet : ParamSet) => {
             configSet[paramSet.param] = paramSet.value;
         })
     }
 
-    handleDynTableCall(event) {
+    /**
+     * Handle the event coming from dynTable
+     * @param event
+     */
+    public handleDynTableCall(event) {
         switch (event.index) {
             case 0:
                 this.openConfigSetEditModal(event.item);
@@ -118,10 +135,18 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    onTableColumnClicked(event) {
+    /**
+     * Handles the event when clicking on a row of the dynTable
+     * @param event
+     */
+    onTableRowClicked(event) {
         this.router.navigate(['/config', event._id]);
     }
 
+    /**
+     * Opens the config set edit modal
+     * @param {Config} set
+     */
     openConfigSetEditModal(set: Config) {
         this.chosenConfig = set;
         $('#editName').val(this.chosenConfig.name);
@@ -129,7 +154,14 @@ export class ProjectComponent implements OnInit {
         $('#configSetEditModal').modal('open');
     }
 
-    createConfigSet(name, desc, params, results: TrainingSet[] = []) {
+    /**
+     * craetes the configSet with the given params.
+     * @param name
+     * @param desc
+     * @param params
+     * @param {TrainingSet[]} results
+     */
+    public createConfigSet(name, desc, params, results: TrainingSet[] = []) {
         if (name === '') {
             this.notification.error("Please enter a name!");
             return;
@@ -153,7 +185,12 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    editChosenConfig(name: string, description: string) {
+    /**
+     * Edits the name and description of the chosenConfig
+     * @param {string} name
+     * @param {string} description
+     */
+    public editChosenConfig(name: string, description: string) {
         if (this.chosenConfig === null) {
             this.notification.error("No config chosen");
             return;
@@ -169,7 +206,11 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    deleteConfigSet(item) {
+    /**
+     * Deletes the config set after confirmation
+     * @param item
+     */
+    public deleteConfigSet(item) {
         let id = item._id;
         this.confirm.openModal('Delete ' + name, "Do you really want to delete that config?").then((fullfilled) => {
             if (fullfilled) {
@@ -184,7 +225,10 @@ export class ProjectComponent implements OnInit {
         });
     }
 
-    createMapping() {
+    /**
+     * creates a new mapping for the project. Takes all configsSets for that. The first one builds the keys for the mapping
+     */
+    public createMapping() {
         if (!this.configSets || this.configSets.length <= 0) {
             this.notification.error("No configuration Sets");
             return;
@@ -197,15 +241,24 @@ export class ProjectComponent implements OnInit {
         });
     }
 
-    updateMapping() {
+    /**
+     * updates the mapping by adding all new configs to it
+     */
+    public updateMapping() {
         this.addAllConfigsToMapping(this.mapping._id);
     }
 
+    /**
+     * Called to add all new configs to the projects related mapping.
+     * @param mappingID
+     */
     private addAllConfigsToMapping(mappingID) {
         if (this.configSets.length > 1) {
             let toAddParams = [];
+            //goes through all configSets
             for (let i = 0; i < this.configSets.length; i++) {
                 let configSet = this.configSets[i];
+                //assigns the current config to the mapping
                 this.mappingDS.assignConfigToMapping(configSet.params, mappingID).subscribe((unrelatedParams) => {
                     if (unrelatedParams.length > 0) {
                         toAddParams = toAddParams.concat(unrelatedParams);
@@ -214,6 +267,7 @@ export class ProjectComponent implements OnInit {
                 }, () => {
                     this.notification.error("Something went wrong while adding Configs to mapping");
                 }, () => {
+                    //if all configs are added -> display the number of unrelated params
                     if (i === this.configSets.length - 1) {
                         this.mappingDS.addUnrelatedParamsToMapping(mappingID, toAddParams).subscribe((changedMappings) => {
                             if (changedMappings == 1) {
@@ -228,6 +282,10 @@ export class ProjectComponent implements OnInit {
         }
     }
 
+    /**
+     * Creates a new mapping for the mapping
+     * @param {string} mappingID
+     */
     private updateProjectWithMapping(mappingID: string) {
         this.project.mappingID = mappingID;
         this.notification.success("Mapping Created");
@@ -238,6 +296,9 @@ export class ProjectComponent implements OnInit {
         });
     }
 
+    /**
+     * Gets the mapping for the project
+     */
     private getProjectMapping() {
         if (this.project && this.project.mappingID && this.project.mappingID != '') {
             this.mappingDS.getMappingById(this.project.mappingID).subscribe((mappings: Mapping[]) => {
@@ -249,11 +310,17 @@ export class ProjectComponent implements OnInit {
         }
     }
 
-    onDrop(e) {
+    /**
+     * Called when dropping a file on the 'drop config' card.
+     * @param e
+     */
+    public onDrop(e) {
         let file = e.dataTransfer.files[0];
         e.preventDefault();
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-2 dropCard';
+
+        // read file and try to extract params and results
         let FR = new FileReader();
         FR.onload = (ev: FileReaderEvent) => {
             let result = ev.target.result ? ev.target.result : '';
@@ -273,14 +340,23 @@ export class ProjectComponent implements OnInit {
         FR.readAsText(file);
     }
 
-    onDragOver(e) {
+    /**
+     * Called on drag over config card. Change color and prevent default
+     * @param e
+     * @returns {boolean}
+     */
+    public onDragOver(e) {
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-4 dropCard';
         e.preventDefault();
         return false;
     }
 
-    onDragLeave() {
+    /**
+     * Called on leaving drop config card. Change color.
+     * @returns {boolean}
+     */
+    public onDragLeave() {
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-2 dropCard';
         return false;

@@ -55,6 +55,11 @@ export class ParamExtractor {
         return trainingSets;
     }
 
+    /**
+     * Tries to extract flags of a file
+     * @param {string} input
+     * @returns {Flag[]}
+     */
     public static extractFlags(input: string) : Flag[] {
         let result = [];
         let splitLines = input.split("\n");
