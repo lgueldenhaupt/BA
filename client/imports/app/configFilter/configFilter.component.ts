@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {ApplicationRef, ChangeDetectorRef, Component, Input, NgZone, OnInit} from "@angular/core";
 import template from "./configFilter.component.html";
 import style from "./configFilter.component.scss";
 import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";

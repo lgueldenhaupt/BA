@@ -4,7 +4,7 @@
         {{mapping?.name}}
     </div>
 </div>
-<ul class="collapsible" *ngFor="let filter of filters | sortByCriteria: 'key'">
+<ul class="collapsible" *ngFor="let filter of filters">
     <li>
         <div class="collapsible-header filterHead" (click)="openHeader()">
             <div class="switch">
