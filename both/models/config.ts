@@ -9,14 +9,16 @@ export class Config implements ConfigSet {
     projectID: string;
     params: ParamSet[];
     results: TrainingSet[];
+    creator: string;
 
-    constructor(name: string, description: string, projectID: string, params: ParamSet[] = [], results: TrainingSet[] = [], id : string = '') {
+    constructor(name: string, description: string, projectID: string, creator: string, params: ParamSet[] = [], results: TrainingSet[] = [], id : string = '') {
         this.name = name;
         this.description = description;
         this.projectID = projectID;
         this.params = params;
         this._id = id;
         this.results = results;
+        this.creator = creator;
     }
 
     public getValueOf(param : string) : string {

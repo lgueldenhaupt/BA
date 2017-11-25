@@ -7,4 +7,5 @@ export interface ConfigSet {
     projectID: string;
     params: ParamSet[];
     results: TrainingSet[];
+    creator: string;
 }

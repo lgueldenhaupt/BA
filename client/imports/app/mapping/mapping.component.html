@@ -68,12 +68,12 @@
                 <p *ngIf="!selectedMapping.flags">Here you can drop or create flag translations.</p>
                 <span class="grey-text text-darken-2" *ngIf="flagHint && flagHint != ''">Key: {{flagHint}}</span><br>
                 <div class="maxCardHeight">
-                    <div class="chip grey darken-1 white-text" *ngFor="let flag of selectedMapping.flags" (mouseover)="flagHint = flag.key" (mouseleave)="flagHint = ''">{{flag.meaning}}<i class="close material-icons" (click)="deleteFlag(flag)">close</i></div>
+                    <div class="chip grey darken-1 white-text" *ngFor="let flag of selectedMapping.flags" (mouseover)="flagHint = flag.key" (mouseleave)="flagHint = ''">{{flag.meaning}}<i class="icon material-icons" (click)="deleteFlag(flag)">close</i></div>
                 </div>
             </div>
             <div class="card-action">
-                <button class="btn grey darken-3 modal-trigger top_space" data-target="createFlag">Add</button>
-                <button class="btn grey darken-3 top_space" (click)="clearFlags()" *ngIf="selectedMapping.flags && selectedMapping.flags != []">Clear</button>
+                <button class="btn grey darken-3 modal-trigger top_space" data-target="createFlag" *ngIf="isOwner(selectedMapping.creator)">Add</button>
+                <button class="btn grey darken-3 top_space" (click)="clearFlags()" *ngIf="isOwner(selectedMapping.creator) && selectedMapping.flags && selectedMapping.flags != []">Clear</button>
             </div>
         </div>
     </div>

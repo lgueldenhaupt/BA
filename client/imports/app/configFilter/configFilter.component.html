@@ -1,6 +1,6 @@
-<div class="card grey lighten-3">
+<div class="card grey lighten-3" *ngIf="mapping">
     <div class="card-content">
-        <span class="card-title"><i class="material-icons grey-text pointer modal-trigger" data-target="addFilterModal">add_circle</i>  Filter</span>
+        <span class="card-title"><i class="material-icons grey-text pointer" (click)="openModal()">add_circle</i>  Filter</span>
         {{mapping?.name}}
     </div>
 </div>
@@ -25,7 +25,7 @@
 </ul>
 </ul>
 
-<div id="addFilterModal" class="modal">
+<div id="addFilterModal" class="modal" *ngIf="mapping">
     <div class="modal-content">
         <h4>Add new filter </h4>
          <div class="input-field">

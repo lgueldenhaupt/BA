@@ -62,7 +62,7 @@ export class ConfigFilterComponent implements OnInit{
         this.configDS.getData().subscribe((data : ConfigSet[]) => {
             this.configs = [];
             data.forEach((configSet : ConfigSet) => {
-                this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.params, configSet.results, (<any>configSet)._id));
+                this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.creator, configSet.params, configSet.results, (<any>configSet)._id));
             });
         });
 
@@ -155,6 +155,10 @@ export class ConfigFilterComponent implements OnInit{
      */
     public openHeader() {
         $('.collapsible').collapsible();
+    }
+
+    public openModal() {
+        $('#addFilterModal').modal().modal('open');;
     }
 
 }

@@ -21,6 +21,7 @@ export class MappingsDataService {
     public addMappingFromConfig(name, configParams) : Observable<string> {
         let mapping = {
             name: name,
+            creator: Meteor.userId(),
             params: [],
             unrelatedParams: [],
             flags: []

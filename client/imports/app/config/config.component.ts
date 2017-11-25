@@ -60,7 +60,7 @@ export class ConfigComponent implements OnInit{
         private search: SearchService,
         private sanitizer: DomSanitizer
     ) {
-        this.config = {name: '', projectID: '', description: '', params: [], results: []};
+        this.config = {name: '', projectID: '', description: '', creator: '', params: [], results: []};
         this.canSafe = false;
         this.hideText = true;
 
@@ -127,6 +127,10 @@ export class ConfigComponent implements OnInit{
     public handleTableActions(event) {
         switch (event.index) {
             case 0:
+                if (this.config.creator != Meteor.userId()) {
+                    this.notification.notPermitted();
+                    return;
+                }
                 this.deleteParamSet(event.item);
                 break;
             default:

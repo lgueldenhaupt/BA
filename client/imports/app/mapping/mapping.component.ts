@@ -87,6 +87,10 @@ export class MappingComponent implements OnInit{
     public drop(event) {
         event.preventDefault();
         let needToUpdate : boolean = false;
+        if (this.selectedMapping.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
         if (!this.label.innerHTML || this.label.innerHTML === '') return;
 
         // dropped on the alias column
@@ -127,9 +131,13 @@ export class MappingComponent implements OnInit{
      * @param e
      */
     public dropFlagFile(e) {
+        e.preventDefault();
         if (e.dataTransfer.files.length <= 0) return;
         let file = e.dataTransfer.files[0];
-        e.preventDefault();
+        if (this.selectedMapping.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
 
         /**
          * Read flag file and add flags
@@ -189,6 +197,10 @@ export class MappingComponent implements OnInit{
      * @param {Flag} flag
      */
     public deleteFlag(flag: Flag) {
+        if (this.selectedMapping.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
         this.selectedMapping.flags.splice(this.selectedMapping.flags.indexOf(flag), 1);
         this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
     }
@@ -199,6 +211,10 @@ export class MappingComponent implements OnInit{
      * @param {string} meaning
      */
     public createFlag(key: string, meaning: string) {
+        if (this.selectedMapping.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
         this.selectedMapping.flags.push(new Flag(key, meaning));
         this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping).subscribe((changedEntries) => {
             if (changedEntries === 1) {
@@ -215,6 +231,10 @@ export class MappingComponent implements OnInit{
      * @param ID
      */
     public deleteMapping(ID) {
+        if (this.selectedMapping.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
         this.confirm.openModal("Delete Mapping?", "If you delete the mapping, all projects using this mapping will lose their filter options. Delete anyway?").then((fulfilled) => {
             if (fulfilled) {
                 this.projectDS.getProjectsWithMapping(ID).subscribe((data) => {
@@ -233,6 +253,10 @@ export class MappingComponent implements OnInit{
      * opens the edit mapping modal and sets the input field values
      */
     public openEditMapping() {
+        if (this.selectedMapping.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
         this.editedMapping = this.selectedMapping;
         $('#editMapping').modal('open');
         $('#editMappingName').val(this.selectedMapping.name);
@@ -250,5 +274,9 @@ export class MappingComponent implements OnInit{
                 this.notification.success("Mapping updated");
             }
         });
+    }
+
+    public isOwner(creator: string) {
+        return (this.selectedMapping && creator === Meteor.userId());
     }
 }

@@ -48,7 +48,7 @@ const appRoutes: Routes = [
     {
         path: 'mapping',
         component: MappingComponent,
-        // canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn]
     },
     {
         path: 'mapping/:id',

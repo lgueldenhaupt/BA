@@ -52,6 +52,13 @@ export class LoginComponent implements OnInit, OnDestroy{
                     this.notification.success("Logged in");
                 }
             });
+            setTimeout(() => {
+                if (Meteor.userId()) {
+                    this.router.navigate(["/dashboard"]);
+                } else {
+                    this.notification.warning("Pending");
+                }
+            }, 1000)
         } else {
             this.notification.error("Already logged in");
         }

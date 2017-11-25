@@ -19,5 +19,9 @@ export class NotificationService {
         Materialize.toast(message, 4000);
     }
 
+    public notPermitted() {
+        this.error("Not permitted");
+    }
+
     
 }

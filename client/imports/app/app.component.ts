@@ -58,6 +58,9 @@ export class AppComponent implements OnInit {
         } else {
             this.notification.error("Not logged in");
         }
+    }
 
+    public loggedOut() {
+        return !Meteor.user();
     }
 }

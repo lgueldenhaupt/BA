@@ -51,7 +51,6 @@ export class ProjectComponent implements OnInit {
                 private notification: NotificationService,
                 private search: SearchService,
                 private confirm: ConfirmationModalService,
-                private aliasFinder: AliasFinder,
                 private router: Router) {
         this.project = new Project();
 
@@ -125,6 +124,10 @@ export class ProjectComponent implements OnInit {
      * @param event
      */
     public handleDynTableCall(event) {
+        if (this.project.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
         switch (event.index) {
             case 0:
                 this.openConfigSetEditModal(event.item);
@@ -173,7 +176,8 @@ export class ProjectComponent implements OnInit {
             description: desc,
             projectID: this.projectID,
             params: params,
-            results: results
+            results: results,
+            creator: Meteor.userId()
         }).subscribe((newID) => {
             if (newID != '' || newID != undefined) {
                 this.notification.success("ConfigSet added");
@@ -231,6 +235,10 @@ export class ProjectComponent implements OnInit {
      * creates a new mapping for the project. Takes all configsSets for that. The first one builds the keys for the mapping
      */
     public createMapping() {
+        if (this.project.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
         if (!this.configSets || this.configSets.length <= 0) {
             this.notification.error("No configuration Sets");
             return;
@@ -306,7 +314,7 @@ export class ProjectComponent implements OnInit {
             this.mappingDS.getMappingById(this.project.mappingID).subscribe((mappings: Mapping[]) => {
                 if (mappings && mappings[0]) {
                     let m = mappings[0];
-                    this.mapping = new ParamMapping(m.name, m.params, m.unrelatedParams, m.flags, (<any>m)._id);
+                    this.mapping = new ParamMapping(m.name, m.creator, m.params, m.unrelatedParams, m.flags, (<any>m)._id);
                 }
             });
         }
@@ -317,10 +325,10 @@ export class ProjectComponent implements OnInit {
      * @param e
      */
     public onDrop(e) {
-        let file = e.dataTransfer.files[0];
         e.preventDefault();
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-2 dropCard';
+        let file = e.dataTransfer.files[0];
 
         // read file and try to extract params and results
         let FR = new FileReader();
@@ -362,5 +370,9 @@ export class ProjectComponent implements OnInit {
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-2 dropCard';
         return false;
+    }
+
+    public isOwner(creator : string) {
+        return (creator === Meteor.userId());
     }
 }

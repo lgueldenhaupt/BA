@@ -6,6 +6,7 @@ export interface Mapping {
     params: ParamAliases[];
     unrelatedParams: string[];
     flags: Flag[];
+    creator: string;
 }
 
 export class ParamMapping implements Mapping {
@@ -14,13 +15,15 @@ export class ParamMapping implements Mapping {
     unrelatedParams: string[];
     _id: string;
     flags: Flag[];
+    creator: string;
 
-    constructor(name: string, params: ParamAliases[], unrelatedParams: string[], flags: Flag[] = [], _id: string) {
+    constructor(name: string, creator: string, params: ParamAliases[], unrelatedParams: string[], flags: Flag[] = [], _id: string) {
         this.name = name;
         this.params = params;
         this.unrelatedParams = unrelatedParams;
         this.flags = flags;
         this._id = _id;
+        this.creator = creator;
     }
 
     public static getFlagName(flags : Flag[], key : string) : string {

@@ -11,7 +11,7 @@
                 <h4>{{project.name}}</h4>
             </div>
             <div class="col s12 m2 l2">
-                <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" data-target="configSetModal">Add</button>
+                <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" data-target="configSetModal" *ngIf="isOwner(project.creator)">Add</button>
             </div>
         </div>
         <hr>
@@ -23,7 +23,7 @@
 
     <!---------------Right side----------------------------->
     <div class="col s12 l2">
-        <div id="dropCard" class="card amber accent-2 dropCard" (dragleave)="onDragLeave($event)" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+        <div id="dropCard" class="card amber accent-2 dropCard" (dragleave)="onDragLeave($event)" (dragover)="onDragOver($event)" (drop)="onDrop($event)" *ngIf="isOwner(project.creator)">
             <div class="card-content">
                 <span class="card-title">Drop Config</span>
                 <p>Drop a config file here to create a new config</p>
@@ -38,8 +38,8 @@
                 <p [routerLink]="['/mapping', mapping?._id]" class="pointer">{{mapping?.name}}</p>
             </div>
             <div class="card-action">
-                <button class="btn grey darken-1 waves-effect s_top_space" (click)="updateMapping()" *ngIf="project.mappingID && project.mappingID != ''">Update</button>
-                <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()" *ngIf="!project.mappingID || project.mappingID === ''">Create</button>
+                <button class="btn grey darken-1 waves-effect s_top_space" (click)="updateMapping()" *ngIf="project.mappingID && mapping">Update</button>
+                <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()" *ngIf="isOwner(project.creator) && (!project.mappingID || project.mappingID === '')">Create</button>
             </div>
         </div>
     </div>

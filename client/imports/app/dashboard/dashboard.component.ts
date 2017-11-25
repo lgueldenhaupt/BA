@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit{
             this.notification.error("Please insert a name!");
             return;
         }
-        this.projectsDS.addData({name: name, description: description}).subscribe((newID) => {
+        this.projectsDS.addData({name: name, description: description, creator: Meteor.userId()}).subscribe((newID) => {
             if (newID != '' && newID != undefined) {
                 $('#createModal_name').val('');
                 $('#createModal_desc').val('');
@@ -107,10 +107,14 @@ export class DashboardComponent implements OnInit{
     /**
      * Deletes the project with the given id after confirmation.
      * @param id Project id of the project to delete.
-     * @param name Name to be displayed in confirm modal
+     * @param project the project to delete
      */
-    public deleteItem(id, name) {
-        this.confirmation.openModal('Delete ' + name, 'Do you really want to delete this project? <br>All related configs will be deleted too!').then((fullfilled) => {
+    public deleteItem(id, project: Project) {
+        if (project.creator != Meteor.userId()) {
+            this.notification.error("Not permitted");
+            return;
+        }
+        this.confirmation.openModal('Delete ' + project.name, 'Do you really want to delete this project? <br>All related configs will be deleted too!').then((fullfilled) => {
             if (fullfilled) {
                 this.projectsDS.delete(id).subscribe((removedItems) => {
                     if (removedItems === 1) {
@@ -126,12 +130,15 @@ export class DashboardComponent implements OnInit{
     /**
      * Opens the edit modal for a project
      * @param id
-     * @param name
-     * @param description
+     * @param project
      */
-    public openEditModal(id, name, description) {
-        this.editedProject.name = name;
-        this.editedProject.description = description;
+    public openEditModal(id, project: Project) {
+        if (project.creator != Meteor.userId()) {
+            this.notification.error("Not permitted");
+            return;
+        }
+        this.editedProject.name = project.name;
+        this.editedProject.description = project.description;
         this.projectID = id;
         $('#editModal').modal();
     }
