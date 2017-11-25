@@ -11,6 +11,7 @@ import {Option} from "../../../../both/models/option.interface";
 import {FilterService} from "../../services/filter.service";
 import {ParamAliases} from "../../../../both/models/paramAliases";
 import { Session } from 'meteor/session'
+import {UserPreferences} from "../../../../both/models/userPreferences";
 
 declare let $ :any;
 declare let _ : any;
@@ -44,18 +45,32 @@ export class ConfigFilterComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        //searches for filters in the session and sets them
-        if (Session.get('filters')) {
-            let sessionFilters = Session.get('filters');
-            sessionFilters.forEach((filter : Filter) => {
-                this.filters.push(new Filter(filter.key, filter.options, filter.active));
-            });
-            this.updateFilter();
+        if (Meteor.user() && Meteor.userId()) {
+            if ((<any>Meteor.user()).preferences) {
+                let preferences = (<UserPreferences>(<any>Meteor.user()).preferences);
+                preferences.lastConfigFilter.forEach((filter: Filter) => {
+                    if (filter.mappingID === this.mappingID) {
+                        this.filters.push(new Filter(filter.key, filter.options, this.mappingID, filter.active));
+                    }
+                });
+            }
+        } else {
+            //searches for filters in the session and sets them
+            if (Session.get('filters')) {
+                let sessionFilters = Session.get('filters');
+                sessionFilters.forEach((filter : Filter) => {
+                    if (filter.mappingID === this.mappingID) {
+                        this.filters.push(new Filter(filter.key, filter.options, this.mappingID, filter.active));
+                    }
+                });
+            }
         }
+        this.updateFilter();
 
         //gets the corresponding mapping
         this.mappingDS.getMappingById(this.mappingID).subscribe(mappings => {
             this.mapping = mappings[0];
+            this.updateFilter();
         });
 
         //gets all configs of that mapping to search for possible values
@@ -64,6 +79,7 @@ export class ConfigFilterComponent implements OnInit{
             data.forEach((configSet : ConfigSet) => {
                 this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.creator, configSet.params, configSet.results, (<any>configSet)._id));
             });
+            this.updateFilter();
         });
 
         //inits materialize css things
@@ -109,7 +125,7 @@ export class ConfigFilterComponent implements OnInit{
             values.forEach((val) => {
                 options.push({name: val, enabled: true, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
             });
-            this.filters.push(new Filter(key, options));
+            this.filters.push(new Filter(key, options, this.mappingID));
         } else {
             this.filters.splice(this.filters.indexOf(this.canAddFilter(key)), 1);
         }

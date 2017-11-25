@@ -25,6 +25,10 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         this.initMaterializeJS();
+        Meteor.subscribe('projects-collection');
+        Meteor.subscribe('configsets-collection');
+        Meteor.subscribe('mappings-collection');
+        Meteor.subscribe('users');
     }
 
     private initMaterializeJS() {

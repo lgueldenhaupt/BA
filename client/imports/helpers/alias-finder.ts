@@ -79,6 +79,7 @@ export class AliasFinder{
      */
     public static areEqual(first: string, second: string, mapping) : boolean {
         let result = false;
+        if (!mapping) return result;
         first = first.toLowerCase();
         second = second.toLowerCase();
         if (first === second){
