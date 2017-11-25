@@ -1,8 +1,8 @@
 {
   "public": {
     "ldap": {
-      "url": "ldap://ldap.forumsys.com",
-      "dn": "cn=read-only-admin,dc=example,dc=com"
+      "url": "ldap://ifn05.ifn.ing.tu-bs.de",
+      "dn": "CN=Users,DC=ifn,DC=ing,DC=tu-bs,DC=de"
     }
   }
 }

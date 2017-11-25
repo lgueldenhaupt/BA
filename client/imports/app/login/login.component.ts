@@ -35,21 +35,19 @@ export class LoginComponent implements OnInit, OnDestroy{
      * @param {string} password
      */
     logIn(username: string, password: string) {
+        username = username.toLowerCase();
         // get LDAP information from settings.json
         if (!Meteor.settings.public.ldap.dn || !Meteor.settings.public.ldap.url) return;
         let dn = Meteor.settings.public.ldap.dn;
+
         let url = Meteor.settings.public.ldap.url;
 
         if (!Meteor.user()) {
             // try to log in if no user is logged in.
             // loginWithLDAP is a function of accounts-ldap package
-            Meteor.loginWithLDAP(username, password, {dn: dn, url: url}, (err) => {
+            Meteor.loginWithLDAP(username, password, {dn: "CN=" + username + "," + dn, url: url}, (err) => {
                 if (err) {
-                    if (err.reason === "Invalid Credentials") {
-                        this.notification.error("Invalid Credentials");
-                    } else {
-                        this.notification.error("Login failed");
-                    }
+                    this.notification.error("Error: " + err.reason);
                 } else {
                     this.notification.success("Logged in");
                 }
@@ -57,9 +55,6 @@ export class LoginComponent implements OnInit, OnDestroy{
         } else {
             this.notification.error("Already logged in");
         }
-        // setTimeout(() => {
-        //     this.router.navigate(["/dashboard"]);
-        // }, 3000);
     }
 
 }

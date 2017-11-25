@@ -20,6 +20,7 @@ import {Config} from "../../../../both/models/config";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
 import {ConfigsPipe, ProjectFilterPipe} from "../../helpers/filter.pipe";
 import {ParamSet} from "../../../../both/models/paramSet";
+import {AliasFinder} from "../../helpers/alias-finder";
 
 declare let $: any;
 declare let _: any;
@@ -50,6 +51,7 @@ export class ProjectComponent implements OnInit {
                 private notification: NotificationService,
                 private search: SearchService,
                 private confirm: ConfirmationModalService,
+                private aliasFinder: AliasFinder,
                 private router: Router) {
         this.project = new Project();
 
@@ -72,26 +74,26 @@ export class ProjectComponent implements OnInit {
                 (data: Project[]) => {
                     this.project = data[0];
                     this.getProjectMapping();
+                    this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
+                        this.configSets = results;
+                        //add result max and min vals to every config file to show in table
+                        this.configSets.forEach((configSet : ConfigSet) => {
+                            if (configSet.results && configSet.results.length > 0) {
+                                configSet.results.forEach((result : TrainingSet, index) => {
+                                    configSet[index + '. Set Max'] = Math.round(10000 * _.max(result.epochs)) / 10000;
+                                    configSet[index + '. Set Min'] = Math.round(10000 * _.min(result.epochs)) / 10000;
+                                });
+                            }
+                            this.flattenParams(configSet);
+                        });
+                        this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
+                    });
                 }
             );
         });
 
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
-        });
-        this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
-            this.configSets = results;
-            //add result max and min vals to every config file to show in table
-            this.configSets.forEach((configSet : ConfigSet) => {
-                if (configSet.results && configSet.results.length > 0) {
-                    configSet.results.forEach((result : TrainingSet, index) => {
-                        configSet[index + '. Set Max'] = Math.round(10000 * _.max(result.epochs)) / 10000;
-                        configSet[index + '. Set Min'] = Math.round(10000 * _.min(result.epochs)) / 10000;
-                    });
-                }
-                this.flattenParams(configSet);
-            });
-            this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
         });
 
         // subscribe to the filterservice to update displayed configs

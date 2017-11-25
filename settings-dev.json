@@ -1,0 +1,8 @@
+{
+  "public": {
+    "ldap": {
+      "url": "ldap://ldap.forumsys.com",
+      "dn": "dc=example,dc=com"
+    }
+  }
+}
