@@ -174,7 +174,27 @@ export class ConfigFilterComponent implements OnInit{
     }
 
     public openModal() {
-        $('#addFilterModal').modal().modal('open');;
+        $('#addFilterModal').modal({
+                complete: () => {
+                    $('.collapsible').collapsible();
+                },
+                ready: () => {
+                    let autoCompleteData = {};
+                    if (this.mapping) {
+                        this.mapping.params.forEach((paramWithAliases : ParamAliases) => {
+                            autoCompleteData[paramWithAliases.key] = 0;
+                        });
+                    }
+                    $('input.autocomplete').autocomplete({
+                        data: autoCompleteData,
+                        onAutocomplete: (val) => {
+                            this.addFilter(val);
+                            this.updateFilter();
+                        }
+                    });
+                }
+            }
+        ).modal('open');
     }
 
 }
