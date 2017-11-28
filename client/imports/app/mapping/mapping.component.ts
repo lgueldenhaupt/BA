@@ -228,22 +228,21 @@ export class MappingComponent implements OnInit{
 
     /**
      * Deletes the mapping with the given id. Updates projects using this mapping.
-     * @param ID
      */
-    public deleteMapping(ID) {
+    public deleteMapping() {
         if (this.selectedMapping.creator != Meteor.userId()) {
             this.notification.notPermitted();
             return;
         }
         this.confirm.openModal("Delete Mapping?", "If you delete the mapping, all projects using this mapping will lose their filter options. Delete anyway?").then((fulfilled) => {
             if (fulfilled) {
-                this.projectDS.getProjectsWithMapping(ID).subscribe((data) => {
+                this.projectDS.getProjectsWithMapping((<any>this.selectedMapping)._id).subscribe((data) => {
                     data.forEach((project) => {
                         project.mappingID = "";
                         this.projectDS.updateProject(project._id, project);
                     })
                 });
-                this.mappingDS.deleteMapping(ID);
+                this.mappingDS.deleteMapping((<any>this.selectedMapping)._id);
                 this.selectedMapping = null;
             }
         });

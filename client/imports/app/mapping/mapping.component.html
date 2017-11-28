@@ -5,7 +5,6 @@
             <div class="collection-header grey darken-1"><h5 class="white-text">Existing Mappings</h5></div>
             <a class="collection-item pointer black-text" *ngFor="let mapping of mappings | async"
                (click)="selectMapping(mapping)">{{mapping.name}}
-                <a (click)="$event.stopPropagation(); deleteMapping(mapping._id)" class="secondary-content pointer grey-text"><i class="material-icons">delete</i></a>
             </a>
         </div>
 
@@ -25,7 +24,10 @@
     <!------------------------------- Middle ---------------------------------------------------------->
     <div class="col s12 l8">
         <h4 *ngIf="!selectedMapping" class="center-align grey-text">Nothing selected</h4>
-        <h4 *ngIf="selectedMapping" class="center-align">{{selectedMapping.name}}<a (click)="$event.stopPropagation(); openEditMapping()" class="pointer grey-text right_float"><i class="material-icons">edit</i></a></h4>
+        <h4 *ngIf="selectedMapping" class="center-align">{{selectedMapping.name}}
+            <a (click)="deleteMapping()" class="pointer grey-text right_float"><i class="material-icons">delete</i></a>
+            <a (click)="openEditMapping()" class="pointer grey-text right_float"><i class="material-icons">edit</i></a>
+        </h4>
         <table *ngIf="selectedMapping" class="highlight bordered">
             <thead>
             <th>Parameter Key</th>

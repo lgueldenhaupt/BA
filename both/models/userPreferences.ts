@@ -27,4 +27,16 @@ export class UserPreferences {
         });
         this.lastConfigFilter = this.lastConfigFilter.concat(filters);
     }
+
+    public removeMappingFilters(mappingID: string) {
+        let toDelete  = [];
+        this.lastConfigFilter.forEach((filter) => {
+            if (mappingID === filter.mappingID) {
+                toDelete.push(filter);
+            }
+        });
+        toDelete.forEach((filter) => {
+            this.lastConfigFilter.splice(this.lastConfigFilter.indexOf(filter), 1);
+        });
+    }
 }

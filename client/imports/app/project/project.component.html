@@ -34,18 +34,23 @@
         <div class="card amber accent-2">
             <div class="card-content">
                 <span class="card-title">Related Mapping</span>
+                <select id="mappingSelect" class="browser-default" (change)="assignToMapping(selectVal)" [(ngModel)]="selectVal">
+                    <option value="" disabled selected>Choose a mapping</option>
+                    <option *ngFor="let mapping of mappings" [ngValue]="mapping">{{mapping.name}}</option>
+                </select>
                 <p *ngIf="project.mappingID === ''">No mapping assigned yet.</p>
                 <p [routerLink]="['/mapping', mapping?._id]" class="pointer">{{mapping?.name}}</p>
             </div>
             <div class="card-action">
-                <button class="btn grey darken-1 waves-effect s_top_space" (click)="updateMapping()" *ngIf="project.mappingID && mapping">Update</button>
-                <button class="btn grey darken-1 waves-effect s_top_space" (click)="createMapping()" *ngIf="isOwner(project.creator) && (!project.mappingID || project.mappingID === '')">Create</button>
+                <button class="btn grey darken-1 top_space" (click)="updateMapping()" *ngIf="project.mappingID && mapping">Update</button>
+                <button class="btn grey darken-1 top_space" (click)="createMapping()" *ngIf="isOwner(project.creator) && (!project.mappingID || project.mappingID === '')">Create New</button>
             </div>
         </div>
     </div>
 </div>
+<!-------------------------------------------------------------------------------------->
 
-
+<!----------------------------Modals---------------------------------------------------->
 <div id="configSetModal" class="modal">
     <div class="modal-content">
         <h4>Add new configuration set</h4>

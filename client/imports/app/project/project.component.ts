@@ -37,6 +37,7 @@ export class ProjectComponent implements OnInit {
     private projectID: string;
     private project: Project;
     private mapping: ParamMapping;
+    private mappings: Mapping[];
     private configSets: ConfigSet[];
     private filteredConfigs: ConfigSet[];
     private searchText: string;
@@ -89,6 +90,12 @@ export class ProjectComponent implements OnInit {
                     });
                 }
             );
+        });
+
+        this.mappingDS.getData().subscribe((data) => {
+            if (data) {
+                this.mappings = data;
+            }
         });
 
         this.search.getSearchQuery().subscribe(x => {
@@ -293,7 +300,7 @@ export class ProjectComponent implements OnInit {
     }
 
     /**
-     * Creates a new mapping for the mapping
+     * Updates the project to contain the mapping
      * @param {string} mappingID
      */
     private updateProjectWithMapping(mappingID: string) {
@@ -374,5 +381,14 @@ export class ProjectComponent implements OnInit {
 
     public isOwner(creator : string) {
         return (creator === Meteor.userId());
+    }
+
+    public assignToMapping(mapping) {
+        this.confirm.openModal("Assign to " + mapping.name + " ?").then((fulfilled) => {
+            if (fulfilled && mapping._id && mapping._id != '') {
+                this.updateProjectWithMapping(mapping._id);
+                this.addAllConfigsToMapping(mapping._id);
+            }
+        })
     }
 }
