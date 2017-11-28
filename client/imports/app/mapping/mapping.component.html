@@ -13,7 +13,10 @@
                 <span class="card-title">Mappings</span>
                 <p>This is the mapping page. Here you can create or adjust parameter mappings. For every parameter in a
                     mapping you can
-                    chose as many aliases as you want. All configurations of a mapping can be filtered.</p>
+                    chose as many aliases as you want. All configurations of a mapping can be filtered.<br>
+                    Also you can add flags to the mapping, translating every parameter value into something else.
+                    To add flags, click on the add button or drop a flag file on the card. Edit flags by double clicking them.
+                </p>
             </div>
             <div class="card-action">
             </div>
@@ -70,7 +73,7 @@
                 <p *ngIf="!selectedMapping.flags">Here you can drop or create flag translations.</p>
                 <span class="grey-text text-darken-2" *ngIf="flagHint && flagHint != ''">Key: {{flagHint}}</span><br>
                 <div class="maxCardHeight">
-                    <div class="chip grey darken-1 white-text" *ngFor="let flag of selectedMapping.flags" (mouseover)="flagHint = flag.key" (mouseleave)="flagHint = ''">{{flag.meaning}}<i class="icon material-icons" (click)="deleteFlag(flag)">close</i></div>
+                    <div class="chip grey darken-1 white-text noselect" *ngFor="let flag of selectedMapping.flags" (mouseover)="flagHint = flag.key" (mouseleave)="flagHint = ''" (dblclick)="openEditFlag(flag)">{{flag.meaning}}<i class="icon material-icons" (click)="deleteFlag(flag)">close</i></div>
                 </div>
             </div>
             <div class="card-action">
@@ -96,6 +99,23 @@
     </div>
     <div class="modal-footer">
         <button class="modal-action waves-effect waves-green btn-flat" (click)="createFlag(key.value, meaning.value)">Create</button>
+    </div>
+</div>
+
+<div id="editFlag" class="modal">
+    <div class="modal-content">
+        <h4>Edit Flag</h4>
+        <div class="input-field">
+            <input placeholder="Name" id="editFlagName" type="text" class="validate" #Flagkey>
+            <label for="editFlagName">Key</label>
+        </div>
+        <div class="input-field">
+            <textarea placeholder="Description" id="editFlagMeaning" type="text" class="materialize-textarea" #Flagmeaning></textarea>
+            <label for="editFlagMeaning">Meaning</label>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action waves-effect waves-green btn-flat" (click)="editFlag(Flagkey.value, Flagmeaning.value)">Edit</button>
     </div>
 </div>
 

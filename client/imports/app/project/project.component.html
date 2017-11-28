@@ -34,7 +34,7 @@
         <div class="card amber accent-2">
             <div class="card-content">
                 <span class="card-title">Related Mapping</span>
-                <select id="mappingSelect" class="browser-default" (change)="assignToMapping(selectVal)" [(ngModel)]="selectVal">
+                <select id="mappingSelect" class="browser-default" (change)="assignToMapping(selectVal)" [(ngModel)]="selectVal" *ngIf="isOwner(project.creator) && (!project.mappingID || project.mappingID === '')">
                     <option value="" disabled selected>Choose a mapping</option>
                     <option *ngFor="let mapping of mappings" [ngValue]="mapping">{{mapping.name}}</option>
                 </select>

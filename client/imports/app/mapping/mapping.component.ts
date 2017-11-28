@@ -26,6 +26,7 @@ export class MappingComponent implements OnInit{
     private mappings: Observable<Mapping[]>;
     private selectedMapping: Mapping;
     private editedMapping: Mapping;
+    private editedFlag: Flag;
     private id: string;
     private label: any;
 
@@ -273,6 +274,24 @@ export class MappingComponent implements OnInit{
                 this.notification.success("Mapping updated");
             }
         });
+    }
+
+    public openEditFlag(flag: Flag) {
+        if (this.selectedMapping.creator != Meteor.userId()) {
+            this.notification.notPermitted();
+            return;
+        }
+        this.editedFlag = flag;
+        $('#editFlagName').val(flag.key);
+        $('#editFlagMeaning').val(flag.meaning);
+        $('#editFlag').modal().modal('open');
+    }
+
+    public editFlag(key : string, meaning: string) {
+        this.editedFlag.key = key;
+        this.editedFlag.meaning = meaning;
+        this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);
+        $('#editFlag').modal('close');
     }
 
     public isOwner(creator: string) {
