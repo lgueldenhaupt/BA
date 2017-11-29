@@ -30,6 +30,7 @@ export class ConfigFilterComponent implements OnInit{
      * mappingID: the id of the mapping to filter for
      */
     @Input() mappingID: string;
+    @Input() projectID: string;
 
     private mapping: Mapping;
     private configs: Config[];
@@ -49,8 +50,8 @@ export class ConfigFilterComponent implements OnInit{
             if ((<any>Meteor.user()).preferences) {
                 let preferences = (<UserPreferences>(<any>Meteor.user()).preferences);
                 preferences.lastConfigFilter.forEach((filter: Filter) => {
-                    if (filter.mappingID === this.mappingID) {
-                        this.filters.push(new Filter(filter.key, filter.options, this.mappingID, filter.active));
+                    if (filter.projectID === this.projectID) {
+                        this.filters.push(new Filter(filter.key, filter.options, this.projectID, filter.active));
                     }
                 });
             }
@@ -59,8 +60,8 @@ export class ConfigFilterComponent implements OnInit{
             if (Session.get('filters')) {
                 let sessionFilters = Session.get('filters');
                 sessionFilters.forEach((filter : Filter) => {
-                    if (filter.mappingID === this.mappingID) {
-                        this.filters.push(new Filter(filter.key, filter.options, this.mappingID, filter.active));
+                    if (filter.projectID === this.projectID) {
+                        this.filters.push(new Filter(filter.key, filter.options, this.projectID, filter.active));
                     }
                 });
             }
@@ -80,30 +81,6 @@ export class ConfigFilterComponent implements OnInit{
                 this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.creator, configSet.params, configSet.results, (<any>configSet)._id));
             });
             this.updateFilter();
-        });
-
-        //inits materialize css things
-        $(document).ready(() => {
-            $('#addFilterModal').modal({
-                complete: () => {
-                    $('.collapsible').collapsible();
-                },
-                ready: () => {
-                    let autoCompleteData = {};
-                    if (this.mapping) {
-                        this.mapping.params.forEach((paramWithAliases : ParamAliases) => {
-                            autoCompleteData[paramWithAliases.key] = 0;
-                        });
-                    }
-                    $('input.autocomplete').autocomplete({
-                        data: autoCompleteData,
-                        onAutocomplete: (val) => {
-                            this.addFilter(val);
-                            this.updateFilter();
-                        }
-                    });
-                }
-            });
         });
     }
 
@@ -125,7 +102,7 @@ export class ConfigFilterComponent implements OnInit{
             values.forEach((val) => {
                 options.push({name: val, enabled: true, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
             });
-            this.filters.push(new Filter(key, options, this.mappingID));
+            this.filters.push(new Filter(key, options, this.projectID));
         } else {
             this.filters.splice(this.filters.indexOf(this.canAddFilter(key)), 1);
         }

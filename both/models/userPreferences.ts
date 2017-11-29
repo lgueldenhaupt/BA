@@ -14,11 +14,11 @@ export class UserPreferences {
     public replaceOldFilters(filters : Filter[]) {
         let mappingsIDs: string[] = [];
         filters.forEach((filter) => {
-            mappingsIDs.push(filter.mappingID);
+            mappingsIDs.push(filter.projectID);
         });
         let toDelete  = [];
         this.lastConfigFilter.forEach((filter) => {
-            if (mappingsIDs.indexOf(filter.mappingID) != -1) {
+            if (mappingsIDs.indexOf(filter.projectID) != -1) {
                 toDelete.push(filter);
             }
         });
@@ -28,10 +28,10 @@ export class UserPreferences {
         this.lastConfigFilter = this.lastConfigFilter.concat(filters);
     }
 
-    public removeMappingFilters(mappingID: string) {
+    public removeMappingFilters(projectID: string) {
         let toDelete  = [];
         this.lastConfigFilter.forEach((filter) => {
-            if (mappingID === filter.mappingID) {
+            if (projectID === filter.projectID) {
                 toDelete.push(filter);
             }
         });

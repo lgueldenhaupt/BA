@@ -5,13 +5,13 @@ export class Filter  {
     public key : string;
     public active: boolean;
     public options: Option[];
-    public mappingID: string;
+    public projectID: string;
 
-    constructor(key : string, options: Option[] = [], mappingID: string, active : boolean = true) {
+    constructor(key : string, options: Option[] = [], projectID: string, active : boolean = true) {
         this.key = key;
         this.options = options;
         this.active = active;
-        this.mappingID = mappingID;
+        this.projectID = projectID;
     }
 
     toggle() {
