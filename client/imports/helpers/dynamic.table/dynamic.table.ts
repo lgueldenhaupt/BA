@@ -3,6 +3,7 @@ import template from "./dynamic.table.html";
 import style from "./dynamic.table.scss";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
 import {SearchService} from "../../services/search.service";
+import {Observable} from "rxjs/Observable";
 
 declare let $ :any;
 declare let _ : any;
@@ -29,6 +30,7 @@ export class DynamicTable implements OnInit{
     @Input() options: DynamicTableOptions;
     @Output() called: EventEmitter<any> = new EventEmitter();
     @Output() clickedOnColumn: EventEmitter<any> = new EventEmitter();
+    @Output() columnsChanged: EventEmitter<DynamicTableColumn[]> = new EventEmitter();
 
     private activeColumns : DynamicTableColumn[];
     private fixColumns: DynamicTableColumn[];
@@ -68,6 +70,26 @@ export class DynamicTable implements OnInit{
                 this.input = filter.transform(this.trueInput, searchText);
             });
         }
+
+        Observable.of(true)
+            .delay(1000)
+            .subscribe(success => {
+
+                if(success){
+                    if (this.initialColumns) {
+                        this.fixColumns = [];
+                        this.activeColumns = [];
+                        this.initialColumns.forEach((column) => {
+                            if (column.fix) {
+                                this.fixColumns.push(column);
+                            } else {
+                                this.activeColumns.push(column);
+                            }
+                        });
+                    }
+                }
+
+            });
     }
 
     /**
@@ -123,6 +145,7 @@ export class DynamicTable implements OnInit{
         } else {
             this.activeColumns.push(column);
         }
+        this.columnsChanged.emit(this.activeColumns);
     }
 
     /**

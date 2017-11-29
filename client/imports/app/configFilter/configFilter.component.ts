@@ -1,4 +1,4 @@
-import {ApplicationRef, ChangeDetectorRef, Component, Input, NgZone, OnInit} from "@angular/core";
+import {ApplicationRef, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone, OnInit} from "@angular/core";
 import template from "./configFilter.component.html";
 import style from "./configFilter.component.scss";
 import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";
@@ -12,6 +12,7 @@ import {FilterService} from "../../services/filter.service";
 import {ParamAliases} from "../../../../both/models/paramAliases";
 import { Session } from 'meteor/session'
 import {UserPreferences} from "../../../../both/models/userPreferences";
+import {Observable} from "rxjs/Observable";
 
 declare let $ :any;
 declare let _ : any;

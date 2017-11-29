@@ -13,8 +13,7 @@ export class FilterService {
         if (Meteor.user()) {
             if ((<any>Meteor.user()).preferences) {
                 let preferences = (<any>Meteor.user()).preferences;
-                if (!preferences) preferences = [];
-                let newPreferences = new UserPreferences(preferences.lastConfigFilter);
+                let newPreferences = new UserPreferences().copyData(preferences);
                 newPreferences.replaceOldFilters(filters);
                 UsersDataService.updateUser(Meteor.userId(), newPreferences);
             } else {

@@ -68,7 +68,7 @@ export class ConfigComponent implements OnInit{
         this.initalParamColumns = [];
         this.initalParamColumns.push(new DynamicTableColumn('Param', 'param', true));
         this.initalParamColumns.push(new DynamicTableColumn('Value', 'value', true));
-        this.initalParamColumns.push(new DynamicTableColumn('Actions', '', true, [
+        this.initalParamColumns.push(new DynamicTableColumn('Actions', '', true, "", [
             '<i class="material-icons grey-text text-darken-2 pointer">delete</i>'
         ]));
         this.tableOptions = new DynamicTableOptions("Params", new ConfigsPipe(), "highlight");

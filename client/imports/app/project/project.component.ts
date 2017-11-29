@@ -21,6 +21,8 @@ import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/d
 import {ConfigsPipe, ProjectFilterPipe} from "../../helpers/filter.pipe";
 import {ParamSet} from "../../../../both/models/paramSet";
 import {AliasFinder} from "../../helpers/alias-finder";
+import {UserPreferences} from "../../../../both/models/userPreferences";
+import {UsersDataService} from "../../services/users-data.service";
 
 declare let $: any;
 declare let _: any;
@@ -44,6 +46,9 @@ export class ProjectComponent implements OnInit {
     private chosenConfig: Config;
     private initialColumns: DynamicTableColumn[];
     private tableOptions: DynamicTableOptions;
+    private fixColumn: DynamicTableColumn = new DynamicTableColumn('Actions', '', true, "", [
+        "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
+        "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]);
 
     constructor(private projectsDS: ProjectsDataService,
                 private configSetsDS: ConfigSetsDataService,
@@ -59,9 +64,7 @@ export class ProjectComponent implements OnInit {
         this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true,true);
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
-        this.initialColumns.push(new DynamicTableColumn('Actions', '', true, [
-            "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
-            "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]));
+        this.initialColumns.push(this.fixColumn);
     }
 
     ngOnInit(): void {
@@ -73,6 +76,17 @@ export class ProjectComponent implements OnInit {
             project$.subscribe(
                 (data: Project[]) => {
                     this.project = data[0];
+                    if ((<any>Meteor.user()).preferences) {
+                        let prefs = <UserPreferences>(<any>Meteor.user()).preferences;
+                        if (prefs.lastConfigSetColumns && prefs.lastConfigSetColumns != []) {
+                            prefs = new UserPreferences().copyData(prefs);
+                            if (prefs.getProjectsColumns(this.projectID).length != 0) {
+                                this.initialColumns = [];
+                                this.initialColumns.push(this.fixColumn);
+                                this.initialColumns = this.initialColumns.concat(prefs.getProjectsColumns(this.projectID));
+                            }
+                        }
+                    }
                     this.getProjectMapping();
                     this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
                         this.configSets = results;
@@ -390,5 +404,21 @@ export class ProjectComponent implements OnInit {
                 this.addAllConfigsToMapping(mapping._id);
             }
         })
+    }
+
+    public columnsUpdated(columns: DynamicTableColumn[]) {
+        let preferences = (<any>Meteor.user()).preferences;
+        if (!preferences) {
+            preferences = new UserPreferences();
+        } else {
+            preferences = new UserPreferences().copyData(preferences);
+        }
+        preferences.setConfigSetTablePreferences(columns);
+        if (preferences.lastConfigSetColumns) {
+            preferences.lastConfigSetColumns.forEach((column) => {
+                column.projectID = this.projectID;
+            });
+        }
+        UsersDataService.updateUser(Meteor.userId(), preferences);
     }
 }
