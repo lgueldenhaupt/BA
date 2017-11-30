@@ -13,6 +13,7 @@ import {ParamAliases} from "../../../../both/models/paramAliases";
 import { Session } from 'meteor/session'
 import {UserPreferences} from "../../../../both/models/userPreferences";
 import {Observable} from "rxjs/Observable";
+import {AliasFinder} from "../../helpers/alias-finder";
 
 declare let $ :any;
 declare let _ : any;
@@ -41,6 +42,7 @@ export class ConfigFilterComponent implements OnInit{
     constructor(
         private mappingDS: MappingsDataService,
         private configDS: ConfigSetsDataService,
+        private aliasFinder: AliasFinder
     ) {
         this.filters = [];
         this.configs = [];
@@ -91,6 +93,7 @@ export class ConfigFilterComponent implements OnInit{
      */
     public addFilter(key: string) {
         if (this.canAddFilter(key) == null) {
+            let aliases = this.aliasFinder.getAliasesStraight(this.mappingID, key);
             let options : Option[] = [];
             let values = [];
             this.configs.forEach((config : Config) => {
@@ -98,6 +101,12 @@ export class ConfigFilterComponent implements OnInit{
                 if (val != '') {
                     values.push(val);
                 }
+                aliases.forEach((alias) => {
+                     let valueOfAlias = config.getValueOf(alias);
+                     if (valueOfAlias != '') {
+                         values.push(valueOfAlias);
+                     }
+                });
             });
             values = _.uniq(values);
             values.forEach((val) => {

@@ -71,6 +71,7 @@ export class DynamicTable implements OnInit{
             });
         }
 
+        //reload initalColumns, in case of late loading
         Observable.of(true)
             .delay(1000)
             .subscribe(success => {
@@ -174,11 +175,6 @@ export class DynamicTable implements OnInit{
                         if (!this.existsInColumns(this.possibleColumns, propName)) {
                             this.possibleColumns.push(new DynamicTableColumn(propName, prop));
                         }
-                        // if (item[prop] instanceof Array) {
-                        //     let array = item[prop];
-                        //     array.forEach((i) => {
-                        //     })
-                        // }
                     }
                 }
             });

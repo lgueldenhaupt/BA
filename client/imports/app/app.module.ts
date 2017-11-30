@@ -39,7 +39,7 @@ const appRoutes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent,
-        // canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn]
     },
     {
         path: 'login',
@@ -53,17 +53,17 @@ const appRoutes: Routes = [
     {
         path: 'mapping/:id',
         component: MappingComponent,
-        // canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn]
     },
     {
         path: 'project/:id',
         component: ProjectComponent,
-        // canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn]
     },
     {
         path: 'config/:id',
         component: ConfigComponent,
-        // canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn]
     },
     {
         path: '',
