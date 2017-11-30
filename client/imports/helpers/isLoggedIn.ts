@@ -17,7 +17,7 @@ export class IsLoggedIn implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        if (Meteor.user() && Meteor.user()._id) {
+        if (Meteor.userId()) {
             return true;
         } else {
             this.router.navigate(['/login']);

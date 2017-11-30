@@ -136,7 +136,12 @@ export class ProjectComponent implements OnInit {
      */
     private flattenParams(configSet: ConfigSet) {
         configSet.params.forEach((paramSet : ParamSet) => {
-            configSet[paramSet.param] = ParamMapping.getFlagName(this.mapping.flags, paramSet.value);
+            if (this.mapping && this.mapping.flags) {
+                configSet[paramSet.param] = ParamMapping.getFlagName(this.mapping.flags, paramSet.value);
+            } else {
+                configSet[paramSet.param] = paramSet.value;
+            }
+
         })
     }
 
