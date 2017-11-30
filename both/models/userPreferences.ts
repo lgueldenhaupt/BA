@@ -6,6 +6,9 @@ export interface UserPreferencesInterface {
     lastConfigSetColumns: DynamicTableColumn[];
 }
 
+/**
+ *
+ */
 export class UserPreferences implements UserPreferencesInterface{
     lastConfigFilter: Filter[];
     lastConfigSetColumns: DynamicTableColumn[];

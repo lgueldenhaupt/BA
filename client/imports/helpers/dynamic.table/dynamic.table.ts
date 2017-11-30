@@ -154,7 +154,9 @@ export class DynamicTable implements OnInit{
     private initPossibleColumns() {
         this.possibleColumns = Object.assign([], this.initialColumns);
         this.possibleColumns.forEach((column) => {
-            column.toggle();
+            if (!column.active) {
+                column.toggle();
+            }
         });
         this.deepSearchForColumns(this.input);
     }
