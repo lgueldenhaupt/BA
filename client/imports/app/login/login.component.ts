@@ -35,6 +35,10 @@ export class LoginComponent implements OnInit, OnDestroy{
      * @param {string} password
      */
     logIn(username: string, password: string) {
+        if (!password || password === "") {
+            this.notification.error("Empty Password!");
+            return;
+        }
         username = username.toLowerCase();
         // get LDAP information from settings.json
         if (!Meteor.settings.public.ldap.dn || !Meteor.settings.public.ldap.url) return;
