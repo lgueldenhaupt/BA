@@ -76,6 +76,8 @@ export class ProjectComponent implements OnInit {
             project$.subscribe(
                 (data: Project[]) => {
                     this.project = data[0];
+                    let computedConfigFiles = [];
+                    this.configSets = [];
                     this.getProjectMapping();
                     if ((<any>Meteor.user()).preferences) {
                         let prefs = <UserPreferences>(<any>Meteor.user()).preferences;
@@ -89,16 +91,20 @@ export class ProjectComponent implements OnInit {
                         }
                     }
                     this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
-                        this.configSets = results;
                         //add result max and min vals to every config file to show in table
-                        this.configSets.forEach((configSet : ConfigSet) => {
-                            if (configSet.results && configSet.results.length > 0) {
-                                configSet.results.forEach((result : TrainingSet, index) => {
-                                    configSet[index + '. Set Max'] = Math.round(10000 * _.max(result.epochs)) / 10000;
-                                    configSet[index + '. Set Min'] = Math.round(10000 * _.min(result.epochs)) / 10000;
-                                });
+                        let configs = results;
+                        configs.forEach((configSet : ConfigSet) => {
+                            if (computedConfigFiles.indexOf((<any>configSet)._id) === -1) {
+                                computedConfigFiles.push((<any>configSet)._id);
+                                if (configSet.results && configSet.results.length > 0) {
+                                    configSet.results.forEach((result : TrainingSet, index) => {
+                                        configSet[index + '. Set Max'] = Math.round(10000 * _.max(result.epochs)) / 10000;
+                                        configSet[index + '. Set Min'] = Math.round(10000 * _.min(result.epochs)) / 10000;
+                                    });
+                                }
+                                this.flattenParams(configSet);
+                                this.configSets.push(configSet);
                             }
-                            this.flattenParams(configSet);
                         });
                         this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
                     });
