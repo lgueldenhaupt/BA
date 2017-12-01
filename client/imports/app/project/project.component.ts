@@ -197,14 +197,15 @@ export class ProjectComponent implements OnInit {
             this.notification.error("Please enter a name!");
             return;
         }
-        this.configSetsDS.addConfig({
+        let newConfig ={
             name: name,
             description: desc,
             projectID: this.projectID,
             params: params,
             results: results,
             creator: Meteor.userId()
-        }).subscribe((newID) => {
+        };
+        this.configSetsDS.addConfig(newConfig).subscribe((newID) => {
             if (newID != '' || newID != undefined) {
                 this.notification.success("ConfigSet added");
             }
@@ -354,26 +355,28 @@ export class ProjectComponent implements OnInit {
         e.preventDefault();
         let card = document.getElementById('dropCard');
         card.className = 'card amber accent-2 dropCard';
-        let file = e.dataTransfer.files[0];
-
+        let files = <FileList>e.dataTransfer.files;
         // read file and try to extract params and results
-        let FR = new FileReader();
-        FR.onload = (ev: FileReaderEvent) => {
-            let result = ev.target.result ? ev.target.result : '';
-            let splitted = result.split("\n");
-            let params = [];
-            let results = [];
-            if (splitted[0]) {
-                params = ParamExtractor.searchForParams(splitted[0]);
-                if (splitted.length > 1) {
-                    splitted.splice(0, 1);
-                    results = ParamExtractor.searchForTrainingSets(splitted);
-                }
-            }
-            this.createConfigSet(file.name, file.lastModifiedDate + '', params, results);
 
-        };
-        FR.readAsText(file);
+        for (let i = 0; i < files.length; i++) {
+            let FR = new FileReader();
+            FR.onload = (ev: FileReaderEvent) => {
+                let result = ev.target.result ? ev.target.result : '';
+                let splitted = result.split("\n");
+                let params = [];
+                let results = [];
+                if (splitted[0]) {
+                    params = ParamExtractor.searchForParams(splitted[0]);
+                    if (splitted.length > 1) {
+                        splitted.splice(0, 1);
+                        results = ParamExtractor.searchForTrainingSets(splitted);
+                    }
+                }
+                this.createConfigSet(files[i].name, files[i].lastModifiedDate + '', params, results);
+
+            };
+            FR.readAsText(files[i]);
+        }
     }
 
     /**
