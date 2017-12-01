@@ -76,6 +76,7 @@ export class ProjectComponent implements OnInit {
             project$.subscribe(
                 (data: Project[]) => {
                     this.project = data[0];
+                    this.getProjectMapping();
                     if ((<any>Meteor.user()).preferences) {
                         let prefs = <UserPreferences>(<any>Meteor.user()).preferences;
                         if (prefs.lastConfigSetColumns && prefs.lastConfigSetColumns != []) {
@@ -87,7 +88,6 @@ export class ProjectComponent implements OnInit {
                             }
                         }
                     }
-                    this.getProjectMapping();
                     this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
                         this.configSets = results;
                         //add result max and min vals to every config file to show in table
@@ -136,10 +136,10 @@ export class ProjectComponent implements OnInit {
      */
     private flattenParams(configSet: ConfigSet) {
         configSet.params.forEach((paramSet : ParamSet) => {
-            if (this.mapping && this.mapping.flags) {
-                configSet[paramSet.param] = ParamMapping.getFlagName(this.mapping.flags, paramSet.value);
-            } else {
+            if (!this.mapping) {
                 configSet[paramSet.param] = paramSet.value;
+            } else {
+                configSet[paramSet.param] = ParamMapping.getFlagName(this.mapping.flags, paramSet.value);
             }
 
         })
@@ -342,6 +342,13 @@ export class ProjectComponent implements OnInit {
                 if (mappings && mappings[0]) {
                     let m = mappings[0];
                     this.mapping = new ParamMapping(m.name, m.creator, m.params, m.unrelatedParams, m.flags, (<any>m)._id);
+                    if (this.configSets) {
+                        this.configSets.forEach((configSet : ConfigSet) => {
+                            configSet.params.forEach((paramSet : ParamSet) => {
+                                configSet[paramSet.param] = ParamMapping.getFlagName(this.mapping.flags, paramSet.value);
+                            })
+                        });
+                    }
                 }
             });
         }
