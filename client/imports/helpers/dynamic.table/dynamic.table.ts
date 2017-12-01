@@ -196,4 +196,13 @@ export class DynamicTable implements OnInit{
         });
         return result;
     }
+
+    public toggleHighlightRow(index : string) {
+        let id = "#dynRow" + index;
+        if ($(id).hasClass("highlightedRow")) {
+            $(id).removeClass("highlightedRow");
+        } else {
+            $(id).addClass("highlightedRow");
+        }
+    }
 }

@@ -9,3 +9,11 @@
   padding: 5px 20px 2px;
   background-color: #ffc107;
 }
+
+.highlightedRow {
+  background-color: #ffd740 !important;
+}
+
+.highlightedRow td {
+  border-radius: 0;
+}

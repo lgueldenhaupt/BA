@@ -14,15 +14,15 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let set of input" [ngClass]="{'pointer': onColumnClick}">
+    <tr *ngFor="let set of input; let i = index" [ngClass]="{'pointer': onColumnClick}" id="dynRow{{i}}" (click)="toggleHighlightRow(i)">
         <td *ngFor="let column of activeColumns">
-            <div *ngIf="!column.columnActions" (click)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
+            <div *ngIf="!column.columnActions" (dblclick)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
             <div *ngIf="column.columnActions">
                 <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
             </div>
         </td>
         <td *ngFor="let column of fixColumns">
-            <div *ngIf="!column.columnActions" (click)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
+            <div *ngIf="!column.columnActions" (dblclick)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
             <div *ngIf="column.columnActions">
                 <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
             </div>
