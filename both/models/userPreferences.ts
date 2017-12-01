@@ -34,6 +34,23 @@ export class UserPreferences implements UserPreferencesInterface{
         this.lastConfigSetColumns = columns;
     }
 
+    public updateConfigSetTablePreferences(columns : DynamicTableColumn[]) {
+        let projectIDs: string[] = [];
+        columns.forEach((column) => {
+            projectIDs.push(column.projectID);
+        });
+        let toDelete = [];
+        this.lastConfigSetColumns.forEach(column => {
+            if (projectIDs.indexOf(column.projectID) != -1) {
+                toDelete.push(column);
+            }
+        });
+        toDelete.forEach(column => {
+            this.lastConfigSetColumns.splice(this.lastConfigSetColumns.indexOf(column), 1);
+        });
+        this.lastConfigSetColumns = this.lastConfigSetColumns.concat(columns);
+    }
+
     public setLastConfigFilter(filters: Filter[]) : UserPreferences {
         if (!this.lastConfigFilter) this.lastConfigSetColumns = [];
         this.replaceOldFilters(filters);
@@ -41,13 +58,13 @@ export class UserPreferences implements UserPreferencesInterface{
     }
 
     public replaceOldFilters(filters : Filter[]) {
-        let mappingsIDs: string[] = [];
+        let projectIDs: string[] = [];
         filters.forEach((filter) => {
-            mappingsIDs.push(filter.projectID);
+            projectIDs.push(filter.projectID);
         });
         let toDelete  = [];
         this.lastConfigFilter.forEach((filter) => {
-            if (mappingsIDs.indexOf(filter.projectID) != -1) {
+            if (projectIDs.indexOf(filter.projectID) != -1) {
                 toDelete.push(filter);
             }
         });

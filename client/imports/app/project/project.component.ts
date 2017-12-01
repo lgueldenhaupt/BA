@@ -418,12 +418,10 @@ export class ProjectComponent implements OnInit {
         } else {
             preferences = new UserPreferences().copyData(preferences);
         }
-        preferences.setConfigSetTablePreferences(columns);
-        if (preferences.lastConfigSetColumns) {
-            preferences.lastConfigSetColumns.forEach((column) => {
-                column.projectID = this.projectID;
-            });
-        }
+        columns.forEach((column) => {
+            column.projectID = this.projectID;
+        });
+        preferences.updateConfigSetTablePreferences(columns);
         UsersDataService.updateUser(Meteor.userId(), preferences);
     }
 }
