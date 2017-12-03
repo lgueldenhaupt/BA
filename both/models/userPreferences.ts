@@ -1,9 +1,10 @@
 import {Filter} from "./filter";
-import {DynamicTableColumn, DynamicTableColumnInterface} from "./dynamicTable.classes";
+import {DynamicTableColumn, DynamicTableColumnInterface, TableSorting} from "./dynamicTable.classes";
 
 export interface UserPreferencesInterface {
     lastConfigFilter: Filter[];
     lastConfigSetColumns: DynamicTableColumn[];
+    configTableSort: TableSorting;
 }
 
 /**
@@ -12,6 +13,7 @@ export interface UserPreferencesInterface {
 export class UserPreferences implements UserPreferencesInterface{
     lastConfigFilter: Filter[];
     lastConfigSetColumns: DynamicTableColumn[];
+    configTableSort: TableSorting;
 
     constructor(lastConfigFilter: Filter[] = []) {
         this.lastConfigFilter = lastConfigFilter;
@@ -27,6 +29,7 @@ export class UserPreferences implements UserPreferencesInterface{
         }
         this.lastConfigSetColumns = columns;
         this.lastConfigFilter = data.lastConfigFilter;
+        this.configTableSort = data.configTableSort;
         return this;
     }
 

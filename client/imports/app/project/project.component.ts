@@ -17,7 +17,7 @@ import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";
 import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
-import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
+import {DynamicTableColumn, DynamicTableOptions, TableSorting} from "../../../../both/models/dynamicTable.classes";
 import {ConfigsPipe, ProjectFilterPipe} from "../../helpers/filter.pipe";
 import {ParamSet} from "../../../../both/models/paramSet";
 import {AliasFinder} from "../../helpers/alias-finder";
@@ -62,13 +62,13 @@ export class ProjectComponent implements OnInit {
 
         //inits the dyn table configurations
         this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true,true);
+
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
         this.initialColumns.push(this.fixColumn);
     }
 
     ngOnInit(): void {
-
         //parse route params to get the project
         this.route.params.subscribe(params => {
             this.projectID = params['id'];
@@ -89,6 +89,7 @@ export class ProjectComponent implements OnInit {
                                 this.initialColumns = this.initialColumns.concat(prefs.getProjectsColumns(this.projectID));
                             }
                         }
+                        this.tableOptions.sorting = prefs.configTableSort;
                     }
                     this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
                         //add result max and min vals to every config file to show in table
@@ -428,16 +429,17 @@ export class ProjectComponent implements OnInit {
     }
 
     public columnsUpdated(columns: DynamicTableColumn[]) {
-        let preferences = (<any>Meteor.user()).preferences;
-        if (!preferences) {
-            preferences = new UserPreferences();
-        } else {
-            preferences = new UserPreferences().copyData(preferences);
-        }
+        let preferences = UsersDataService.getUserPreferences();
         columns.forEach((column) => {
             column.projectID = this.projectID;
         });
         preferences.updateConfigSetTablePreferences(columns);
         UsersDataService.updateUser(Meteor.userId(), preferences);
+    }
+
+    public updateTableSorting(sorting : TableSorting) {
+        let prefs = UsersDataService.getUserPreferences();
+        prefs.configTableSort = sorting;
+        UsersDataService.updateUser(Meteor.userId(), prefs);
     }
 }

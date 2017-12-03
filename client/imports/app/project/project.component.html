@@ -11,12 +11,16 @@
                 <h4>{{project.name}}</h4>
             </div>
             <div class="col s12 m2 l2">
-                <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" data-target="configSetModal" *ngIf="isOwner(project.creator)">Add</button>
+                <button class="btn grey darken-3 top_space tooltipped modal-trigger" data-position="left" data-delay="50" data-tooltip="Add new configuration set" data-target="configSetModal"
+                        *ngIf="isOwner(project.creator)">Add
+                </button>
             </div>
+
         </div>
         <hr>
         <div class="center-align">
-            <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" [options]="tableOptions" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableRowClicked($event)" (columnsChanged)="columnsUpdated($event)"></dynTable>
+            <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" [options]="tableOptions" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableRowClicked($event)"
+                      (columnsChanged)="columnsUpdated($event)" (sortingChanged)="updateTableSorting($event)"></dynTable>
             <span *ngIf="(filteredConfigs)?.length < 1" class="">No configs to display</span>
         </div>
     </div>

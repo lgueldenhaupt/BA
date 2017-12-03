@@ -16,4 +16,15 @@ export class UsersDataService  {
 
         })
     }
+
+    public static getUserPreferences() : UserPreferences {
+        if (!Meteor.userId()) return;
+        let preferences = (<any>Meteor.user()).preferences;
+        if (!preferences) {
+            preferences = new UserPreferences();
+        } else {
+            preferences = new UserPreferences().copyData(preferences);
+        }
+        return preferences;
+    }
 }

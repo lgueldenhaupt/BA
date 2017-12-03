@@ -47,12 +47,19 @@ export class DynamicTableOptions {
     public containsConfigSets: boolean;
     public searchFilter: PipeTransform;
     public configurable: boolean;
+    public sorting: TableSorting;
 
-    constructor(name: string, searchFilter : PipeTransform = null, classes : string = "", configurable : boolean = false, containsConfigSets: boolean = false) {
+    constructor(name: string, searchFilter : PipeTransform = null, classes : string = "", configurable : boolean = false, containsConfigSets: boolean = false, sorting: TableSorting = null) {
         this.name = name;
         this.classes = classes;
         this.containsConfigSets = containsConfigSets;
         this.searchFilter = searchFilter;
         this.configurable = configurable;
+        this.sorting = sorting;
     }
+}
+
+export interface TableSorting {
+    criteria: string;
+    descending: boolean;
 }

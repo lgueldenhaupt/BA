@@ -104,11 +104,13 @@ export class AliasFinder{
     public getFlagMeaning(mappingID, key: string) : string {
         if (!mappingID ||!key) return key;
         let result = key;
-        this.mappings.forEach((mapping: Mapping) => {
-            if ((<ParamMapping>mapping)._id === mappingID) {
-                result = ParamMapping.getFlagName(mapping.flags, key);
-            }
-        });
+        if (this.mappings) {
+            this.mappings.forEach((mapping: Mapping) => {
+                if ((<ParamMapping>mapping)._id === mappingID) {
+                    result = ParamMapping.getFlagName(mapping.flags, key);
+                }
+            });
+        }
         return result;
     }
 }

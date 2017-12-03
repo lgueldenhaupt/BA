@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import template from "./dynamic.table.html";
 import style from "./dynamic.table.scss";
-import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
+import {DynamicTableColumn, DynamicTableOptions, TableSorting} from "../../../../both/models/dynamicTable.classes";
 import {SearchService} from "../../services/search.service";
 import {Observable} from "rxjs/Observable";
 
@@ -31,6 +31,7 @@ export class DynamicTable implements OnInit{
     @Output() called: EventEmitter<any> = new EventEmitter();
     @Output() clickedOnColumn: EventEmitter<any> = new EventEmitter();
     @Output() columnsChanged: EventEmitter<DynamicTableColumn[]> = new EventEmitter();
+    @Output() sortingChanged: EventEmitter<TableSorting> = new EventEmitter();
 
     private activeColumns : DynamicTableColumn[];
     private fixColumns: DynamicTableColumn[];
@@ -88,6 +89,10 @@ export class DynamicTable implements OnInit{
                             }
                         });
                     }
+                    if (this.options && this.options.sorting) {
+                        this.sortDescending = !this.options.sorting.descending;
+                        this.orderBy(this.options.sorting.criteria);
+                    }
                 }
 
             });
@@ -105,7 +110,7 @@ export class DynamicTable implements OnInit{
      * Sorts the table by the given criteria. Toggles ascending and descending
      * @param criteria
      */
-    public orderBy(criteria : any) {
+    public orderBy(criteria : string) {
         if (!this.sortDescending) {
             this.input = _.sortBy(this.input, criteria);
             this.sortDescending = true;
@@ -113,6 +118,7 @@ export class DynamicTable implements OnInit{
             this.input = _.sortBy(this.input,criteria).reverse();
             this.sortDescending = false;
         }
+        this.sortingChanged.emit({criteria : criteria, descending: this.sortDescending});
     }
 
     /**
