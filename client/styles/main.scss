@@ -165,3 +165,21 @@ td {
 .switch label .lever {
   margin: 0px 10px 0px 0px !important;
 }
+
+input[type=range] + .thumb {
+  background-color: #ff6f00;
+}
+
+input[type=range] + .thumb .value {
+  color: #ff6f00;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  background-color: #ff6f00;
+}
+input[type=range]::-moz-range-thumb {
+  background-color: #ff6f00;
+}
+input[type=range]::-ms-thumb {
+  background-color: #ff6f00;
+}

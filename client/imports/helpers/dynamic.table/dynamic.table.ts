@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from "@angular/core";
 import template from "./dynamic.table.html";
 import style from "./dynamic.table.scss";
 import {DynamicTableColumn, DynamicTableOptions, TableSorting} from "../../../../both/models/dynamicTable.classes";
@@ -16,7 +16,7 @@ declare let _ : any;
     template,
     styles: [ style ]
 })
-export class DynamicTable implements OnInit{
+export class DynamicTable implements OnInit, OnChanges{
     /**
      * input: Any array of objects. One object represents one row
      * initialColumns: The columns that should be displayed by default. See 'DynamicTableColumn' for more information.
@@ -38,6 +38,9 @@ export class DynamicTable implements OnInit{
     private possibleColumns : DynamicTableColumn[];
     private trueInput : any[];
     private sortDescending: boolean = false;
+    private currentPage: number = 1;
+    private maxPages: any[] = [];
+    private maxItemsPerPage: number = 20;
 
     constructor(
         private search : SearchService
@@ -69,6 +72,7 @@ export class DynamicTable implements OnInit{
                 }
                 let filter = this.options.searchFilter;
                 this.input = filter.transform(this.trueInput, searchText);
+                this.recalculateMaxPages();
             });
         }
 
@@ -96,6 +100,17 @@ export class DynamicTable implements OnInit{
                 }
 
             });
+    }
+
+    ngOnChanges(changes : SimpleChanges) {
+        if (changes['input'] && this.input) {
+            this.recalculateMaxPages();
+        }
+    }
+
+    public recalculateMaxPages() {
+        let count = Math.ceil(this.input.length / this.maxItemsPerPage);
+        this.maxPages = new Array(count);
     }
 
     /**
@@ -209,6 +224,12 @@ export class DynamicTable implements OnInit{
             $(id).removeClass("highlightedRow");
         } else {
             $(id).addClass("highlightedRow");
+        }
+    }
+
+    public changePage(page : number) {
+        if (page >= 1 && page <= this.maxPages.length) {
+            this.currentPage = page;
         }
     }
 }
