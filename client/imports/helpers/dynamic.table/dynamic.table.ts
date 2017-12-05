@@ -41,6 +41,7 @@ export class DynamicTable implements OnInit, OnChanges{
     private currentPage: number = 1;
     private maxPages: any[] = [];
     private maxItemsPerPage: number = 20;
+    private jumpToTop: boolean = true;
 
     constructor(
         private search : SearchService
@@ -230,6 +231,10 @@ export class DynamicTable implements OnInit, OnChanges{
     public changePage(page : number) {
         if (page >= 1 && page <= this.maxPages.length) {
             this.currentPage = page;
+            if (this.jumpToTop) {
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            }
         }
     }
 }
