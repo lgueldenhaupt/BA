@@ -139,6 +139,8 @@ export class DashboardComponent implements OnInit{
         }
         this.editedProject.name = project.name;
         this.editedProject.description = project.description;
+        this.editedProject.creator = project.creator;
+        this.editedProject.mappingID = project.mappingID;
         this.projectID = id;
         $('#editModal').modal();
     }
