@@ -371,7 +371,11 @@ export class ProjectComponent implements OnInit {
         card.className = 'card amber accent-2 dropCard';
         let files = <FileList>e.dataTransfer.files;
         // read file and try to extract params and results
+        this.uploadFiles(files);
 
+    }
+
+    private uploadFiles(files) {
         for (let i = 0; i < files.length; i++) {
             let FR = new FileReader();
             FR.onload = (ev: FileReaderEvent) => {
@@ -441,5 +445,12 @@ export class ProjectComponent implements OnInit {
         let prefs = UsersDataService.getUserPreferences();
         prefs.configTableSort = sorting;
         UsersDataService.updateUser(Meteor.userId(), prefs);
+    }
+
+    public fileChange(event) {
+        if (event && event.target && event.target.files) {
+            let files = event.target.files;
+            this.uploadFiles(files);
+        }
     }
 }

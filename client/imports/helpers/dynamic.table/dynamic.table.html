@@ -5,7 +5,7 @@
 </div>
 
 <!----------------------------Table------------------------------------------------>
-<table [ngClass]="options?.classes ? options.classes : ''">
+<table [ngClass]="options?.classes ? options.classes : ''" *ngIf="input && input.length > 0">
     <thead>
     <tr>
         <th *ngFor="let column of activeColumns" (click)="orderBy(column.property)" class="pointer">{{column.name}}</th>
@@ -32,7 +32,7 @@
     </ng-template>
     </tbody>
 </table>
-<ul class="pagination">
+<ul class="pagination" *ngIf="input && input.length > 0">
     <li [ngClass]="{'disabled': currentPage === 1}" class="pointer noselect" (click)="changePage(currentPage - 1)"><a><i class="material-icons">chevron_left</i></a></li>
     <li class="waves-effect pointer waves-light noselect" *ngFor="let page of maxPages; index as i" [ngClass]="{'active': currentPage === i +1}" (click)="changePage(i +1)"><a>{{i + 1}}</a></li>
     <li [ngClass]="{'disabled': currentPage === maxPages.length}" class="pointer noselect"><a><i class="material-icons" (click)="changePage(currentPage + 1)">chevron_right</i></a></li>

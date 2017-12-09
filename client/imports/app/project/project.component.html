@@ -33,6 +33,17 @@
                 <p>Drop a config file here to create a new config</p>
             </div>
             <div class="card-action">
+                <form action="#">
+                    <div class="file-field input-field upload_button">
+                        <div class="btn grey darken-1 bot_space">
+                            <span>Upload</span>
+                            <input type="file" multiple (change)="fileChange($event)">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text">
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="card amber accent-2">
