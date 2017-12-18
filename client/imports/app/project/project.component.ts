@@ -391,7 +391,6 @@ export class ProjectComponent implements OnInit {
                     }
                 }
                 this.createConfigSet(files[i].name, files[i].lastModifiedDate + '', params, results);
-
             };
             FR.readAsText(files[i]);
         }

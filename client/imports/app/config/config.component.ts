@@ -4,12 +4,9 @@ import style from "./config.component.scss";
 import {ActivatedRoute} from "@angular/router";
 import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import {ConfigSet} from "../../../../both/models/configSet.model";
-import {FileReaderEvent} from "../../../../both/models/fileReaderInterface";
-import {ParamExtractor} from "../../helpers/param-extractor";
 import {NotificationService} from "../../services/notification.service";
 import {AliasFinder} from "../../helpers/alias-finder";
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
-import {TrainingSet} from "../../../../both/models/trainingSet";
 import * as d3 from "d3";
 import {ParamSet} from "../../../../both/models/paramSet";
 import {ProjectsDataService} from "../../services/projects-data.service";
@@ -17,6 +14,7 @@ import {SearchService} from "../../services/search.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
 import {ConfigsPipe} from "../../helpers/filter.pipe";
+import {ConfigresultParser} from "../../helpers/configresult-parser";
 let domtoimage = require('dom-to-image');
 
 declare let $ :any;
@@ -104,7 +102,7 @@ export class ConfigComponent implements OnInit{
                     // init the results svg
                     if (this.config.results) {
                         this.initResultColors();
-                        this.initResults(this.chart, this.getMaxVal(this.config.results), this.getMinVal(this.config.results));
+                        ConfigresultParser.initResults(this.chart, this.config, d3.select("#visualisation"));
                     }
                 }
             )
@@ -237,139 +235,13 @@ export class ConfigComponent implements OnInit{
     }
 
     /**
-     * Creates a svg for the results using d3js.
-     * @param chart The chart options
-     * @param maxVal The max value of the results
-     * @param minVal The min value of the results
-     */
-    private initResults(chart, maxVal, minVal) {
-        if (this.config.results.length <= 0) return;
-        if (typeof chart.vis.remove === "function") {
-            chart.vis.selectAll("*").remove();
-        }
-        let vis = d3.select("#visualisation"),
-            WIDTH = chart.width,
-            HEIGHT = chart.height,
-            MARGINS = {
-                top: 20,
-                right: 20,
-                bottom: 33,
-                left: 50
-            },
-            xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, this.config.results[0].epochs.length -1]),
-            yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top - (MARGINS.bottom - MARGINS.top), MARGINS.bottom - (MARGINS.bottom - MARGINS.top)]).domain([minVal,maxVal]),
-            xAxis = d3.axisBottom()
-                .scale(xScale).ticks(10),
-            yAxis = d3.axisLeft()
-                .scale(yScale);
-        vis.append("svg:g")
-            .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-            .call(xAxis);
-        vis.append("svg:g")
-            .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-            .call(yAxis);
-        vis.append("text")
-            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-            .attr("transform", "translate("+ (20/2) +","+(HEIGHT/2)+")rotate(-90)")  // text is drawn off the screen top left, move down and out and rotate
-            .text("Accuracy ");
-        vis.append("text")
-            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-            .attr("transform", "translate("+ (WIDTH/2) +","+(HEIGHT -3)+")")  // centre below axis
-            .text("Epoch");
-
-        let lineGen = d3.line()
-            .x(function(d, i) {
-                return xScale(i);
-            })
-            .y(function(d) {
-                return yScale(d);
-            }).curve(d3.curveCardinal);
-        this.config.results.forEach((trainingSet, index) => {
-            let color = this.chart.colors[index];
-            vis.append('svg:path')
-                .attr('d', lineGen(trainingSet.epochs))
-                .attr('stroke', color)
-                .attr('stroke-width', 2)
-                .attr('fill', 'none');
-            vis.append('g')
-                .attr("id", "trainingSet" + index);
-            vis.select('#trainingSet' + index).selectAll("circle").data(trainingSet.epochs)
-                .enter()
-                .append("svg:circle")
-                .attr("cx", function (d, i) {
-                    return xScale(i);
-                })
-                .attr("cy", function (d) {
-                    return yScale(d);
-                })
-                .attr("r", 4)
-                .attr("fill", color)
-                .on("mouseover", function (d, i) {
-                    d3.select(this).transition()
-                        .ease(d3.easeElastic)
-                        .duration("500")
-                        .attr("r", 6);
-                    vis.append("text")
-                        .attr("x", xScale(i) - 30)
-                        .attr("y", yScale(d) - 15)
-                        .attr("id", "t" + d.x + "-" + d.y + "-" + i)
-                        .text(function () {
-                            return d
-                        })
-                })
-                .on("mouseout", function (d, i) {
-                    d3.select(this).transition()
-                        .ease(d3.easeElastic)
-                        .duration("500")
-                        .attr("r", 4);
-                    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
-                })
-        });
-        chart.vis = vis;
-    }
-
-    /**
-     * Returns the max value of the results
-     * @param results
-     * @returns {number}
-     */
-    private getMaxVal(results) {
-        let maxVal = 0;
-        if (results.length > 0) {
-            results.forEach((trainingSet : TrainingSet) => {
-                trainingSet.epochs.forEach((epoch) => {
-                    maxVal = epoch > maxVal ? epoch : maxVal;
-                });
-            });
-        }
-        return (+maxVal + 0.02);
-    }
-
-    /**
-     * Returns the min value of the results
-     * @param results
-     * @returns {number}
-     */
-    private getMinVal(results) {
-        let minVal = 1;
-        if (results.length > 0) {
-            results.forEach((trainingSet : TrainingSet) => {
-                trainingSet.epochs.forEach((epoch) => {
-                    minVal = epoch < minVal ? epoch : minVal;
-                });
-            });
-        }
-        return (+minVal - 0.02);
-    }
-
-    /**
      * Called on resize window. Scales the svg new.
      */
     public resize() {
         $('#visualisation').width($('#results').width());
         this.chart.width = $('#results').width();
         if (this.config && this.config.results) {
-            this.initResults(this.chart, this.getMaxVal(this.config.results), this.getMinVal(this.config.results));
+            ConfigresultParser.initResults(this.chart, this.config, d3.select("#visualisation"));
         }
     }
 

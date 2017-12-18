@@ -49,6 +49,7 @@ export class ParamExtractor {
             //split an epoch to the trainingSets and insert them
             let splitEpoch = currentEpoch.split(',');
             for (let i = 0; i < trainingSetCount; i++) {
+                // + operator converts to number
                 trainingSets[i].addEpoch(+splitEpoch[i]);
             }
         });

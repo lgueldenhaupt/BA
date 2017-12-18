@@ -22,6 +22,7 @@ import {AliasFinder} from "../helpers/alias-finder";
 import {FilterService} from "../services/filter.service";
 import {DynamicTable} from "../helpers/dynamic.table/dynamic.table";
 import {IsLoggedIn} from "../helpers/isLoggedIn";
+import {ConfigresultParser} from "../helpers/configresult-parser";
 
 /**
  * This is the app module configuration. Every created component, filter, service, submodule for the main module must be declared here.
@@ -105,7 +106,8 @@ const appRoutes: Routes = [
         SearchService,
         ParamExtractor,
         AliasFinder,
-        IsLoggedIn
+        IsLoggedIn,
+        ConfigresultParser
     ],
     // Modules
     imports: [

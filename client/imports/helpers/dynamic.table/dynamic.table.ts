@@ -40,7 +40,7 @@ export class DynamicTable implements OnInit, OnChanges{
     private sortDescending: boolean = false;
     private currentPage: number = 1;
     private maxPages: any[] = [];
-    private maxItemsPerPage: number = 20;
+    private maxItemsPerPage: number = 7;
     private jumpToTop: boolean = true;
 
     constructor(
