@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit{
     editedProject: Project;
     projectID: string;
     searchText: string;
+    onlyShowOwnProjects: boolean = false;
 
     constructor(
         private projectsDS: ProjectsDataService,

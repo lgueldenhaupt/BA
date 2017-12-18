@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {ParamSet} from "../../../both/models/paramSet";
 import {Filter} from "../../../both/models/filter";
 import {ParamAliases} from "../../../both/models/paramAliases";
+import {Project} from "../../../both/models/project.model";
 
 /**
  * This filter pipe is used to filter projects by name or description.
@@ -96,5 +97,21 @@ export class StringSort implements PipeTransform {
             }
         });
         return array;
+    }
+}
+
+@Pipe({
+    name: 'userProjects'
+})
+export class UserProjects implements PipeTransform {
+    transform(array: Array<Project>, showUsers: boolean): Array<Project> {
+        if (!array || !(array.length > 0)) return [];
+        if (showUsers) {
+            return array.filter( (proj : Project) => {
+                return proj.creator === Meteor.userId();
+            });
+        } else {
+            return array;
+        }
     }
 }
