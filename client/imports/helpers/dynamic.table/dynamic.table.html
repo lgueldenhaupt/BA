@@ -17,8 +17,9 @@
     <ng-template ngFor let-set [ngForOf]="input" let-i="index">
         <tr *ngIf="i >= (currentPage -1) * maxItemsPerPage && i < currentPage * maxItemsPerPage" [ngClass]="{'pointer': onColumnClick}" id="dynRow{{i}}" (click)="toggleHighlightRow(i)">
             <td *ngFor="let column of activeColumns">
-                <div *ngIf="!column.columnActions" (dblclick)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
-                <div *ngIf="column.columnActions">
+                <img *ngIf="column.name === 'Image'" src="{{set[column.property]}}" height="60">
+                <div *ngIf="!column.columnActions && column.name != 'Image'" (dblclick)="clickColumn(set)" class="pointer">{{set[column.property]}}</div>
+                <div *ngIf="column.columnActions && column.name != 'Image'">
                     <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
                 </div>
             </td>

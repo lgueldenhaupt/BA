@@ -10,8 +10,9 @@ export class Config implements ConfigSet {
     params: ParamSet[];
     results: TrainingSet[];
     creator: string;
+    image: any;
 
-    constructor(name: string, description: string, projectID: string, creator: string, params: ParamSet[] = [], results: TrainingSet[] = [], id : string = '') {
+    constructor(name: string, description: string, projectID: string, creator: string, params: ParamSet[] = [], results: TrainingSet[] = [], id : string = '', image : any = null) {
         this.name = name;
         this.description = description;
         this.projectID = projectID;
@@ -19,6 +20,7 @@ export class Config implements ConfigSet {
         this._id = id;
         this.results = results;
         this.creator = creator;
+        this.image = image;
     }
 
     public getValueOf(param : string) : string {

@@ -23,9 +23,13 @@ import {ParamSet} from "../../../../both/models/paramSet";
 import {AliasFinder} from "../../helpers/alias-finder";
 import {UserPreferences} from "../../../../both/models/userPreferences";
 import {UsersDataService} from "../../services/users-data.service";
+import {ConfigresultParser} from "../../helpers/configresult-parser";
+import * as d3 from "d3";
 
 declare let $: any;
 declare let _: any;
+
+let domtoimage = require('dom-to-image');
 
 /**
  * This component respresents the project page
@@ -36,6 +40,9 @@ declare let _: any;
     styles: [style]
 })
 export class ProjectComponent implements OnInit {
+    private canCloseUploadModal: boolean;
+    private files : any;
+    private chart: any;
     private projectID: string;
     private project: Project;
     private mapping: ParamMapping;
@@ -66,6 +73,20 @@ export class ProjectComponent implements OnInit {
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
         this.initialColumns.push(this.fixColumn);
+        this.chart = {
+            width: $('#results').width(),
+            height: 500,
+            vis: {},
+            colors: [
+                "#DC143C",
+                "#228B22",
+                "#4169E1",
+                "#FFD700",
+                "#778899"
+            ]
+        };
+        $('#visualisation').width(this.chart.width);
+        $('#visualisation').height(this.chart.height);
     }
 
     ngOnInit(): void {
@@ -104,9 +125,9 @@ export class ProjectComponent implements OnInit {
                                     });
                                 }
                                 this.flattenParams(configSet);
-                                this.configSets.push(configSet);
                             }
                         });
+                        this.configSets = configs;
                         this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
                     });
                 }
@@ -210,16 +231,29 @@ export class ProjectComponent implements OnInit {
             projectID: this.projectID,
             params: params,
             results: results,
-            creator: Meteor.userId()
+            creator: Meteor.userId(),
+            image: null
         };
-        this.configSetsDS.addConfig(newConfig).subscribe((newID) => {
-            if (newID != '' || newID != undefined) {
-                this.notification.success("ConfigSet added");
-            }
-            else {
-                this.notification.error("Could not add Config Set");
-            }
-        });
+        $('#visualisation').width($('#results').width());
+        $('#visualisation').height(400);
+        this.chart.width = $('#results').width();
+        this.chart.height = 400;
+        ConfigresultParser.initResults(this.chart, newConfig, d3.select("#visualisation"));
+        domtoimage.toPng(document.getElementById('results'))
+            .then((dataUrl) => {
+                newConfig.image = dataUrl;
+                if (this.canCloseUploadModal) {
+                    $('#graphPreviewModal').modal('close');
+                }
+                this.configSetsDS.addConfig(newConfig).subscribe((newID) => {
+                    if (newID != '' || newID != undefined) {
+                        this.notification.success("ConfigSet added");
+                    }
+                    else {
+                        this.notification.error("Could not add Config Set");
+                    }
+                });
+            });
         if ($('#configSetModal').modal()) {
             $('#configSetModal').modal('close');
         }
@@ -257,6 +291,7 @@ export class ProjectComponent implements OnInit {
                 this.configSetsDS.delete(id).subscribe((changedEntries) => {
                     if (changedEntries === 1) {
                         this.notification.success("ConfigSet deleted");
+                        console.log()
                     } else {
                         this.notification.error("ConfigSet not deleted");
                     }
@@ -374,26 +409,39 @@ export class ProjectComponent implements OnInit {
         this.uploadFiles(files);
 
     }
+     private delayLoop(i) {
+         let FR = new FileReader();
+         FR.onload = (ev: FileReaderEvent) => {
+             let result = ev.target.result ? ev.target.result : '';
+             let splitted = result.split("\n");
+             let params = [];
+             let results = [];
+             if (splitted[0]) {
+                 params = ParamExtractor.searchForParams(splitted[0]);
+                 if (splitted.length > 1) {
+                     splitted.splice(0, 1);
+                     results = ParamExtractor.searchForTrainingSets(splitted);
+                 }
+             }
+             this.createConfigSet(this.files[i].name, this.files[i].lastModifiedDate + '', params, results);
+             i++;
+             if (i < this.files.length) {
+                 this.delayLoop(i);
+             } else {
+                 this.canCloseUploadModal = true;
+             }
+         };
+         FR.readAsText(this.files[i]);
+     }
 
     private uploadFiles(files) {
-        for (let i = 0; i < files.length; i++) {
-            let FR = new FileReader();
-            FR.onload = (ev: FileReaderEvent) => {
-                let result = ev.target.result ? ev.target.result : '';
-                let splitted = result.split("\n");
-                let params = [];
-                let results = [];
-                if (splitted[0]) {
-                    params = ParamExtractor.searchForParams(splitted[0]);
-                    if (splitted.length > 1) {
-                        splitted.splice(0, 1);
-                        results = ParamExtractor.searchForTrainingSets(splitted);
-                    }
-                }
-                this.createConfigSet(files[i].name, files[i].lastModifiedDate + '', params, results);
-            };
-            FR.readAsText(files[i]);
-        }
+        $('#graphPreviewModal').modal({
+            dismissible: false
+        }).modal('open');
+        this.canCloseUploadModal = false;
+        let i = 0;
+        this.files = files;
+        this.delayLoop(i);
     }
 
     /**
