@@ -8,7 +8,7 @@ declare let SSL : any;
 
 export class Main {
     start(): void {
-        SSL('C:/Users/lguel/server.key', 'C:/Users/lguel/server.cert', 442);
+        SSL(Meteor.settings.cert_key, Meteor.settings.cert_cert, 442);
         Meteor.users.allow({
             update: function() {
                 return true;

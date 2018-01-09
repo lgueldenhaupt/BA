@@ -4,5 +4,7 @@
       "url": "ldap://ldap.forumsys.com",
       "dn": "dc=example,dc=com"
     }
-  }
+  },
+  "cert_key": "C:/Users/lguel/server.key",
+  "cert_cert": "C:/Users/lguel/server.cert"
 }

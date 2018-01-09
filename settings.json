@@ -3,6 +3,8 @@
     "ldap": {
       "url": "ldap://ifn05.ifn.ing.tu-bs.de",
       "dn": "CN=Users,DC=ifn,DC=ing,DC=tu-bs,DC=de"
-    }
+    },
+   "key": "C:/Users/lguel/server.key",
+   "cert": "C:/Users/lguel/server.cert"
   }
 }
