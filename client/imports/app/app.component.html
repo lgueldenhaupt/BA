@@ -1,6 +1,6 @@
 <title>DeepLearning</title>
 <ul id="dropdown1" class="dropdown-content">
-    <li *ngIf="loggedOut()"><a routerLink="/login" class="black-text" >LogIn</a></li>
+    <li *ngIf="loggedOut()"><a routerLink="/login" class="black-text">LogIn</a></li>
     <li *ngIf="!loggedOut()"><a (click)="logOut()" class="black-text">LogOut</a></li>
     <li><a (click)="info()" class="black-text">Info</a></li>
     <li class="divider"></li>
@@ -9,11 +9,11 @@
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper grey darken-2">
-            <a data-activates="slide-out" class="button-collapse hide-on-large-only left"><i class="material-icons white-text">menu</i></a>
+            <a data-activates="slide-out" class="button-collapse hide-on-large-only left"><i class="material-icons white-text pointer">menu</i></a>
             <a href="" class="brand-logo center">NNDO</a>
             <ul id="nav-mobile" class="left hide-on-med-and-down">
                 <li class="dropdown-button" data-activates="dropdown1"><a href="" routerLinkActive="active">Menu<i class="material-icons right">arrow_drop_down</i></a></li>
-                <li ><a href="" routerLink="/dashboard" routerLinkActive="active">Projects</a></li>
+                <li><a href="" routerLink="/dashboard" routerLinkActive="active">Projects</a></li>
                 <li><a href="" routerLink="/mapping" routerLinkActive="active">Mappings</a></li>
             </ul>
             <form class="right hide-on-med-and-down" style="width: 200px; margin-right: 20px">
@@ -24,17 +24,20 @@
 </div>
 
 <ul id="slide-out" class="side-nav">
-    <li><div class="user-view">
-        <div class="background">
-            <img src="https://s3-ap-south-1.amazonaws.com/av-blog-media/wp-content/uploads/2017/05/29021937/635965173527052708-540999202_wallpaper-2870969.jpg" width="500">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="https://s3-ap-south-1.amazonaws.com/av-blog-media/wp-content/uploads/2017/05/29021937/635965173527052708-540999202_wallpaper-2870969.jpg" width="500">
+            </div>
+            <br>
+            <br>
         </div>
-        <a ><img class="circle" src="https://i.stack.imgur.com/Lkn5a.png?s=328&g=1"></a>
-        <a ><span class="name black-text">John Doe</span></a>
-        <a ><span class="email black-text">jdandturk@gmail.com</span></a>
-    </div></li>
+    </li>
     <li><a routerLink="/dashboard">Dashboard</a></li>
     <li><a routerLink="/mapping">Mappings</a></li>
-    <li><div class="divider"></div></li>
+    <li>
+        <div class="divider"></div>
+    </li>
     <li><a routerLink="/login">Logout</a></li>
 </ul>
 

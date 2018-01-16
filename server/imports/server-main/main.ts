@@ -4,11 +4,8 @@ import {ProjectsCollection} from "../../../both/collections/projects.collection"
 import {ConfigSetsCollection} from "../../../both/collections/configsets.collection";
 import {MappingsCollection} from "../../../both/collections/mappings.collection";
 
-declare let SSL : any;
-
 export class Main {
     start(): void {
-        SSL(Meteor.settings.cert_key, Meteor.settings.cert_cert, 442);
         Meteor.users.allow({
             update: function() {
                 return true;
