@@ -68,7 +68,7 @@ export class ConfigresultParser {
                 bottom: 33,
                 left: 50
             },
-            xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, config.results[0].epochs.length -1]),
+            xScale = d3.scaleLinear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([1, config.results[0].epochs.length]),
             yScale = d3.scaleLinear().range([HEIGHT - MARGINS.top - (MARGINS.bottom - MARGINS.top), MARGINS.bottom - (MARGINS.bottom - MARGINS.top)]).domain([ConfigresultParser.getMinVal(config.results), ConfigresultParser.getMaxVal(config.results)]),
             xAxis = d3.axisBottom()
                 .scale(xScale).ticks(10),
@@ -91,7 +91,7 @@ export class ConfigresultParser {
 
         let lineGen = d3.line()
             .x(function(d, i) {
-                return xScale(i);
+                return xScale(i +1);
             })
             .y(function(d) {
                 return yScale(d);
@@ -109,7 +109,7 @@ export class ConfigresultParser {
                 .enter()
                 .append("svg:circle")
                 .attr("cx", function (d, i) {
-                    return xScale(i);
+                    return xScale(i +1);
                 })
                 .attr("cy", function (d) {
                     return yScale(d);
