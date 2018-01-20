@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, EventEmitter, OnInit} from "@angular/core";
 import {ProjectsDataService} from "../../services/projects-data.service";
 import {ConfigSetsDataService} from "../../services/configsets-data.service";
 import template from "./project.component.html";
@@ -50,6 +50,7 @@ export class ProjectComponent implements OnInit {
     private configSets: ConfigSet[];
     private filteredConfigs: ConfigSet[];
     private searchText: string;
+    private filesUpdateEmitter: EventEmitter<boolean> = new EventEmitter();
     private chosenConfig: Config;
     private initialColumns: DynamicTableColumn[];
     private tableOptions: DynamicTableOptions;
@@ -248,6 +249,7 @@ export class ProjectComponent implements OnInit {
                 this.configSetsDS.addConfig(newConfig).subscribe((newID) => {
                     if (newID != '' || newID != undefined) {
                         this.notification.success("ConfigSet added");
+                        this.filesUpdateEmitter.emit(true);
                     }
                     else {
                         this.notification.error("Could not add Config Set");

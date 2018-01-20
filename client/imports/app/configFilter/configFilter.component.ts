@@ -1,4 +1,4 @@
-import {ApplicationRef, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone, OnInit} from "@angular/core";
+import {ApplicationRef, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, NgZone, OnInit} from "@angular/core";
 import template from "./configFilter.component.html";
 import style from "./configFilter.component.scss";
 import {Mapping, ParamMapping} from "../../../../both/models/mapping.model";
@@ -33,6 +33,7 @@ export class ConfigFilterComponent implements OnInit{
      */
     @Input() mappingID: string;
     @Input() projectID: string;
+    @Input() filesUpdateEmitter: EventEmitter<any>;
 
     private mapping: Mapping;
     private configs: Config[];
@@ -71,13 +72,27 @@ export class ConfigFilterComponent implements OnInit{
         }
         this.updateFilter();
 
+        this.getAllConfigs();
+
         //gets the corresponding mapping
         this.mappingDS.getMappingById(this.mappingID).subscribe(mappings => {
             this.mapping = mappings[0];
             this.updateFilter();
         });
 
-        //gets all configs of that mapping to search for possible values
+        //update options if new files available
+        this.filesUpdateEmitter.subscribe((data) => {
+            this.getAllConfigs();
+            this.filters.forEach(filter => {
+                filter.options = this.getFilterOptions(filter.key);
+            });
+        })
+    }
+
+    /**
+     * gets all configs of that mapping to search for possible values
+     */
+    public getAllConfigs() {
         this.configDS.getData().subscribe((data : ConfigSet[]) => {
             this.configs = [];
             data.forEach((configSet : ConfigSet) => {
@@ -93,30 +108,34 @@ export class ConfigFilterComponent implements OnInit{
      */
     public addFilter(key: string) {
         if (this.canAddFilter(key) == null) {
-            let aliases = this.aliasFinder.getAliasesStraight(this.mappingID, key);
-            let options : Option[] = [];
-            let values = [];
-            this.configs.forEach((config : Config) => {
-                let val = config.getValueOf(key);
-                if (val != '') {
-                    values.push(val);
-                }
-                aliases.forEach((alias) => {
-                     let valueOfAlias = config.getValueOf(alias);
-                     if (valueOfAlias != '') {
-                         values.push(valueOfAlias);
-                     }
-                });
-            });
-            values = _.uniq(values);
-            values.forEach((val) => {
-                options.push({name: val, enabled: true, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
-            });
-            this.filters.push(new Filter(key, options, this.projectID));
+            this.filters.push(new Filter(key, this.getFilterOptions(key), this.projectID));
         } else {
             this.filters.splice(this.filters.indexOf(this.canAddFilter(key)), 1);
         }
         this.updateFilter();
+    }
+
+    public getFilterOptions(key : string) : Option[] {
+        let options : Option[] = [];
+        let aliases = this.aliasFinder.getAliasesStraight(this.mappingID, key);
+        let values = [];
+        this.configs.forEach((config : Config) => {
+            let val = config.getValueOf(key);
+            if (val != '') {
+                values.push(val);
+            }
+            aliases.forEach((alias) => {
+                let valueOfAlias = config.getValueOf(alias);
+                if (valueOfAlias != '') {
+                    values.push(valueOfAlias);
+                }
+            });
+        });
+        values = _.uniq(values);
+        values.forEach((val) => {
+            options.push({name: val, enabled: true, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
+        });
+        return options;
     }
 
     /**
