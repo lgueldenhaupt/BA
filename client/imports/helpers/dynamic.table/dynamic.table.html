@@ -1,5 +1,5 @@
 <!----------------------------Header------------------------------------------------>
-<div *ngIf="options && options.configurable" class="left-align">
+<div class="left-align">
     <span class="tableHeading">{{options.name}}</span>
     <i class="material-icons right_float grey-text text-darken-2 pointer" (click)="openSettings()">settings</i>
 </div>
@@ -43,8 +43,8 @@
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <h4>Table Settings</h4>
-        <hr>
-        <div class=" left-align">
+        <hr *ngIf="options && options.configurable">
+        <div class=" left-align" *ngIf="options && options.configurable">
             <h5>Columns</h5>
             <div class="flex_conti">
                 <div *ngFor="let column of possibleColumns | sortByCriteria: 'name'" class="propertyCheckbox">
