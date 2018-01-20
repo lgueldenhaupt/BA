@@ -414,6 +414,7 @@ export class ProjectComponent implements OnInit {
      private delayLoop(i) {
          let FR = new FileReader();
          FR.onload = (ev: FileReaderEvent) => {
+             setTimeout(() => {
              let result = ev.target.result ? ev.target.result : '';
              let splitted = result.split("\n");
              let params = [];
@@ -425,13 +426,14 @@ export class ProjectComponent implements OnInit {
                      results = ParamExtractor.searchForTrainingSets(splitted);
                  }
              }
-             this.createConfigSet(this.files[i].name, this.files[i].lastModifiedDate + '', params, results);
-             i++;
-             if (i < this.files.length) {
-                 this.delayLoop(i);
-             } else {
-                 this.canCloseUploadModal = true;
-             }
+                 this.createConfigSet(this.files[i].name, this.files[i].lastModifiedDate + '', params, results);
+                 i++;
+                 if (i < this.files.length) {
+                     this.delayLoop(i);
+                 } else {
+                     this.canCloseUploadModal = true;
+                 }
+             }, 400);
          };
          FR.readAsText(this.files[i]);
      }
