@@ -128,10 +128,20 @@ export class DynamicTable implements OnInit, OnChanges{
      */
     public orderBy(criteria : string) {
         if (!this.sortDescending) {
-            this.input = _.sortBy(this.input, criteria);
+            this.input = _.sortBy(this.input, (val) => {
+                if (isNaN(val[criteria])) {
+                    return val[criteria];
+                }
+                return +val[criteria];
+            });
             this.sortDescending = true;
         } else {
-            this.input = _.sortBy(this.input,criteria).reverse();
+            this.input = _.sortBy(this.input, (val) => {
+                if (isNaN(val[criteria])) {
+                    return val[criteria];
+                }
+                return +val[criteria];
+            }).reverse();
             this.sortDescending = false;
         }
         this.sortingChanged.emit({criteria : criteria, descending: this.sortDescending});
