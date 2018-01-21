@@ -1,6 +1,6 @@
 <!----------------------------Header------------------------------------------------>
 <div class="left-align">
-    <span class="tableHeading">{{options.name}}</span>
+    <span class="tableHeading">{{options.name}} - <span class="grey-text small_text" *ngIf="input">{{input.length}} entries</span></span>
     <i class="material-icons right_float grey-text text-darken-2 pointer" (click)="openSettings()">settings</i>
 </div>
 

@@ -5,18 +5,18 @@ declare let $ : any;
 export class NotificationService {
 
 
-    public success(message) {
+    public success(message, time : number = 4000) {
         let successToast = $('<span class="successToast">' + message + ' <i class="material-icons tiny">check</i></span>');
-        Materialize.toast(successToast, 4000);
+        Materialize.toast(successToast, time);
     }
 
-    public error(message) {
+    public error(message, time : number = 4000) {
         let errorToast = $('<span class="errorToast">' + message + ' <i class="material-icons tiny">error</i></span>');
-        Materialize.toast(errorToast, 4000);
+        Materialize.toast(errorToast, time);
     }
 
-    public warning(message) {
-        Materialize.toast(message, 4000);
+    public warning(message, time : number = 4000) {
+        Materialize.toast(message, time);
     }
 
     public notPermitted() {

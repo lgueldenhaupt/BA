@@ -54,6 +54,7 @@ export class ProjectComponent implements OnInit {
     private chosenConfig: Config;
     private initialColumns: DynamicTableColumn[];
     private tableOptions: DynamicTableOptions;
+    private progressInPercent : number;
     private fixColumn: DynamicTableColumn = new DynamicTableColumn('Actions', '', true, "", [
         "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
         "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]);
@@ -248,7 +249,7 @@ export class ProjectComponent implements OnInit {
                 }
                 this.configSetsDS.addConfig(newConfig).subscribe((newID) => {
                     if (newID != '' || newID != undefined) {
-                        this.notification.success("ConfigSet added");
+                        this.notification.success("ConfigSet added", 1000);
                         this.filesUpdateEmitter.emit(true);
                     }
                     else {
@@ -430,6 +431,8 @@ export class ProjectComponent implements OnInit {
                  i++;
                  if (i < this.files.length) {
                      this.delayLoop(i);
+                     let progress = (i / this.files.length * 100 + "%");
+                     $('#progressBar').width(progress);
                  } else {
                      this.canCloseUploadModal = true;
                  }
@@ -442,6 +445,7 @@ export class ProjectComponent implements OnInit {
         $('#graphPreviewModal').modal({
             dismissible: false
         }).modal('open');
+        $('#progressBar').width('0%');
         this.canCloseUploadModal = false;
         let i = 0;
         this.files = files;
