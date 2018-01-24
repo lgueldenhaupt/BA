@@ -20,8 +20,8 @@ export class Main {
             };
             return Meteor.users.find(selector, options);
         });
-        Meteor.publish('projects-collection', () => {
-            return ProjectsCollection.find();
+        Meteor.publish('projects-collection', function () {
+            return ProjectsCollection.find({ $or: [ {creator: this.userId}, {privateProject: false}]});
         });
         Meteor.publish('configsets-collection', () => {
             return ConfigSetsCollection.find();

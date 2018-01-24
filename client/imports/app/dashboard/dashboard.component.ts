@@ -46,6 +46,7 @@ export class DashboardComponent implements OnInit{
     projectID: string;
     searchText: string;
     onlyShowOwnProjects: boolean = false;
+    private userID : string;
 
     constructor(
         private projectsDS: ProjectsDataService,
@@ -65,6 +66,7 @@ export class DashboardComponent implements OnInit{
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
         });
+        this.userID = Meteor.userId();
     }
 
     /**
@@ -87,12 +89,12 @@ export class DashboardComponent implements OnInit{
      * @param name
      * @param description
      */
-    public createProject(name, description) {
+    public createProject(name, description, privateProject : boolean = true) {
         if (name === '') {
             this.notification.error("Please insert a name!");
             return;
         }
-        this.projectsDS.addData({name: name, description: description, creator: Meteor.userId()}).subscribe((newID) => {
+        this.projectsDS.addData({name: name, description: description, privateProject: privateProject, creator: Meteor.userId()}).subscribe((newID) => {
             if (newID != '' && newID != undefined) {
                 $('#createModal_name').val('');
                 $('#createModal_desc').val('');
@@ -142,6 +144,7 @@ export class DashboardComponent implements OnInit{
         this.editedProject.description = project.description;
         this.editedProject.creator = project.creator;
         this.editedProject.mappingID = project.mappingID;
+        this.editedProject.privateProject = project.privateProject;
         this.projectID = id;
         $('#editModal').modal();
     }
@@ -155,6 +158,7 @@ export class DashboardComponent implements OnInit{
                 this.editedProject.name = '';
                 this.editedProject.description = '';
                 this.projectID = '';
+                this.editedProject.privateProject = true;
                 this.notification.success("Entry updated");
             }
         });

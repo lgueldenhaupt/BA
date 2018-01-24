@@ -1,32 +1,5 @@
 <div class="row">
     <!------------------------------- Left side ------------------------------------------->
-    <div class="col s2">
-    </div>
-
-    <!------------------------------- Middle ------------------------------------------->
-    <div class="col s12 l8">
-        <div class="row">
-            <div class="col s10"><h3>Project Dashboard</h3></div>
-            <div class="col s12 l2">
-                <button class="btn top_space modal-trigger grey darken-3" data-target="modal1" (click)="openAddProjectModal()">Add Project</button>
-            </div>
-        </div>
-        <div class="flex_conti">
-            <div [@growShrink]="''" class="card amber darken-1 card_space hoverable" *ngFor="let item of projects | async | projects: searchText | userProjects: onlyShowOwnProjects" draggable="true">
-                <div class="card-content pointer" (click)="openProject(item._id)">
-                    <span class="card-title">{{item.name}}</span>
-                    <p>{{item.description}}</p>
-                </div>
-
-                <div class="card-action">
-                    <a (click)="deleteItem(item._id, item)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
-                    <a (click)="openEditModal(item._id, item)" class="secondary-content right modal-trigger" data-target="editModal"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!------------------------------- Right side ------------------------------------------->
     <div class="col s12 l2">
         <div class="card">
             <div class="card-content">
@@ -41,6 +14,35 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!------------------------------- Middle ------------------------------------------->
+    <div class="col s12 l8">
+        <div class="row">
+            <div class="col s10"><h3>Project Dashboard</h3></div>
+            <div class="col s12 l2">
+                <button class="btn top_space modal-trigger grey darken-3" data-target="modal1" (click)="openAddProjectModal()">Add Project</button>
+            </div>
+        </div>
+        <div class="flex_conti">
+            <div [@growShrink]="''" class="card amber darken-1 card_space hoverable" *ngFor="let item of projects | async | projects: searchText | userProjects: onlyShowOwnProjects">
+                <div class="card-content pointer" (click)="openProject(item._id)">
+                    <span class="card-title">{{item.name}}</span>
+                    <p>{{item.description}}</p>
+                </div>
+
+                <div class="card-action" >
+                    <div *ngIf="userID == item.creator">
+                        <a (click)="deleteItem(item._id, item)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
+                        <a (click)="openEditModal(item._id, item)" class="secondary-content right modal-trigger" data-target="editModal"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!------------------------------- Right side ------------------------------------------->
+    <div class="col s12 l2">
     </div>
 </div>
 
@@ -57,9 +59,11 @@
             <textarea placeholder="Description" id="createModal_desc" type="text" class="materialize-textarea" #desc></textarea>
             <label for="createModal_desc">Description</label>
         </div>
+        <input type="checkbox" class="filled-in" id="privateProject" checked #private/>
+        <label for="privateProject" class="black-text">Private Project</label>
     </div>
     <div class="modal-footer">
-        <button class="modal-action waves-effect waves-green btn-flat" (click)="createProject(name.value, desc.value)">Create</button>
+        <button class="modal-action waves-effect waves-green btn-flat" (click)="createProject(name.value, desc.value, private.checked)">Create</button>
     </div>
 </div>
 
@@ -74,6 +78,8 @@
             <textarea placeholder="Description" id="desc" type="text" class="materialize-textarea" [(ngModel)]="editedProject.description"></textarea>
             <label for="desc">Description</label>
         </div>
+        <input type="checkbox" class="filled-in" id="priv" [checked]="editedProject.privateProject" [(ngModel)]="editedProject.privateProject"/>
+        <label for="priv" class="black-text">Private Project</label>
     </div>
     <div class="modal-footer">
         <button class="modal-action modal-close waves-effect waves-green btn-flat" (click)="editProject()">Edit</button>
