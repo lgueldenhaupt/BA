@@ -46,6 +46,10 @@ export class ConfigComponent implements OnInit{
         "#FFD700",
         "#778899"
     ];
+    private trainingSetNames: string[] = [
+        "Training",
+        "Development"
+    ];
     private chart;
 
     constructor(
@@ -220,13 +224,14 @@ export class ConfigComponent implements OnInit{
             } else {
                 color = this.colors[index];
             }
-            let text = result.name != '' ? result.name : index;
+            let testSetName = (this.trainingSetNames.length - index +1) + ". Test";
+            let text = index >= this.trainingSetNames.length ? testSetName : this.trainingSetNames[index];
             this.chart.colors.push(color);
             colorList.append("div")
                 .attr("class", "row")
                 .append("div")
                 .attr("class", "col s2")
-                .attr("style", "background-color: " + color + "; height: 30px; margin: 3px;")
+                .attr("style", "background-color: " + color + "; height: 30px; margin: 3px; white-space: nowrap;")
                 .append("div")
                 .attr("class", "col s10")
                 .html(text)
