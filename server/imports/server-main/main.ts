@@ -26,8 +26,8 @@ export class Main {
         Meteor.publish('configsets-collection', () => {
             return ConfigSetsCollection.find();
         });
-        Meteor.publish('mappings-collection', () => {
-            return MappingsCollection.find();
+        Meteor.publish('mappings-collection', function() {
+            return MappingsCollection.find({creator: this.userId});
         });
         //publish the custom user data
         Meteor.publish(null, () => {
