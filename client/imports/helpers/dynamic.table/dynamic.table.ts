@@ -4,6 +4,7 @@ import style from "./dynamic.table.scss";
 import {DynamicTableColumn, DynamicTableOptions, TableSorting} from "../../../../both/models/dynamicTable.classes";
 import {SearchService} from "../../services/search.service";
 import {Observable} from "rxjs/Observable";
+import {UsersDataService} from "../../services/users-data.service";
 
 declare let $ :any;
 declare let _ : any;
@@ -46,6 +47,10 @@ export class DynamicTable implements OnInit, OnChanges{
     constructor(
         private search : SearchService
     ) {
+        let prefs = UsersDataService.getUserPreferences();
+        if (prefs.maxItemsPerPage) {
+            this.maxItemsPerPage = prefs.maxItemsPerPage;
+        }
     }
 
     ngOnInit(): void {
@@ -112,6 +117,9 @@ export class DynamicTable implements OnInit, OnChanges{
     public recalculateMaxPages() {
         let count = Math.ceil(this.input.length / this.maxItemsPerPage);
         this.maxPages = new Array(count);
+        let prefs = UsersDataService.getUserPreferences();
+        prefs.setMaxItemsPP(this.maxItemsPerPage);
+        UsersDataService.updateUser(Meteor.userId(), prefs);
     }
 
     /**

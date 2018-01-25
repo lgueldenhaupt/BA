@@ -18,7 +18,7 @@ export class UsersDataService  {
     }
 
     public static getUserPreferences() : UserPreferences {
-        if (!Meteor.userId()) return;
+        if (!Meteor.userId() || !Meteor.user()) return;
         let preferences = (<any>Meteor.user()).preferences;
         if (!preferences) {
             preferences = new UserPreferences();

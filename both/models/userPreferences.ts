@@ -5,6 +5,7 @@ export interface UserPreferencesInterface {
     lastConfigFilter: Filter[];
     lastConfigSetColumns: DynamicTableColumn[];
     configTableSort: TableSorting;
+    maxItemsPerPage: number;
 }
 
 /**
@@ -14,6 +15,7 @@ export class UserPreferences implements UserPreferencesInterface{
     lastConfigFilter: Filter[];
     lastConfigSetColumns: DynamicTableColumn[];
     configTableSort: TableSorting;
+    maxItemsPerPage: number;
 
     constructor(lastConfigFilter: Filter[] = []) {
         this.lastConfigFilter = lastConfigFilter;
@@ -30,11 +32,20 @@ export class UserPreferences implements UserPreferencesInterface{
         this.lastConfigSetColumns = columns;
         this.lastConfigFilter = data.lastConfigFilter;
         this.configTableSort = data.configTableSort;
+        this.maxItemsPerPage = data.maxItemsPerPage;
         return this;
     }
 
     public setConfigSetTablePreferences(columns : DynamicTableColumn[]) {
         this.lastConfigSetColumns = columns;
+    }
+
+    public setMaxItemsPP(count: number) {
+        this.maxItemsPerPage = count;
+    }
+
+    public getMaxItemsPP(): number {
+        return this.maxItemsPerPage;
     }
 
     public updateConfigSetTablePreferences(columns : DynamicTableColumn[]) {
