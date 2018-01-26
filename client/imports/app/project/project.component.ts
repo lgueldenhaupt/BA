@@ -330,6 +330,26 @@ export class ProjectComponent implements OnInit {
         this.addAllConfigsToMapping(this.mapping._id);
     }
 
+    public removeMapping() {
+        this.confirm.openModal("Remove related mapping?", "Do you really want to remove the currently related mapping? This will not delete the mapping, just the relation.")
+            .then((fulfilled) => {
+                if (fulfilled) {
+                    this.project.mappingID = "";
+                    UsersDataService.removeProjectFilters(this.projectID);
+                    this.projectsDS.updateProject(this.project._id, this.project).subscribe((changedFiles) => {
+                        if (changedFiles > 0) {
+                            this.notification.success("Related mapping removed");
+                        } else {
+                            this.notification.error("Something went wrong.")
+                        }
+                    }, (err) => {
+                        this.notification.error("Something went wrong");
+                        console.log(err);
+                    });
+                }
+            });
+    }
+
     /**
      * Called to add all new configs to the projects related mapping.
      * @param mappingID
@@ -370,7 +390,7 @@ export class ProjectComponent implements OnInit {
      */
     private updateProjectWithMapping(mappingID: string) {
         this.project.mappingID = mappingID;
-        this.notification.success("Mapping Created");
+        this.notification.success("Mapping assigned");
         this.projectsDS.updateProject(this.projectID, this.project).subscribe((changedEntries) => {
             if (changedEntries == 1) {
                 this.notification.success("Project updated");

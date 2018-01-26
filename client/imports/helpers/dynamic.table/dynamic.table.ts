@@ -47,10 +47,6 @@ export class DynamicTable implements OnInit, OnChanges{
     constructor(
         private search : SearchService
     ) {
-        let prefs = UsersDataService.getUserPreferences();
-        if (prefs.maxItemsPerPage) {
-            this.maxItemsPerPage = prefs.maxItemsPerPage;
-        }
     }
 
     ngOnInit(): void {
@@ -78,7 +74,6 @@ export class DynamicTable implements OnInit, OnChanges{
                 }
                 let filter = this.options.searchFilter;
                 this.input = filter.transform(this.trueInput, searchText);
-                this.recalculateMaxPages();
             });
         }
 
@@ -103,6 +98,11 @@ export class DynamicTable implements OnInit, OnChanges{
                         this.sortDescending = !this.options.sorting.descending;
                         this.orderBy(this.options.sorting.criteria);
                     }
+                    let prefs = UsersDataService.getUserPreferences();
+                    if (prefs && prefs.maxItemsPerPage) {
+                        this.maxItemsPerPage = prefs.maxItemsPerPage;
+                        this.recalculateMaxPages()
+                    }
                 }
 
             });
@@ -117,6 +117,9 @@ export class DynamicTable implements OnInit, OnChanges{
     public recalculateMaxPages() {
         let count = Math.ceil(this.input.length / this.maxItemsPerPage);
         this.maxPages = new Array(count);
+    }
+
+    public setUserMaxItemsPerPage() {
         let prefs = UsersDataService.getUserPreferences();
         prefs.setMaxItemsPP(this.maxItemsPerPage);
         UsersDataService.updateUser(Meteor.userId(), prefs);

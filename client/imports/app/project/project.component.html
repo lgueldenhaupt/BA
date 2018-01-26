@@ -48,6 +48,7 @@
             </div>
             <div class="card-action">
                 <button class="btn grey darken-1 top_space" (click)="updateMapping()" *ngIf="project.mappingID && mapping">Update</button>
+                <button class="btn grey darken-1 top_space" (click)="removeMapping()" *ngIf="project.mappingID && mapping">Remove</button>
                 <button class="btn grey darken-1 top_space" (click)="createMapping()" *ngIf="isOwner(project.creator) && (!project.mappingID || project.mappingID === '')">Create New</button>
             </div>
         </div>
