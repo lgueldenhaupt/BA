@@ -251,9 +251,6 @@ export class ProjectComponent implements OnInit {
         domtoimage.toPng(document.getElementById('results'))
             .then((dataUrl) => {
                 newConfig.image = dataUrl;
-                if (this.canCloseUploadModal) {
-                    $('#graphPreviewModal').modal('close');
-                }
                 this.configSetsDS.addConfig(newConfig).subscribe((newID) => {
                     if (newID != '' || newID != undefined) {
                         this.notification.success("ConfigSet added", 1000);
@@ -267,6 +264,10 @@ export class ProjectComponent implements OnInit {
         if ($('#configSetModal').modal()) {
             $('#configSetModal').modal('close');
         }
+    }
+
+    public closeUploadModal() {
+        $('#graphPreviewModal').modal('close');
     }
 
     /**
@@ -459,7 +460,7 @@ export class ProjectComponent implements OnInit {
                 i++;
                 if (i < this.files.length) {
                     this.delayLoop(i);
-                    let progress = (i / this.files.length * 100 + "%");
+                    let progress = ((i + 1) / this.files.length * 100 + "%");
                     $('#progressBar').width(progress);
                 } else {
                     this.canCloseUploadModal = true;

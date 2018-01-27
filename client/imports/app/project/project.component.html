@@ -77,12 +77,16 @@
 
 <div id="graphPreviewModal" class="modal">
     <div class="modal-content">
-        <h4>Upload running - Please wait...</h4>
+        <h4 *ngIf="!canCloseUploadModal">Upload running - Please wait...</h4>
+        <h4 *ngIf="canCloseUploadModal">Upload finished</h4>
         <div id="results">
             <svg id="visualisation"></svg>
         </div>
-        <div class="progress">
+        <div class="progress" *ngIf="!canCloseUploadModal">
             <div class="determinate" id="progressBar" style="width: 0%"></div>
         </div>
+    </div>
+    <div class="modal-footer" *ngIf="canCloseUploadModal">
+        <button class="waves-effect waves-green btn-flat" (click)="closeUploadModal()">Close</button>
     </div>
 </div>
