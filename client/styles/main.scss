@@ -191,3 +191,7 @@ input[type=range]::-ms-thumb {
 .progress .determinate {
   background-color: #ff6f00;
 }
+
+.autoOverflow {
+  overflow: auto !important;
+}

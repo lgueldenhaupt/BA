@@ -214,9 +214,11 @@ export class DynamicTable implements OnInit, OnChanges{
             input.forEach((item) => {
                 for (let prop in item) {
                     if (item.hasOwnProperty(prop)) {
-                        let propName = prop.charAt(0).toUpperCase() + prop.slice(1);
-                        if (!this.existsInColumns(this.possibleColumns, propName)) {
-                            this.possibleColumns.push(new DynamicTableColumn(propName, prop));
+                        if (this.options.hideColumns.indexOf(prop) == -1) {
+                            let propName = prop.charAt(0).toUpperCase() + prop.slice(1);
+                            if (!this.existsInColumns(this.possibleColumns, propName)) {
+                                this.possibleColumns.push(new DynamicTableColumn(propName, prop));
+                            }
                         }
                     }
                 }

@@ -41,7 +41,7 @@ let domtoimage = require('dom-to-image');
 })
 export class ProjectComponent implements OnInit {
     private canCloseUploadModal: boolean;
-    private files : any;
+    private files: any;
     private chart: any;
     private projectID: string;
     private project: Project;
@@ -54,7 +54,7 @@ export class ProjectComponent implements OnInit {
     private chosenConfig: Config;
     private initialColumns: DynamicTableColumn[];
     private tableOptions: DynamicTableOptions;
-    private progressInPercent : number;
+    private progressInPercent: number;
     private fixColumn: DynamicTableColumn = new DynamicTableColumn('Actions', '', true, "", [
         "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
         "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]);
@@ -70,7 +70,14 @@ export class ProjectComponent implements OnInit {
         this.project = new Project();
 
         //inits the dyn table configurations
-        this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true,true);
+        this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true);
+        this.tableOptions.hideColumns = [
+            'actions',
+            'creator',
+            'params',
+            'projectID',
+            '_id'
+        ];
 
         this.initialColumns = [];
         this.initialColumns.push(new DynamicTableColumn('Name', 'name', false));
@@ -117,11 +124,11 @@ export class ProjectComponent implements OnInit {
                     this.configSetsDS.getProjectConfigs(this.projectID).subscribe((results) => {
                         //add result max and min vals to every config file to show in table
                         let configs = results;
-                        configs.forEach((configSet : ConfigSet) => {
+                        configs.forEach((configSet: ConfigSet) => {
                             if (computedConfigFiles.indexOf((<any>configSet)._id) === -1) {
                                 computedConfigFiles.push((<any>configSet)._id);
                                 if (configSet.results && configSet.results.length > 0) {
-                                    configSet.results.forEach((result : TrainingSet, index) => {
+                                    configSet.results.forEach((result: TrainingSet, index) => {
                                         configSet[index + '. Set Max'] = Math.round(10000 * _.max(result.epochs)) / 10000;
                                         configSet[index + '. Set Min'] = Math.round(10000 * _.min(result.epochs)) / 10000;
                                     });
@@ -165,7 +172,7 @@ export class ProjectComponent implements OnInit {
      * @param {ConfigSet} configSet
      */
     private flattenParams(configSet: ConfigSet) {
-        configSet.params.forEach((paramSet : ParamSet) => {
+        configSet.params.forEach((paramSet: ParamSet) => {
             if (!this.mapping) {
                 configSet[paramSet.param] = paramSet.value;
             } else {
@@ -227,7 +234,7 @@ export class ProjectComponent implements OnInit {
             this.notification.error("Please enter a name!");
             return;
         }
-        let newConfig ={
+        let newConfig = {
             name: name,
             description: desc,
             projectID: this.projectID,
@@ -408,8 +415,8 @@ export class ProjectComponent implements OnInit {
                     let m = mappings[0];
                     this.mapping = new ParamMapping(m.name, m.creator, m.params, m.unrelatedParams, m.flags, (<any>m)._id);
                     if (this.configSets) {
-                        this.configSets.forEach((configSet : ConfigSet) => {
-                            configSet.params.forEach((paramSet : ParamSet) => {
+                        this.configSets.forEach((configSet: ConfigSet) => {
+                            configSet.params.forEach((paramSet: ParamSet) => {
                                 configSet[paramSet.param] = ParamMapping.getFlagName(this.mapping.flags, paramSet.value);
                             })
                         });
@@ -432,34 +439,35 @@ export class ProjectComponent implements OnInit {
         this.uploadFiles(files);
 
     }
-     private delayLoop(i) {
-         let FR = new FileReader();
-         FR.onload = (ev: FileReaderEvent) => {
-             setTimeout(() => {
-             let result = ev.target.result ? ev.target.result : '';
-             let splitted = result.split("\n");
-             let params = [];
-             let results = [];
-             if (splitted[0]) {
-                 params = ParamExtractor.searchForParams(splitted[0]);
-                 if (splitted.length > 1) {
-                     splitted.splice(0, 1);
-                     results = ParamExtractor.searchForTrainingSets(splitted);
-                 }
-             }
-                 this.createConfigSet(this.files[i].name, this.files[i].lastModifiedDate + '', params, results);
-                 i++;
-                 if (i < this.files.length) {
-                     this.delayLoop(i);
-                     let progress = (i / this.files.length * 100 + "%");
-                     $('#progressBar').width(progress);
-                 } else {
-                     this.canCloseUploadModal = true;
-                 }
-             }, 400);
-         };
-         FR.readAsText(this.files[i]);
-     }
+
+    private delayLoop(i) {
+        let FR = new FileReader();
+        FR.onload = (ev: FileReaderEvent) => {
+            setTimeout(() => {
+                let result = ev.target.result ? ev.target.result : '';
+                let splitted = result.split("\n");
+                let params = [];
+                let results = [];
+                if (splitted[0]) {
+                    params = ParamExtractor.searchForParams(splitted[0]);
+                    if (splitted.length > 1) {
+                        splitted.splice(0, 1);
+                        results = ParamExtractor.searchForTrainingSets(splitted);
+                    }
+                }
+                this.createConfigSet(this.files[i].name, this.files[i].lastModifiedDate + '', params, results);
+                i++;
+                if (i < this.files.length) {
+                    this.delayLoop(i);
+                    let progress = (i / this.files.length * 100 + "%");
+                    $('#progressBar').width(progress);
+                } else {
+                    this.canCloseUploadModal = true;
+                }
+            }, 400);
+        };
+        FR.readAsText(this.files[i]);
+    }
 
     private uploadFiles(files) {
         $('#graphPreviewModal').modal({
@@ -494,7 +502,7 @@ export class ProjectComponent implements OnInit {
         return false;
     }
 
-    public isOwner(creator : string) {
+    public isOwner(creator: string) {
         return (creator === Meteor.userId());
     }
 
@@ -516,7 +524,7 @@ export class ProjectComponent implements OnInit {
         UsersDataService.updateUser(Meteor.userId(), preferences);
     }
 
-    public updateTableSorting(sorting : TableSorting) {
+    public updateTableSorting(sorting: TableSorting) {
         let prefs = UsersDataService.getUserPreferences();
         prefs.configTableSort = sorting;
         UsersDataService.updateUser(Meteor.userId(), prefs);

@@ -44,18 +44,18 @@ export class DynamicTableColumn implements DynamicTableColumnInterface {
 export class DynamicTableOptions {
     public name: string;
     public classes: string;
-    public containsConfigSets: boolean;
     public searchFilter: PipeTransform;
     public configurable: boolean;
     public sorting: TableSorting;
+    public hideColumns: string[];
 
-    constructor(name: string, searchFilter : PipeTransform = null, classes : string = "", configurable : boolean = false, containsConfigSets: boolean = false, sorting: TableSorting = null) {
+    constructor(name: string, searchFilter : PipeTransform = null, classes : string = "", configurable : boolean = false, sorting: TableSorting = null, hideColumns : string[] = []) {
         this.name = name;
         this.classes = classes;
-        this.containsConfigSets = containsConfigSets;
         this.searchFilter = searchFilter;
         this.configurable = configurable;
         this.sorting = sorting;
+        this.hideColumns = hideColumns;
     }
 }
 
