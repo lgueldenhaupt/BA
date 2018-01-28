@@ -135,7 +135,6 @@ export class ProjectComponent implements OnInit {
                             }
                         });
                         this.configSets = configs;
-                        this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
                     });
                 }
             );

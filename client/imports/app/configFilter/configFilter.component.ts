@@ -70,8 +70,6 @@ export class ConfigFilterComponent implements OnInit{
                 });
             }
         }
-        this.updateFilter();
-
         this.getAllConfigs();
 
         //gets the corresponding mapping
@@ -98,7 +96,6 @@ export class ConfigFilterComponent implements OnInit{
             data.forEach((configSet : ConfigSet) => {
                 this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.creator, configSet.params, configSet.results, (<any>configSet)._id));
             });
-            this.updateFilter();
         });
     }
 
