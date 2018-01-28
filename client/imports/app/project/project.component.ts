@@ -56,7 +56,6 @@ export class ProjectComponent implements OnInit {
     private tableOptions: DynamicTableOptions;
     private progressInPercent: number;
     private fixColumn: DynamicTableColumn = new DynamicTableColumn('Actions', '', true, "", [
-        "<i class=\"material-icons grey-text text-darken-2 pointer\">edit</i>",
         "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]);
 
     constructor(private projectsDS: ProjectsDataService,
@@ -193,9 +192,6 @@ export class ProjectComponent implements OnInit {
         }
         switch (event.index) {
             case 0:
-                this.openConfigSetEditModal(event.item);
-                break;
-            case 1:
                 this.deleteConfigSet(event.item);
                 break;
             default:
@@ -209,17 +205,6 @@ export class ProjectComponent implements OnInit {
      */
     onTableRowClicked(event) {
         this.router.navigate(['/config', event._id]);
-    }
-
-    /**
-     * Opens the config set edit modal
-     * @param {Config} set
-     */
-    openConfigSetEditModal(set: Config) {
-        this.chosenConfig = set;
-        $('#editName').val(this.chosenConfig.name);
-        $('#editDesc').val(this.chosenConfig.description);
-        $('#configSetEditModal').modal('open');
     }
 
     /**
@@ -268,27 +253,6 @@ export class ProjectComponent implements OnInit {
 
     public closeUploadModal() {
         $('#graphPreviewModal').modal('close');
-    }
-
-    /**
-     * Edits the name and description of the chosenConfig
-     * @param {string} name
-     * @param {string} description
-     */
-    public editChosenConfig(name: string, description: string) {
-        if (this.chosenConfig === null) {
-            this.notification.error("No config chosen");
-            return;
-        } else {
-            this.chosenConfig.name = name;
-            this.chosenConfig.description = description;
-            this.configSetsDS.updateConfig(this.chosenConfig._id, this.chosenConfig).subscribe((changedConfigs) => {
-                if (changedConfigs == 1) {
-                    this.notification.success("Config udpdated");
-                    $('#configSetEditModal').modal('close');
-                }
-            });
-        }
     }
 
     /**

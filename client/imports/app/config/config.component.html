@@ -3,7 +3,7 @@
     <div class="col s12 l2">
         <div class="card grey lighten-2" *ngIf="config">
             <div class="card-content">
-                <span class="card-title">Description</span>
+                <span class="card-title">Description<i class="material-icons grey-text text-darken-2 pointer right_float" (click)="openEditModal()">edit</i></span>
                 <p class="grey-text text-darken-1">{{config.description}}</p>
             </div>
         </div>
@@ -24,7 +24,6 @@
         </div>
 
 
-
         <div *ngIf="config != null">
             <h5>{{config.name}}</h5>
             <dynTable [input]="config.params" [initialColumns]="initalParamColumns" (called)="handleTableActions($event)" [options]="tableOptions" (clickedOnColumn)="getAliases($event)"></dynTable>
@@ -37,6 +36,26 @@
         <button class="btn grey darken-3 top_space" (click)="convertToPdf()" *ngIf="config?.results?.length != 0 && !pdfLink">Convert to svg</button>
         <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results.svg" *ngIf="config?.results?.length != 0 && pdfLink">Download</a>
     </div>
+</div>
+
+<!------------modals------------------>
+<div id="configSetEditModal" class="modal">
+    <form>
+        <div class="modal-content">
+            <h4>Edit ConfigSet</h4>
+            <div class="input-field">
+                <input placeholder="Name" id="editName" type="text" class="validate" #editName>
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <textarea placeholder="Description" id="editDesc" type="text" class="materialize-textarea" #editDesc></textarea>
+                <label for="desc">Description</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn-flat" (click)="editConfig()">Edit</button>
+        </div>
+    </form>
 </div>
 
 

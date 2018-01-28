@@ -140,6 +140,24 @@ export class ConfigComponent implements OnInit{
         }
     }
 
+    public openEditModal() {
+        $('#configSetEditModal').modal().modal('open');
+        $('#editName').val(this.config.name);
+        $('#editDesc').val(this.config.description);
+    }
+
+    public editConfig() {
+        let editedConf = Object.assign({}, this.config);
+        editedConf.name = $('#editName').val();
+        editedConf.description = $('#editDesc').val();
+        this.configDS.updateConfig((<any>editedConf)._id, editedConf).subscribe((changedConfigs) => {
+            if (changedConfigs == 1) {
+                this.notification.success("ConfigSet udpdated");
+                $('#configSetEditModal').modal('close');
+            }
+        });
+    }
+
     /**
      * Sanitizes the given url to not be 'unsafe'
      * @param {string} url

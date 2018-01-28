@@ -71,6 +71,7 @@
             <div class="card-content">
                 <span class="card-title">Flags</span>
                 <p *ngIf="!selectedMapping.flags">Here you can drop or create flag translations.</p>
+                <p>Double click to edit a flag.</p>
                 <span class="grey-text text-darken-2" *ngIf="flagHint && flagHint != ''">Key: {{flagHint}}</span><br>
                 <div class="maxCardHeight">
                     <div class="chip grey darken-1 white-text noselect" *ngFor="let flag of selectedMapping.flags" (mouseover)="flagHint = flag.key" (mouseleave)="flagHint = ''"
@@ -89,48 +90,54 @@
 
 <!------------------------------------Modals----------------------------------->
 <div id="createFlag" class="modal">
-    <div class="modal-content">
-        <h4>Add new Flag</h4>
-        <div class="input-field">
-            <input placeholder="Name" id="createModal_name" type="text" class="validate" #key>
-            <label for="createModal_name">Key</label>
+    <form>
+        <div class="modal-content">
+            <h4>Add new Flag</h4>
+            <div class="input-field">
+                <input placeholder="Name" id="createModal_name" type="text" class="validate" #key>
+                <label for="createModal_name">Key</label>
+            </div>
+            <div class="input-field">
+                <input placeholder="Description" id="createModal_desc" type="text" class="materialize-textarea" #meaning>
+                <label for="createModal_desc">Meaning</label>
+            </div>
         </div>
-        <div class="input-field">
-            <textarea placeholder="Description" id="createModal_desc" type="text" class="materialize-textarea" #meaning></textarea>
-            <label for="createModal_desc">Meaning</label>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" (click)="createFlag(key.value, meaning.value)">Create</button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-action waves-effect waves-green btn-flat" (click)="createFlag(key.value, meaning.value)">Create</button>
-    </div>
+    </form>
 </div>
 
 <div id="editFlag" class="modal">
-    <div class="modal-content">
-        <h4>Edit Flag</h4>
-        <div class="input-field">
-            <input placeholder="Name" id="editFlagName" type="text" class="validate" #Flagkey>
-            <label for="editFlagName">Key</label>
+    <form>
+        <div class="modal-content">
+            <h4>Edit Flag</h4>
+            <div class="input-field">
+                <input placeholder="Name" id="editFlagName" type="text" class="validate" #Flagkey>
+                <label for="editFlagName">Key</label>
+            </div>
+            <div class="input-field">
+                <textarea placeholder="Description" id="editFlagMeaning" type="text" class="materialize-textarea" #Flagmeaning></textarea>
+                <label for="editFlagMeaning">Meaning</label>
+            </div>
         </div>
-        <div class="input-field">
-            <textarea placeholder="Description" id="editFlagMeaning" type="text" class="materialize-textarea" #Flagmeaning></textarea>
-            <label for="editFlagMeaning">Meaning</label>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" (click)="editFlag(Flagkey.value, Flagmeaning.value)">Edit</button>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-action waves-effect waves-green btn-flat" (click)="editFlag(Flagkey.value, Flagmeaning.value)">Edit</button>
-    </div>
+    </form>
 </div>
 
 <div id="editMapping" class="modal">
-    <div class="modal-content">
-        <h4>Edit Mapping</h4>
-        <div class="input-field">
-            <input placeholder="Name" id="editMappingName" type="text" #name>
-            <label for="editMappingName">Name</label>
+    <form>
+        <div class="modal-content">
+            <h4>Edit Mapping</h4>
+            <div class="input-field">
+                <input placeholder="Name" id="editMappingName" type="text" #name>
+                <label for="editMappingName">Name</label>
+            </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-action waves-effect waves-grey btn-flat" (click)="editMapping(name.value)">Edit</button>
-    </div>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action waves-effect waves-grey btn-flat" (click)="editMapping(name.value)">Edit</button>
+        </div>
+    </form>
 </div>

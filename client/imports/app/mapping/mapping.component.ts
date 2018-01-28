@@ -216,6 +216,10 @@ export class MappingComponent implements OnInit{
             this.notification.notPermitted();
             return;
         }
+        if (key == "" || meaning == "") {
+            this.notification.error("Please enter a key and a meaning!");
+            return;
+        }
         this.selectedMapping.flags.push(new Flag(key, meaning));
         this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping).subscribe((changedEntries) => {
             if (changedEntries === 1) {
@@ -288,6 +292,10 @@ export class MappingComponent implements OnInit{
     }
 
     public editFlag(key : string, meaning: string) {
+        if (key == "" || meaning == "") {
+            this.notification.error("Please enter a key and a meaning!");
+            return;
+        }
         this.editedFlag.key = key;
         this.editedFlag.meaning = meaning;
         this.mappingDS.updateMapping((<any>this.selectedMapping)._id, this.selectedMapping);

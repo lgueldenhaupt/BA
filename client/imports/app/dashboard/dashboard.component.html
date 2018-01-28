@@ -31,7 +31,7 @@
                     <p>{{item.description}}</p>
                 </div>
 
-                <div class="card-action" >
+                <div class="card-action">
                     <div *ngIf="userID == item.creator">
                         <a (click)="deleteItem(item._id, item)" class="secondary-content right"><i class="material-icons grey-text text-darken-2 pointer">delete</i></a>
                         <a (click)="openEditModal(item._id, item)" class="secondary-content right modal-trigger" data-target="editModal"><i class="material-icons grey-text text-darken-2 pointer">edit</i></a>
@@ -49,39 +49,43 @@
 
 <!----------------------Modals etc-------------------------->
 <div id="modal1" class="modal">
-    <div class="modal-content">
-        <h4>Add new project</h4>
-        <div class="input-field">
-            <input placeholder="Name" id="createModal_name" type="text" class="validate" #name>
-            <label for="createModal_name">Name</label>
+    <form>
+        <div class="modal-content">
+            <h4>Add new project</h4>
+            <div class="input-field">
+                <input placeholder="Name" id="createModal_name" type="text" class="validate" #name>
+                <label for="createModal_name">Name</label>
+            </div>
+            <div class="input-field">
+                <textarea placeholder="Description" id="createModal_desc" type="text" class="materialize-textarea" #desc></textarea>
+                <label for="createModal_desc">Description</label>
+            </div>
+            <input type="checkbox" class="filled-in" id="privateProject" checked #private/>
+            <label for="privateProject" class="black-text">Private Project</label>
         </div>
-        <div class="input-field">
-            <textarea placeholder="Description" id="createModal_desc" type="text" class="materialize-textarea" #desc></textarea>
-            <label for="createModal_desc">Description</label>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" (click)="createProject(name.value, desc.value, private.checked)">Create</button>
         </div>
-        <input type="checkbox" class="filled-in" id="privateProject" checked #private/>
-        <label for="privateProject" class="black-text">Private Project</label>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-action waves-effect waves-green btn-flat" (click)="createProject(name.value, desc.value, private.checked)">Create</button>
-    </div>
+    </form>
 </div>
 
 <div id="editModal" class="modal">
-    <div class="modal-content">
-        <h4>Edit Project</h4>
-        <div class="input-field">
-            <input placeholder="Name" id="name" type="text" class="validate" [(ngModel)]="editedProject.name">
-            <label for="name">Name</label>
+    <form>
+        <div class="modal-content">
+            <h4>Edit Project</h4>
+            <div class="input-field">
+                <input placeholder="Name" id="name" type="text" class="validate" name="name" [(ngModel)]="editedProject.name">
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field">
+                <textarea placeholder="Description" id="desc" type="text" name="description" class="materialize-textarea" [(ngModel)]="editedProject.description"></textarea>
+                <label for="desc">Description</label>
+            </div>
+            <input type="checkbox" class="filled-in" id="priv" [checked]="editedProject.privateProject" name="private" [(ngModel)]="editedProject.privateProject"/>
+            <label for="priv" class="black-text">Private Project</label>
         </div>
-        <div class="input-field">
-            <textarea placeholder="Description" id="desc" type="text" class="materialize-textarea" [(ngModel)]="editedProject.description"></textarea>
-            <label for="desc">Description</label>
+        <div class="modal-footer">
+            <button type="submit" class="modal-action modal-close waves-effect waves-green btn-flat" (click)="editProject()">Edit</button>
         </div>
-        <input type="checkbox" class="filled-in" id="priv" [checked]="editedProject.privateProject" [(ngModel)]="editedProject.privateProject"/>
-        <label for="priv" class="black-text">Private Project</label>
-    </div>
-    <div class="modal-footer">
-        <button class="modal-action modal-close waves-effect waves-green btn-flat" (click)="editProject()">Edit</button>
-    </div>
+    </form>
 </div>

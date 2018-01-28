@@ -1,23 +1,25 @@
 <div class="container xl_top_space">
     <div id="loginCard" class="card grey lighten-1" *ngIf="!username">
-        <div class="card-content">
-            <span class="card-title"><h4 class="center-align">Log In</h4></span>
-            <p class="center-align">Please log in with your LDAP-Account</p>
-            <div class="whiteArea">
-                <div class="input-field">
-                    <input placeholder="Username" id="userame" type="text" class="validate" #name>
-                    <label for="username">Name</label>
+        <form>
+            <div class="card-content">
+                <span class="card-title"><h4 class="center-align">Log In</h4></span>
+                <p class="center-align">Please log in with your LDAP-Account</p>
+                <div class="whiteArea">
+                    <div class="input-field">
+                        <input placeholder="Username" id="userame" type="text" class="validate" #name>
+                        <label for="username">Name</label>
+                    </div>
+                    <div class="input-field">
+                        <input placeholder="Password" id="pw" type="password" #pw>
+                        <label for="pw">Password</label>
+                    </div>
                 </div>
-                <div class="input-field">
-                    <input placeholder="Password" id="pw" type="password" #pw>
-                    <label for="pw">Password</label>
-                </div>
-            </div>
 
-        </div>
-        <div class="card-action">
-            <button class="btn grey darken-3 center-align" (click)="logIn(name.value, pw.value)">log in</button>
-        </div>
+            </div>
+            <div class="card-action">
+                <button type="submit" class="btn grey darken-3 center-align" (click)="logIn(name.value, pw.value)">log in</button>
+            </div>
+        </form>
     </div>
 
 </div>
