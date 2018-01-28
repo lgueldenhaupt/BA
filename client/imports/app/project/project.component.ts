@@ -18,7 +18,7 @@ import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
 import {DynamicTableColumn, DynamicTableOptions, TableSorting} from "../../../../both/models/dynamicTable.classes";
-import {ConfigsPipe, ProjectFilterPipe} from "../../helpers/filter.pipe";
+import {ConfigsPipe, SearchFilterPipe} from "../../helpers/filter.pipe";
 import {ParamSet} from "../../../../both/models/paramSet";
 import {AliasFinder} from "../../helpers/alias-finder";
 import {UserPreferences} from "../../../../both/models/userPreferences";
@@ -69,7 +69,7 @@ export class ProjectComponent implements OnInit {
         this.project = new Project();
 
         //inits the dyn table configurations
-        this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true);
+        this.tableOptions = new DynamicTableOptions("Configurations", new SearchFilterPipe(), "highlight", true);
         this.tableOptions.hideColumns = [
             'creator',
             'params',

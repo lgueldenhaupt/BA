@@ -9,15 +9,22 @@ import {Project} from "../../../both/models/project.model";
  * compares given searchText with name and description.
  */
 @Pipe({
-    name: 'projects'
+    name: 'search'
 })
-export class ProjectFilterPipe implements PipeTransform {
+export class SearchFilterPipe implements PipeTransform {
     transform(items: any[], searchText: string): any[] {
         if(!items) return [];
         if(!searchText) return items;
         searchText = searchText.toLowerCase();
         return items.filter( it => {
-            return it.name.toLowerCase().includes(searchText) || it.description.toLowerCase().includes(searchText);
+            for (let prop in it) {
+                if (it.hasOwnProperty(prop)) {
+                    if (typeof it[prop] === "string" && it[prop].toLowerCase().includes(searchText)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         });
     }
 }

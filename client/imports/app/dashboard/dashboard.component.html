@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="flex_conti">
-            <div [@growShrink]="''" class="card amber darken-1 card_space hoverable" *ngFor="let item of projects | async | projects: searchText | userProjects: onlyShowOwnProjects">
+            <div [@growShrink]="''" class="card amber darken-1 card_space hoverable" *ngFor="let item of projects | async | search: searchText | userProjects: onlyShowOwnProjects">
                 <div class="card-content pointer" (click)="openProject(item._id)">
                     <span class="card-title">{{item.name}}</span>
                     <p>{{item.description}}</p>
