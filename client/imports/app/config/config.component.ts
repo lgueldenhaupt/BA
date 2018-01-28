@@ -33,8 +33,7 @@ export class ConfigComponent implements OnInit{
     private configID: string;
     private config: ConfigSet;
     private mappingID: string;
-    private canSafe: boolean;
-    private hideText: boolean;
+    private resultsValid : boolean = true;
     private searchText: string;
     private pdfLink : any;
     private initalParamColumns: DynamicTableColumn[];
@@ -63,8 +62,6 @@ export class ConfigComponent implements OnInit{
         private sanitizer: DomSanitizer
     ) {
         this.config = {name: '', projectID: '', description: '', creator: '', params: [], results: []};
-        this.canSafe = false;
-        this.hideText = true;
 
         //get information for the dyn table
         this.initalParamColumns = [];
@@ -106,7 +103,7 @@ export class ConfigComponent implements OnInit{
                     // init the results svg
                     if (this.config.results) {
                         this.initResultColors();
-                        ConfigresultParser.initResults(this.chart, this.config, d3.select("#visualisation"));
+                        this.resultsValid = ConfigresultParser.initResults(this.chart, this.config, d3.select("#visualisation"));
                     }
                 }
             )

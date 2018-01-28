@@ -71,7 +71,6 @@ export class ProjectComponent implements OnInit {
         //inits the dyn table configurations
         this.tableOptions = new DynamicTableOptions("Configurations", new ProjectFilterPipe(), "highlight", true);
         this.tableOptions.hideColumns = [
-            'actions',
             'creator',
             'params',
             'projectID',
@@ -232,7 +231,10 @@ export class ProjectComponent implements OnInit {
         $('#visualisation').height(400);
         this.chart.width = $('#results').width();
         this.chart.height = 400;
-        ConfigresultParser.initResults(this.chart, newConfig, d3.select("#visualisation"));
+        let valid = ConfigresultParser.initResults(this.chart, newConfig, d3.select("#visualisation"));
+        if (!valid) {
+            this.notification.error("Results are invalid at some point!");
+        }
         domtoimage.toPng(document.getElementById('results'))
             .then((dataUrl) => {
                 newConfig.image = dataUrl;

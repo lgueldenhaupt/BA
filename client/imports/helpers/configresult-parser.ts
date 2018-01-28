@@ -55,8 +55,9 @@ export class ConfigresultParser {
      * @param maxVal The max value of the results
      * @param minVal The min value of the results
      */
-    public static initResults(chart, config, vis) {
-        if (config.results.length <= 0) return;
+    public static initResults(chart, config, vis) : boolean {
+        if (config.results.length <= 0) return true;
+        let validResults = true;
         if (typeof chart.vis.remove === "function") {
             chart.vis.selectAll("*").remove();
         }
@@ -94,6 +95,10 @@ export class ConfigresultParser {
                 return xScale(i +1);
             })
             .y(function(d) {
+                if (isNaN(d)) {
+                    d = 0;
+                    validResults = false;
+                }
                 return yScale(d);
             }).curve(d3.curveCardinal);
         config.results.forEach((trainingSet, index) => {
@@ -109,14 +114,26 @@ export class ConfigresultParser {
                 .enter()
                 .append("svg:circle")
                 .attr("cx", function (d, i) {
+                    if (isNaN(d)) {
+                        d = 0;
+                        validResults = false;
+                    }
                     return xScale(i +1);
                 })
                 .attr("cy", function (d) {
+                    if (isNaN(d)) {
+                        d = 0;
+                        validResults = false;
+                    }
                     return yScale(d);
                 })
                 .attr("r", 4)
                 .attr("fill", color)
                 .on("mouseover", function (d, i) {
+                    if (isNaN(d)) {
+                        d = 0;
+                        validResults = false;
+                    }
                     d3.select(this).transition()
                         .ease(d3.easeElastic)
                         .duration("500")
@@ -130,6 +147,10 @@ export class ConfigresultParser {
                         })
                 })
                 .on("mouseout", function (d, i) {
+                    if (isNaN(d)) {
+                        d = 0;
+                        validResults = false;
+                    }
                     d3.select(this).transition()
                         .ease(d3.easeElastic)
                         .duration("500")
@@ -138,5 +159,6 @@ export class ConfigresultParser {
                 })
         });
         chart.vis = vis;
+        return validResults;
     }
 }

@@ -7,6 +7,11 @@
                 <p class="grey-text text-darken-1">{{config.description}}</p>
             </div>
         </div>
+        <div class="card amber" *ngIf="config && !resultsValid">
+            <div class="card-content">
+                <p>Results are invalid at some point!</p>
+            </div>
+        </div>
     </div>
 
 

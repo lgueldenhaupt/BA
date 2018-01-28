@@ -29,7 +29,7 @@ export class ProjectFilterPipe implements PipeTransform {
     name: 'filter'
 })
 export class FilterPipe implements PipeTransform {
-    transform(items: any[], searchText: string): any[] {
+    transform(items: string[], searchText: string): string[] {
         if(!items) return [];
         if(!searchText) return items;
         searchText = searchText.toLowerCase();

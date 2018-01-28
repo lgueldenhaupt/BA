@@ -11,6 +11,7 @@ import {NotificationService} from "../../services/notification.service";
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
 import {Flag} from "../../../../both/models/flag";
 import {ProjectsDataService} from "../../services/projects-data.service";
+import {UsersDataService} from "../../services/users-data.service";
 
 declare let $ :any;
 
@@ -244,6 +245,7 @@ export class MappingComponent implements OnInit{
                 this.projectDS.getProjectsWithMapping((<any>this.selectedMapping)._id).subscribe((data) => {
                     data.forEach((project) => {
                         project.mappingID = "";
+                        UsersDataService.removeProjectFilters(project._id);
                         this.projectDS.updateProject(project._id, project);
                     })
                 });
