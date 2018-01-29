@@ -55,6 +55,7 @@ export class ProjectComponent implements OnInit {
     private initialColumns: DynamicTableColumn[];
     private tableOptions: DynamicTableOptions;
     private progressInPercent: number;
+    private initFinished: boolean = false;
     private fixColumn: DynamicTableColumn = new DynamicTableColumn('Actions', '', true, "", [
         "<i class=\"material-icons grey-text text-darken-2 pointer\">delete</i>"]);
 
@@ -135,6 +136,11 @@ export class ProjectComponent implements OnInit {
                             }
                         });
                         this.configSets = configs;
+                        if (this.initFinished) {
+                            this.filteredConfigs = FilterService.filterConfigs(this.configSets, this.mapping);
+                        } else {
+                            this.filteredConfigs = configs;
+                        }
                     });
                 }
             );
@@ -237,6 +243,7 @@ export class ProjectComponent implements OnInit {
         domtoimage.toPng(document.getElementById('results'))
             .then((dataUrl) => {
                 newConfig.image = dataUrl;
+                this.initFinished = true;
                 this.configSetsDS.addConfig(newConfig).subscribe((newID) => {
                     if (newID != '' || newID != undefined) {
                         this.notification.success("ConfigSet added", 1000);
@@ -267,7 +274,6 @@ export class ProjectComponent implements OnInit {
                 this.configSetsDS.delete(id).subscribe((changedEntries) => {
                     if (changedEntries === 1) {
                         this.notification.success("ConfigSet deleted");
-                        console.log()
                     } else {
                         this.notification.error("ConfigSet not deleted");
                     }

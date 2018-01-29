@@ -82,7 +82,7 @@ export class ConfigFilterComponent implements OnInit{
         this.filesUpdateEmitter.subscribe((data) => {
             this.getAllConfigs();
             this.filters.forEach(filter => {
-                filter.options = this.getFilterOptions(filter.key);
+                filter.options = this.getFilterOptions(filter.key, filter.options);
             });
         })
     }
@@ -112,7 +112,7 @@ export class ConfigFilterComponent implements OnInit{
         this.updateFilter();
     }
 
-    public getFilterOptions(key : string) : Option[] {
+    public getFilterOptions(key : string, oldOptions : Option[] = []) : Option[] {
         let options : Option[] = [];
         let aliases = this.aliasFinder.getAliasesStraight(this.mappingID, key);
         let values = [];
@@ -130,7 +130,15 @@ export class ConfigFilterComponent implements OnInit{
         });
         values = _.uniq(values);
         values.forEach((val) => {
-            options.push({name: val, enabled: true, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
+            let ena = true;
+            //get old filter enabled options, if they are existent
+            for (let i = 0; i < oldOptions.length; i++) {
+                if (val === oldOptions[i].name) {
+                    ena = oldOptions[i].enabled;
+                    break;
+                }
+            }
+            options.push({name: val, enabled: ena, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
         });
         return options;
     }

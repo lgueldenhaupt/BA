@@ -115,6 +115,7 @@ export class DynamicTable implements OnInit, OnChanges{
     }
 
     public recalculateMaxPages() {
+        if (!this.input) return;
         let count = Math.ceil(this.input.length / this.maxItemsPerPage);
         this.maxPages = new Array(count);
     }

@@ -28,7 +28,8 @@
             <div [@growShrink]="''" class="card amber darken-1 card_space hoverable" *ngFor="let item of projects | async | search: searchText | userProjects: onlyShowOwnProjects">
                 <div class="card-content pointer" (click)="openProject(item._id)">
                     <span class="card-title">{{item.name}}</span>
-                    <p>{{item.description}}</p>
+                    <p *ngIf="item.description">{{item.description}}</p>
+                    <p *ngIf="!item.description" class="grey-text text-darken-2">no description yet</p>
                 </div>
 
                 <div class="card-action">
