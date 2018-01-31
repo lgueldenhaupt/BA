@@ -141,6 +141,7 @@ export class ConfigComponent implements OnInit{
         $('#configSetEditModal').modal().modal('open');
         $('#editName').val(this.config.name);
         $('#editDesc').val(this.config.description);
+        Materialize.updateTextFields();
     }
 
     public editConfig() {

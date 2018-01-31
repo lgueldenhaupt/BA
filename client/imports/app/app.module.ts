@@ -36,12 +36,14 @@ import {InfoCardComponent} from "./infoCard/infoCard.component";
  * Path: url part
  * Component: responsible component
  * CanActivate: Guard for access control
+ * Data: any data you like to pass with the route
  */
 const appRoutes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent,
-        canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn],
+        data: {depth: 1}
     },
     {
         path: 'login',
@@ -50,22 +52,26 @@ const appRoutes: Routes = [
     {
         path: 'mapping',
         component: MappingComponent,
-        canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn],
+        data: {depth: 2}
     },
     {
         path: 'mapping/:id',
         component: MappingComponent,
-        canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn],
+        data: {depth: 2}
     },
     {
         path: 'project/:id',
         component: ProjectComponent,
-        canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn],
+        data: {depth: 2}
     },
     {
         path: 'config/:id',
         component: ConfigComponent,
-        canActivate: [IsLoggedIn]
+        canActivate: [IsLoggedIn],
+        data: {depth: 3}
     },
     {
         path: '',

@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import template from "./app.component.html";
-import style from "./app.component.scss";
+import styles from "./app.component.scss";
 import {Router} from "@angular/router";
 import {NotificationService} from "../services/notification.service";
-import {el} from "@angular/platform-browser/testing/src/browser_util";
+import {animate, group, query, style, transition, trigger} from "@angular/animations";
 
 declare let $: any;
 
@@ -13,7 +13,33 @@ declare let $: any;
 @Component({
     selector: "app",
     template,
-    styles: [style]
+    styles: [styles],
+    animations : [
+        trigger('routeAnimation', [
+            transition('1 => 2, 2 => 3, 1 => 3', [
+                style({ height: '!' }),
+                query(':enter', style({ transform: 'translateX(100%)' })),
+                query(':enter, :leave', style({ position: 'absolute', top: 0, left: 0, right: 0 })),
+                group([
+                    query(':leave', [
+                        animate('0.5s cubic-bezier(.35,0,.25,1)', style({ transform: 'translateX(-100%)' })),
+                    ]),
+                    query(':enter', animate('0.5s cubic-bezier(.35,0,.25,1)', style({ transform: 'translateX(0)' }))),
+                ]),
+            ]),
+            transition('3 => 2, 2 => 1, 3 => 1', [
+                style({ height: '!' }),
+                query(':enter', style({ transform: 'translateX(-100%)' })),
+                query(':enter, :leave', style({ position: 'absolute', top: 0, left: 0, right: 0 })),
+                group([
+                    query(':leave', [
+                        animate('0.5s cubic-bezier(.35,0,.25,1)', style({ transform: 'translateX(100%)' })),
+                    ]),
+                    query(':enter', animate('0.5s cubic-bezier(.35,0,.25,1)', style({ transform: 'translateX(0)' }))),
+                ]),
+            ]),
+        ])
+    ]
 })
 
 export class AppComponent implements OnInit {
@@ -51,6 +77,10 @@ export class AppComponent implements OnInit {
             }
         });
         this.router.navigate(["/login"]);
+    }
+
+    public getDepth(outlet) {
+        return outlet.activatedRouteData['depth'];
     }
 
     /**

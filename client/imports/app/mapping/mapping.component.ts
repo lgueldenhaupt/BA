@@ -14,6 +14,7 @@ import {ProjectsDataService} from "../../services/projects-data.service";
 import {UsersDataService} from "../../services/users-data.service";
 
 declare let $: any;
+declare const Materialize : any;
 
 /**
  * This component respresents the mapping page
@@ -264,6 +265,7 @@ export class MappingComponent implements OnInit {
         this.editedMapping = this.selectedMapping;
         $('#editMapping').modal('open');
         $('#editMappingName').val(this.selectedMapping.name);
+        Materialize.updateTextFields();
     }
 
     /**

@@ -12,6 +12,7 @@ import undefined = Match.undefined;
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
 
 declare const $ :any;
+declare const Materialize : any;
 
 /**
  * The dashboard component displays all projects.
@@ -147,6 +148,7 @@ export class DashboardComponent implements OnInit{
         this.editedProject.privateProject = project.privateProject;
         this.projectID = id;
         $('#editModal').modal();
+        Materialize.updateTextFields();
     }
 
     /**
