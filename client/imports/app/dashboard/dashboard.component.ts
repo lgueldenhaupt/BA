@@ -10,7 +10,6 @@ import {trigger, state, style, animate, transition} from "@angular/animations";
 import {Router} from "@angular/router";
 import undefined = Match.undefined;
 import {ConfirmationModalService} from "../../services/confirmationModal.service";
-import {FormGroup} from "@angular/forms";
 
 declare const $ :any;
 

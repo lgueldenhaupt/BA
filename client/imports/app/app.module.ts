@@ -23,6 +23,7 @@ import {FilterService} from "../services/filter.service";
 import {DynamicTable} from "../helpers/dynamic.table/dynamic.table";
 import {IsLoggedIn} from "../helpers/isLoggedIn";
 import {ConfigresultParser} from "../helpers/configresult-parser";
+import {InfoCardComponent} from "./infoCard/infoCard.component";
 
 /**
  * This is the app module configuration. Every created component, filter, service, submodule for the main module must be declared here.
@@ -84,6 +85,7 @@ const appRoutes: Routes = [
         ConfigComponent,
         MappingComponent,
         ConfigFilterComponent,
+        InfoCardComponent,
         SearchFilterPipe,
         FilterPipe,
         ConfigsPipe,

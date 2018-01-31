@@ -1,0 +1,11 @@
+<div class="card amber accent-2" id="data">
+    <div class="card-content">
+        <span class="card-title">{{title}}</span>
+        <p (click)="showInfo = !showInfo" class="pointer noselect grey-text text-darken-1">
+            <span *ngIf="!showInfo">Show</span>
+            <span *ngIf="showInfo">Hide</span>
+             Information
+        </p>
+        <span *ngIf="showInfo" [innerHtml]="text"></span>
+    </div>
+</div>

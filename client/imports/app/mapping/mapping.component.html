@@ -8,19 +8,13 @@
             </a>
         </div>
 
-        <div class="card amber accent-2" id="data">
-            <div class="card-content">
-                <span class="card-title">Mappings</span>
-                <p>This is the mapping page. Here you can create or adjust parameter mappings. For every parameter in a
-                    mapping you can
-                    chose as many aliases as you want. All configurations of a mapping can be filtered.<br>
-                    Also you can add flags to the mapping, translating every parameter value into something else.
-                    To add flags, click on the add button or drop a flag file on the card. Edit flags by double clicking them.
-                </p>
-            </div>
-            <div class="card-action">
-            </div>
-        </div>
+        <infoCard [title]="'Mappings'" [text]="'This is the mapping page. Here you can create or adjust parameter mappings. ' +
+        'For every parameter in a mapping you can chose as many aliases as you want. All configurations related to a mapping can be filtered.<br> ' +
+        'Unrelated parameters can be dragged onto the alias column to set this parameter as an alias for the row specific key. ' +
+        'Unrelated parameters can also be dragged onto the add button to set them as a new key. ' +
+        'Aliases are not fix and can be dragged onto another alias, the add button, or the unrelated parameters field.<br> ' +
+        'Also you can add flags to the mapping, translating every parameter value into something else. To add flags, ' +
+        'click on the add button or drop a flag file on the card. Edit flags by double clicking them.'"></infoCard>
 
     </div>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import template from "./mapping.component.html";
 import style from "./mapping.component.scss";
 import {MappingsDataService} from "../../services/mappings-data.service";
@@ -13,7 +13,7 @@ import {Flag} from "../../../../both/models/flag";
 import {ProjectsDataService} from "../../services/projects-data.service";
 import {UsersDataService} from "../../services/users-data.service";
 
-declare let $ :any;
+declare let $: any;
 
 /**
  * This component respresents the mapping page
@@ -21,9 +21,9 @@ declare let $ :any;
 @Component({
     selector: "mapping",
     template,
-    styles: [ style ]
+    styles: [style]
 })
-export class MappingComponent implements OnInit{
+export class MappingComponent implements OnInit {
     private mappings: Observable<Mapping[]>;
     private selectedMapping: Mapping;
     private editedMapping: Mapping;
@@ -31,14 +31,12 @@ export class MappingComponent implements OnInit{
     private id: string;
     private label: any;
 
-    constructor(
-        private mappingDS: MappingsDataService,
-        private projectDS: ProjectsDataService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private confirm: ConfirmationModalService,
-        private notification: NotificationService
-    ) {
+    constructor(private mappingDS: MappingsDataService,
+                private projectDS: ProjectsDataService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private confirm: ConfirmationModalService,
+                private notification: NotificationService) {
     }
 
     ngOnInit(): void {
@@ -88,7 +86,7 @@ export class MappingComponent implements OnInit{
      */
     public drop(event) {
         event.preventDefault();
-        let needToUpdate : boolean = false;
+        let needToUpdate: boolean = false;
         if (this.selectedMapping.creator != Meteor.userId()) {
             this.notification.notPermitted();
             return;
@@ -293,7 +291,7 @@ export class MappingComponent implements OnInit{
         $('#editFlag').modal().modal('open');
     }
 
-    public editFlag(key : string, meaning: string) {
+    public editFlag(key: string, meaning: string) {
         if (key == "" || meaning == "") {
             this.notification.error("Please enter a key and a meaning!");
             return;
