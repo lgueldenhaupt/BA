@@ -72,6 +72,8 @@ export class ProjectComponent implements OnInit {
         //inits the dyn table configurations
         this.tableOptions = new DynamicTableOptions("Configurations", new SearchFilterPipe(), "highlight", true);
         this.tableOptions.hideColumns = [
+            'Actions',
+            'results',
             'creator',
             'params',
             'projectID',

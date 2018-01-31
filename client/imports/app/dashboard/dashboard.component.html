@@ -29,7 +29,7 @@
                 <div class="card-content pointer" (click)="openProject(item._id)">
                     <span class="card-title">{{item.name}}</span>
                     <p *ngIf="item.description">{{item.description}}</p>
-                    <p *ngIf="!item.description" class="grey-text text-darken-2">no description yet</p>
+                    <p *ngIf="!item.description" class="grey-text text-darken-2">no description</p>
                 </div>
 
                 <div class="card-action">

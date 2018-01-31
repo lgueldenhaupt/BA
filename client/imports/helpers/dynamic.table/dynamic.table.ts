@@ -111,6 +111,7 @@ export class DynamicTable implements OnInit, OnChanges{
     ngOnChanges(changes : SimpleChanges) {
         if (changes['input'] && this.input) {
             this.recalculateMaxPages();
+            this.initPossibleColumns();
         }
     }
 
@@ -197,7 +198,12 @@ export class DynamicTable implements OnInit, OnChanges{
      * Inits the first columns and looks for possible ones
      */
     private initPossibleColumns() {
-        this.possibleColumns = Object.assign([], this.initialColumns);
+        this.possibleColumns = [];
+        this.initialColumns.forEach((column) => {
+            if (this.options.hideColumns.indexOf(column.name) == -1) {
+                this.possibleColumns.push(column);
+            }
+        });
         this.possibleColumns.forEach((column) => {
             if (!column.active) {
                 column.toggle();
