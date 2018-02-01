@@ -14,6 +14,7 @@ import { Session } from 'meteor/session'
 import {UserPreferences} from "../../../../both/models/userPreferences";
 import {Observable} from "rxjs/Observable";
 import {AliasFinder} from "../../helpers/alias-finder";
+import {Flag} from "../../../../both/models/flag";
 
 declare let $ :any;
 declare let _ : any;
@@ -30,15 +31,16 @@ declare let _ : any;
 export class ConfigFilterComponent implements OnInit{
     /**
      * mappingID: the id of the mapping to filter for
-     */
+*/
     @Input() mappingID: string;
     @Input() projectID: string;
-    @Input() filesUpdateEmitter: EventEmitter<any>;
+    @Input() filesUpdateEmitter: EventEmitter<boolean>;
 
     private mapping: Mapping;
     private configs: Config[];
     private filters: Filter[];
     private hintText: string;
+    private projectMappingMatchingParams: ParamAliases[];
 
     constructor(
         private mappingDS: MappingsDataService,
@@ -76,6 +78,9 @@ export class ConfigFilterComponent implements OnInit{
         this.mappingDS.getMappingById(this.mappingID).subscribe(mappings => {
             this.mapping = mappings[0];
             this.updateFilter();
+            this.mappingDS.getProjectRelatedMappingParams(this.mapping, this.projectID).subscribe((paramsWithAliases : ParamAliases[]) => {
+                this.projectMappingMatchingParams = paramsWithAliases;
+            });
         });
 
         //update options if new files available
@@ -84,7 +89,12 @@ export class ConfigFilterComponent implements OnInit{
             this.filters.forEach(filter => {
                 filter.options = this.getFilterOptions(filter.key, filter.options);
             });
-        })
+        });
+    }
+
+    public getFlags() : Flag[] {
+        if (!this.mapping) return [];
+        return this.mapping.flags;
     }
 
     /**
@@ -138,7 +148,8 @@ export class ConfigFilterComponent implements OnInit{
                     break;
                 }
             }
-            options.push({name: val, enabled: ena, meaning: ParamMapping.getFlagName(this.mapping.flags, val)});
+            let flags = this.mapping ? this.mapping.flags : [];
+            options.push({name: val, enabled: ena});
         });
         return options;
     }

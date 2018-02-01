@@ -15,10 +15,10 @@
             </div>
             {{filter.key}}
         </div>
-        <div class="collapsible-body grey lighten-3"  style="overflow: auto;">
+        <div class="collapsible-body grey lighten-3" style="overflow: auto;">
             <p *ngFor="let option of filter.options; let i = index">
                 <input type="checkbox" class="filled-in" id="{{i}}{{filter.key}}" [checked]="option.enabled" (click)="option.enabled = !option.enabled; updateFilter()"/>
-                <label for="{{i}}{{filter.key}}" class="black-text">{{option.meaning}}</label>
+                <label for="{{i}}{{filter.key}}" class="black-text">{{option.name | flagTranslate: getFlags()}}</label>
             </p>
         </div>
     </li>
@@ -27,15 +27,32 @@
 
 <div id="addFilterModal" class="modal" *ngIf="mapping">
     <div class="modal-content">
-        <h4>Add new filter </h4>
-         <div class="input-field">
+        <h4 class="switch">Add new filter
+                <label class="right_float">
+                    Only matching
+                    <input type="checkbox" #onlyMatching>
+                    <span class="lever"></span>
+                    All
+                </label>
+        </h4>
+        <div class="input-field">
             <input type="text" id="autocomplete-input" class="autocomplete">
             <label for="autocomplete-input">Search</label>
         </div>
         <span class="grey-text key_aliases">{{hintText}}</span><br>
-        <p class="chip grey darken-1 white-text pointer noselect" *ngFor="let paramWithAliases of mapping.params | sortByCriteria: 'key'" (click)="addFilter(paramWithAliases.key)" (mouseover)="setModalHintText(paramWithAliases)" (mouseleave)="hintText = ''">
-            {{paramWithAliases.key}}<i class="icon material-icons" *ngIf="!canAddFilter(paramWithAliases.key)">add</i><i class="icon material-icons" *ngIf="canAddFilter(paramWithAliases.key)">delete</i>
-        </p>
+        <div *ngIf="!onlyMatching.checked">
+            <p class="chip grey darken-1 white-text pointer noselect" *ngFor="let paramWithAliases of projectMappingMatchingParams | sortByCriteria: 'key'" (click)="addFilter(paramWithAliases.key)"
+               (mouseover)="setModalHintText(paramWithAliases)" (mouseleave)="hintText = ''">
+                {{paramWithAliases.key}}<i class="icon material-icons" *ngIf="!canAddFilter(paramWithAliases.key)">add</i><i class="icon material-icons" *ngIf="canAddFilter(paramWithAliases.key)">delete</i>
+            </p>
+        </div>
+        <div *ngIf="onlyMatching.checked">
+            <p class="chip grey darken-1 white-text pointer noselect" *ngFor="let paramWithAliases of mapping.params | sortByCriteria: 'key'" (click)="addFilter(paramWithAliases.key)"
+               (mouseover)="setModalHintText(paramWithAliases)" (mouseleave)="hintText = ''">
+                {{paramWithAliases.key}}<i class="icon material-icons" *ngIf="!canAddFilter(paramWithAliases.key)">add</i><i class="icon material-icons" *ngIf="canAddFilter(paramWithAliases.key)">delete</i>
+            </p>
+        </div>
+
     </div>
     <div class="modal-footer">
     </div>

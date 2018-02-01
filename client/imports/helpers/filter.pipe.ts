@@ -3,6 +3,7 @@ import {ParamSet} from "../../../both/models/paramSet";
 import {Filter} from "../../../both/models/filter";
 import {ParamAliases} from "../../../both/models/paramAliases";
 import {Project} from "../../../both/models/project.model";
+import {Flag} from "../../../both/models/flag";
 
 /**
  * This filter pipe is used to filter projects by name or description.
@@ -120,5 +121,20 @@ export class UserProjects implements PipeTransform {
         } else {
             return array;
         }
+    }
+}
+
+@Pipe({
+    name: 'flagTranslate'
+})
+export class FlagTranslate implements PipeTransform {
+    transform(value: string, flags: Flag[]): string {
+        let result = value;
+        flags.forEach((flag) => {
+            if (flag.key == value) {
+                result = flag.meaning;
+            }
+        });
+        return result;
     }
 }

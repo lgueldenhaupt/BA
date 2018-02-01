@@ -5,12 +5,20 @@ import {Mapping} from "../../../both/models/mapping.model";
 import {MappingsCollection} from "../../../both/collections/mappings.collection";
 import {ProjectsCollection} from "../../../both/collections/projects.collection";
 import {ProjectsDataService} from "./projects-data.service";
+import {ParamAliases} from "../../../both/models/paramAliases";
+import {map} from "rxjs/operator/map";
+import {ConfigSetsDataService} from "./configsets-data.service";
+import {ConfigSet} from "../../../both/models/configSet.model";
+import {ParamSet} from "../../../both/models/paramSet";
+import {AliasFinder} from "../helpers/alias-finder";
 
 @Injectable()
 export class MappingsDataService {
     private data: ObservableCursor<Mapping>;
 
-    constructor() {
+    constructor(
+        private configDS : ConfigSetsDataService
+    ) {
         this.data = MappingsCollection.find({});
     }
 
@@ -102,5 +110,39 @@ export class MappingsDataService {
             }
         });
         return found;
+    }
+
+    /**
+     * Gets those parameters that are relevant to the given project and related in a mapping
+     * @returns {Observable<ParamAliases[]>}
+     */
+    public getProjectRelatedMappingParams(mapping: Mapping, projectID: string) : Observable<ParamAliases[]> {
+        if (!mapping || !mapping.params) return;
+        return Observable.create(observer => {
+            let mappingParams : ParamAliases[] = Object.assign([], mapping.params);
+            this.configDS.getProjectConfigs(projectID).subscribe((configSets: ConfigSet[]) => {
+                let foundParams = [];
+                let intersectionParams : ParamAliases[] = [];
+                configSets.forEach((configSet : ConfigSet) => {
+                    configSet.params.forEach((paramSet: ParamSet) => {
+                        if (foundParams.indexOf(paramSet.param) == -1) {
+                            foundParams.push(paramSet.param);
+                        }
+                    })
+                });
+                for (let i = mappingParams.length -1; i >= 0; i--) {
+                    if (foundParams.indexOf(mappingParams[i].key) != -1) {
+                        intersectionParams.push(mappingParams[i]);
+                        continue;
+                    }
+                    mappingParams[i].aliases.forEach((alias : string) =>{
+                        if (foundParams.indexOf(alias) != -1) {
+                            intersectionParams.push(mappingParams[i]);
+                        }
+                    });
+                }
+                observer.next(intersectionParams);
+            });
+        });
     }
 }
