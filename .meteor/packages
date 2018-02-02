@@ -26,3 +26,5 @@ session
 typ:accounts-ldap
 npm-bcrypt
 accounts-password
+jalik:ufs
+jalik:ufs-gridfs

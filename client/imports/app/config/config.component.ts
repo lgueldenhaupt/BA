@@ -15,10 +15,12 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {DynamicTableColumn, DynamicTableOptions} from "../../../../both/models/dynamicTable.classes";
 import {ConfigsPipe} from "../../helpers/filter.pipe";
 import {ConfigresultParser} from "../../helpers/configresult-parser";
+import {FilesDataService} from "../../services/files-data.service";
 let domtoimage = require('dom-to-image');
 
 declare let $ :any;
 declare let Materialize : any;
+declare let FS: any;
 
 /**
  * This component represents the Config Page.
@@ -50,6 +52,7 @@ export class ConfigComponent implements OnInit{
         "Development"
     ];
     private chart;
+    private files = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -58,6 +61,7 @@ export class ConfigComponent implements OnInit{
         private confirm: ConfirmationModalService,
         private aliasFinder: AliasFinder,
         private projectDS: ProjectsDataService,
+        private filesDS: FilesDataService,
         private search: SearchService,
         private sanitizer: DomSanitizer
     ) {
@@ -117,6 +121,10 @@ export class ConfigComponent implements OnInit{
         this.search.getSearchQuery().subscribe(x => {
             this.searchText = (<HTMLInputElement>x.target).value;
         });
+
+        this.filesDS.getConfigFiles(this.configID).subscribe(data => {
+            this.files = data;
+        })
     }
 
     /**
@@ -142,6 +150,21 @@ export class ConfigComponent implements OnInit{
         $('#editName').val(this.config.name);
         $('#editDesc').val(this.config.description);
         Materialize.updateTextFields();
+    }
+
+    public fileUpload(e) {
+        e.preventDefault();
+        if (e && e.target && e.target.files) {
+            let files = e.target.files;
+            for (let i = 0; i < files.length; i++) {
+                this.filesDS.uploadFile(files[i], this.configID).then(()=> {
+                    this.notification.success('File uploaded')
+                }).catch((err) => {
+                    this.notification.error('Something went wrong');
+                    console.log(err)
+                });
+            }
+        }
     }
 
     public editConfig() {

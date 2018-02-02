@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
         Meteor.subscribe('configsets-collection');
         Meteor.subscribe('mappings-collection');
         Meteor.subscribe('users');
+        Meteor.subscribe('files');
     }
 
     private initMaterializeJS() {

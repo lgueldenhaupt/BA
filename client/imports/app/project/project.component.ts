@@ -18,9 +18,8 @@ import {TrainingSet} from "../../../../both/models/trainingSet";
 import {FilterService} from "../../services/filter.service";
 import {Config} from "../../../../both/models/config";
 import {DynamicTableColumn, DynamicTableOptions, TableSorting} from "../../../../both/models/dynamicTable.classes";
-import {ConfigsPipe, SearchFilterPipe} from "../../helpers/filter.pipe";
+import { SearchFilterPipe} from "../../helpers/filter.pipe";
 import {ParamSet} from "../../../../both/models/paramSet";
-import {AliasFinder} from "../../helpers/alias-finder";
 import {UserPreferences} from "../../../../both/models/userPreferences";
 import {UsersDataService} from "../../services/users-data.service";
 import {ConfigresultParser} from "../../helpers/configresult-parser";
@@ -411,7 +410,6 @@ export class ProjectComponent implements OnInit {
         let files = <FileList>e.dataTransfer.files;
         // read file and try to extract params and results
         this.uploadFiles(files);
-
     }
 
     private delayLoop(i) {
