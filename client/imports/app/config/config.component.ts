@@ -167,6 +167,20 @@ export class ConfigComponent implements OnInit{
         }
     }
 
+    public deleteFile(file) {
+        this.confirm.openModal("Delete attached File?").then(fulfilled => {
+            if (fulfilled) {
+                this.filesDS.removeFile(file).subscribe((changed: number) => {
+                    if (changed === 1) {
+                        this.notification.success("File deleted")
+                    } else {
+                        this.notification.error("Something went wrong")
+                    }
+                });
+            }
+        });
+    }
+
     public editConfig() {
         let editedConf = Object.assign({}, this.config);
         editedConf.name = $('#editName').val();

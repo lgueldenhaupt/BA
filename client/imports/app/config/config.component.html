@@ -3,8 +3,13 @@
     <div class="col s12 l2">
         <div class="card grey lighten-2" *ngIf="config">
             <div class="card-content">
-                <span class="card-title">Description<i class="material-icons grey-text text-darken-2 pointer right_float" (click)="openEditModal()">edit</i></span>
+                <span class="card-title">{{config.name}}<i class="material-icons grey-text text-darken-2 pointer right_float" (click)="openEditModal()">edit</i></span>
                 <p class="grey-text text-darken-1">{{config.description}}</p>
+            </div>
+            <div class="card-action">
+                Convert results to an svg file to download it.<br>
+                <button class="btn grey darken-3 top_space" (click)="convertToPdf()" *ngIf="config?.results?.length != 0 && !pdfLink">Convert</button>
+                <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results.svg" *ngIf="config?.results?.length != 0 && pdfLink">Download</a>
             </div>
         </div>
         <div class="card amber" *ngIf="config && !resultsValid">
@@ -38,20 +43,20 @@
 
     <!----------------------Right Area------------------------->
     <div class="col s12 l2">
-        <button class="btn grey darken-3 top_space" (click)="convertToPdf()" *ngIf="config?.results?.length != 0 && !pdfLink">Convert to svg</button>
-        <a class="btn grey darken-3 top_space" [href]="sanitize(pdfLink)" download="{{config.name}}_results.svg" *ngIf="config?.results?.length != 0 && pdfLink">Download</a>
+        <ul class="collection with-header" *ngIf="files?.length > 0">
+            <li class="collection-header grey lighten-1">Related Files</li>
+            <li *ngFor="let file of files" class="pointer collection-item">
+                <a [href]="file.url" download class="grey-text text-darken-1">
+                    {{file.name}}
+                </a>
+                <i class="material-icons grey-text text-darken-2 pointer secondary-content" (click)="deleteFile(file)">delete</i>
+            </li>
+        </ul>
         <div class="card amber">
             <div class="card-content">
-                <span class="card-title">Related Files</span>
+                <span class="card-title">Upload</span>
                 Upload or download related files
-                <br>
-                <ul>
-                    <li *ngFor="let file of files" class="pointer">
-                        <a [href]="file.url" download>{{file.name}}</a>
-                    </li>
-                </ul>
             </div>
-
             <div class="card-action">
                 <div class="file-field input-field upload_button">
                     <div class="btn grey darken-1">

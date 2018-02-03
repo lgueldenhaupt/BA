@@ -2,6 +2,7 @@ import {Files, FileStore} from "../../../both/collections/file.collection";
 import {Injectable} from "@angular/core";
 import {MongoObservable} from "meteor-rxjs";
 import {Observable} from "rxjs/Observable";
+import {UserFile} from "../../../both/models/file";
 
 declare const UploadFS: any;
 
@@ -33,5 +34,9 @@ export class FilesDataService {
 
     public getConfigFiles(configID: string) : Observable<any> {
         return Files.find({configID: configID});
+    }
+
+    public removeFile(data : UserFile) : Observable<number> {
+        return Files.remove(data._id);
     }
 }
