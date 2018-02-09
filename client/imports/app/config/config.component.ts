@@ -152,18 +152,22 @@ export class ConfigComponent implements OnInit{
         Materialize.updateTextFields();
     }
 
-    public fileUpload(e) {
+    public inputChanged(e) {
         e.preventDefault();
         if (e && e.target && e.target.files) {
             let files = e.target.files;
-            for (let i = 0; i < files.length; i++) {
-                this.filesDS.uploadFile(files[i], this.configID).then(()=> {
-                    this.notification.success('File uploaded')
-                }).catch((err) => {
-                    this.notification.error('Something went wrong');
-                    console.log(err)
-                });
-            }
+            this.fileUpload(files);
+        }
+    }
+
+    public fileUpload(files) {
+        for (let i = 0; i < files.length; i++) {
+            this.filesDS.uploadFile(files[i], this.configID).then(()=> {
+                this.notification.success('File uploaded')
+            }).catch((err) => {
+                this.notification.error('Something went wrong');
+                console.log(err)
+            });
         }
     }
 
@@ -314,5 +318,40 @@ export class ConfigComponent implements OnInit{
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
+    }
+
+    /**
+     * Called when dropping a file on the 'drop config' card.
+     * @param e
+     */
+    public onFileDrop(e) {
+        e.preventDefault();
+        let card = document.getElementById('uploadCard');
+        card.className = 'card amber accent-2';
+        let files = <FileList>e.dataTransfer.files;
+        // read file and try to extract params and results
+        this.fileUpload(files);
+    }
+
+    /**
+     * Called on drag over config card. Change color and prevent default
+     * @param e
+     * @returns {boolean}
+     */
+    public onFileDragOver(e) {
+        let card = document.getElementById('uploadCard');
+        card.className = 'card amber accent-4';
+        e.preventDefault();
+        return false;
+    }
+
+    /**
+     * Called on leaving uploAD card. Change color.
+     * @returns {boolean}
+     */
+    public onFileDragLeave() {
+        let card = document.getElementById('uploadCard');
+        card.className = 'card amber accent-2';
+        return false;
     }
 }

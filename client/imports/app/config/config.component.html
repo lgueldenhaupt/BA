@@ -52,7 +52,7 @@
                 <i class="material-icons grey-text text-darken-2 pointer secondary-content" (click)="deleteFile(file)">delete</i>
             </li>
         </ul>
-        <div class="card amber">
+        <div class="card amber" id="uploadCard" (dragleave)="onFileDragLeave($event)" (dragover)="onFileDragOver($event)" (drop)="onFileDrop($event)">
             <div class="card-content">
                 <span class="card-title">Upload</span>
                 Upload or download related files
@@ -61,7 +61,7 @@
                 <div class="file-field input-field upload_button">
                     <div class="btn grey darken-1">
                         <span>Upload</span>
-                        <input type="file" id="upload" multiple (change)="fileUpload($event)">
+                        <input type="file" id="upload" multiple (change)="inputChanged($event)">
                     </div>
                     <div class="file-path-wrapper">
                         <input class="file-path validate" type="text">
