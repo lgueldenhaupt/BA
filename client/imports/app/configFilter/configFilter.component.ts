@@ -104,7 +104,9 @@ export class ConfigFilterComponent implements OnInit{
         this.configDS.getData().subscribe((data : ConfigSet[]) => {
             this.configs = [];
             data.forEach((configSet : ConfigSet) => {
-                this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.creator, configSet.params, configSet.results, (<any>configSet)._id));
+                if (configSet.projectID === this.projectID) {
+                    this.configs.push(new Config(configSet.name, configSet.description, configSet.projectID, configSet.creator, configSet.params, configSet.results, (<any>configSet)._id));
+                }
             });
         });
     }
