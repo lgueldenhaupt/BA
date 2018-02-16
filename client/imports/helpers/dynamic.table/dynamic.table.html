@@ -5,36 +5,99 @@
 </div>
 
 <!----------------------------Table------------------------------------------------>
-<div class="autoOverflow">
-    <table [ngClass]="options?.classes ? options.classes : ''" *ngIf="input && input.length > 0">
-        <thead>
-        <tr>
-            <th *ngFor="let column of activeColumns" (click)="orderBy(column.property)" class="pointer">{{column.name}}</th>
-            <th *ngFor="let column of fixColumns" (click)="orderBy(column.property)" class="pointer">{{column.name}}</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <ng-template ngFor let-set [ngForOf]="input" let-i="index">
-            <tr *ngIf="i >= (currentPage -1) * maxItemsPerPage && i < currentPage * maxItemsPerPage" [ngClass]="{'pointer': onColumnClick}" id="dynRow{{i}}" (click)="toggleHighlightRow(i)" (dblclick)="clickColumn(set)">
-                <td *ngFor="let column of activeColumns">
-                    <img *ngIf="column.name === 'Image'" src="{{set[column.property]}}" height="60">
-                    <div *ngIf="!column.columnActions && column.name != 'Image'" class="pointer">{{set[column.property]}}</div>
-                    <div *ngIf="column.columnActions && column.name != 'Image'">
-                        <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
-                    </div>
-                </td>
-                <td *ngFor="let column of fixColumns">
-                    <div *ngIf="!column.columnActions" class="pointer">{{set[column.property]}}</div>
-                    <div *ngIf="column.columnActions">
-                        <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
-                    </div>
-                </td>
+<div class="table-container">
+    <div class="table-container-inner">
+        <table [ngClass]="options?.classes ? options.classes : ''" *ngIf="input && input.length > 0">
+            <thead>
+            <tr>
+                <th *ngFor="let column of activeColumns" (click)="orderBy(column.property)" class="pointer">{{column.name}}</th>
+                <th *ngFor="let column of fixColumns" (click)="orderBy(column.property)" class="pointer">{{column.name}}</th>
             </tr>
-        </ng-template>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            <ng-template ngFor let-set [ngForOf]="input" let-i="index">
+                <tr *ngIf="i >= (currentPage -1) * maxItemsPerPage && i < currentPage * maxItemsPerPage" [ngClass]="{'pointer': onColumnClick}" id="dynRow{{i}}" (click)="toggleHighlightRow(i)" (dblclick)="clickColumn(set)">
+                    <td *ngFor="let column of activeColumns">
+                        <img *ngIf="column.name === 'Image'" src="{{set[column.property]}}" height="60">
+                        <div *ngIf="!column.columnActions && column.name != 'Image'" class="pointer">{{set[column.property]}}</div>
+                        <div *ngIf="column.columnActions && column.name != 'Image'">
+                            <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
+                        </div>
+                    </td>
+                    <td *ngFor="let column of fixColumns">
+                        <div *ngIf="!column.columnActions" class="pointer">{{set[column.property]}}</div>
+                        <div *ngIf="column.columnActions">
+                            <a *ngFor="let action of column.columnActions; let i = index" [innerHTML]="action" (click)="callFunction(i, set)"></a>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            </tbody>
+        </table>
+    </div>
 </div>
+<!--<div class="table-container">-->
+    <!--<div class="table-container-inner">-->
+        <!--<table class="table-header-fixed">-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--<th>-->
+                    <!--<span>Förts</span>-->
+                <!--</th>-->
+                <!--<th >-->
+                    <!--<span>Second</span>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<span>Thdird</span>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<span>Forth</span>-->
+                <!--</th>-->
+                <!--<th>-->
+                    <!--<span>Fitth</span>-->
+                <!--</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+            <!--<tr>-->
+                <!--<td>First</td>-->
+                <!--<td>Second</td>-->
+                <!--<td>Third</td>-->
+                <!--<td>Forth</td>-->
+                <!--<td>Forth</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>First</td>-->
+                <!--<td>Second</td>-->
+                <!--<td>Third</td>-->
+                <!--<td>Forth</td>-->
+                <!--<td>Forth</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>First</td>-->
+                <!--<td>Second</td>-->
+                <!--<td>Third</td>-->
+                <!--<td>Forth</td>-->
+                <!--<td>Forth</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>First</td>-->
+                <!--<td >Second</td>-->
+                <!--<td>Third</td>-->
+                <!--<td>Forth</td>-->
+                <!--<td >Forth</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>First</td>-->
+                <!--<td >Second</td>-->
+                <!--<td >Third</td>-->
+                <!--<td >Forth</td>-->
+                <!--<td>Forth</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+    <!--</div>&lt;!&ndash; /fixed-table-container-inner &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /fixed-table-container &ndash;&gt;-->
 <ul class="pagination center-align" *ngIf="input && input.length > 0">
     <li [ngClass]="{'disabled': currentPage === 1}" class="pointer noselect" (click)="changePage(currentPage - 1)"><a><i class="material-icons">chevron_left</i></a></li>
     <li class="waves-effect pointer waves-light noselect" *ngFor="let page of maxPages; index as i" [ngClass]="{'active': currentPage === i +1}" (click)="changePage(i +1)"><a>{{i + 1}}</a></li>

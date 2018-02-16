@@ -204,3 +204,28 @@ input[type=range]::-ms-thumb {
     font-weight: bold;
     font-size: large;
 }
+
+.dont_show {
+    display: none;
+}
+
+.table-container {
+    height: 67vh;
+    margin: 10px auto;
+    overflow: hidden;
+}
+
+.table-container-inner {
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 100%;
+}
+
+td {
+    padding: 5px;
+    border-bottom: solid 1px #cccccc;
+}
+
+td + td {
+    border-left: solid 1px #cccccc;
+}

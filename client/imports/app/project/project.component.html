@@ -11,7 +11,6 @@
         <div class="center-align">
             <dynTable [input]="filteredConfigs" [initialColumns]="initialColumns" [options]="tableOptions" (called)="handleDynTableCall($event)" (clickedOnColumn)="onTableRowClicked($event)"
                       (columnsChanged)="columnsUpdated($event)" (sortingChanged)="updateTableSorting($event)"></dynTable>
-            <span *ngIf="(filteredConfigs)?.length < 1" class="">No configs to display</span>
         </div>
     </div>
 
