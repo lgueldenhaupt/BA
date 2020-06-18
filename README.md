@@ -1,4 +1,4 @@
-# Neural Network Data Oranizer
+# Neural Network Data Organizer
 
 ## Motivation
 
